@@ -292,7 +292,7 @@
       <p class="platforms">Windows x64 · macOS Apple Silicon · Linux x64</p>
     </div>
     <div class="plot">
-      <img class="plotimg" src="hero-map.png" alt="Gi* hot-spot analysis of case data produced by MESA">
+      <img class="plotimg" src="hero-map.png" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster over rural southeast Utah">
       <div class="plotph" aria-hidden="true">
         <span class="phlabel">Gi* hot-spot analysis</span>
         <span class="phnote">figure coming soon</span>
@@ -517,6 +517,13 @@
     var ph = document.querySelector('.plot .plotph');
     img.addEventListener('load', function(){ img.style.display='block'; if(ph) ph.style.display='none'; });
     img.addEventListener('error', function(){ img.remove(); });
+    // Upgrade the static poster to the animated inference GIF, unless the user
+    // prefers reduced motion. Only swaps once the GIF has actually loaded.
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var probe = new Image();
+      probe.onload = function(){ img.src = 'hero-map.gif'; };
+      probe.src = 'hero-map.gif';
+    }
   })();
 
   // Downloads: auto-populate from manifest.json when release builds exist.
