@@ -179,6 +179,9 @@
   .term .ok{color:#7FB08A}
   .term .zero{color:#E4B65A}
   .term .cmt{color:#586771}
+  .figpanel{margin:0;background:var(--map);border-radius:6px;overflow:hidden;
+    box-shadow:0 1px 0 rgba(255,255,255,.4),0 18px 40px -22px rgba(14,20,26,.5)}
+  .figpanel img{display:block;width:100%;height:auto}
 
   /* ---- download ---- */
   .download .wrap{padding:78px 32px}
@@ -247,7 +250,8 @@
     }
     .mark svg rect,footer .fmark svg rect{fill:#1B242B}
     .plot{box-shadow:0 0 0 1px rgba(255,255,255,.05),0 24px 50px -26px rgba(0,0,0,.7)}
-    .term{border:1px solid var(--line)}
+    .term,.figpanel{border:1px solid var(--line)}
+    .figpanel{box-shadow:0 0 0 1px rgba(255,255,255,.05),0 24px 50px -26px rgba(0,0,0,.7)}
     .btn:hover{background:#fff}
     .get.ready:hover{background:#fff}
   }
@@ -391,17 +395,14 @@
       <span class="eyebrow seclabel"><b>03</b> · Offline</span>
       <h2>Built for protected health information.</h2>
       <p>Spatial epidemiology usually means shipping addresses to a geocoding API. MESA
-        doesn't. The address database lives on your disk, the analysis runs in-process,
-        and the network stays quiet, so you can work on an air-gapped machine and still
-        get reproducible results.</p>
+        doesn't. The address database lives on your disk and the analysis runs in-process,
+        so you can work on an air-gapped machine and still get reproducible results. Every
+        figure on this page, including the scan below, is real MESA output computed
+        entirely offline.</p>
     </div>
-    <div class="term" role="img" aria-label="Terminal showing zero outbound connections during a geocode run">
-      <div><span class="pmt">$</span> mesa geocode cases.csv <span class="cmt">--offline</span></div>
-      <div><span class="cmt"># watching outbound connections…</span></div>
-      <div><span class="ok">✓</span> 4,812 addresses matched</div>
-      <div>outbound connections … <span class="zero">0</span></div>
-      <div>bytes sent to network … <span class="zero">0</span></div>
-    </div>
+    <figure class="figpanel">
+      <img src="scan.png" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled over rural southeast Utah">
+    </figure>
   </div>
 </section>
 
