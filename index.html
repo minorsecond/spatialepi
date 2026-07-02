@@ -46,6 +46,8 @@
     font-family:var(--mono);font-size:.72rem;font-weight:500;
     letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
   }
+  .seclabel{display:block;margin-bottom:20px;color:var(--faint)}
+  .seclabel b{color:var(--hot);font-weight:500}
   h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.12;
     text-wrap:balance;margin:0}
   p{margin:0}
@@ -114,6 +116,37 @@
     text-transform:uppercase;color:var(--hot);margin-bottom:14px}
   .cap h3{font-size:1.28rem;margin-bottom:10px}
   .cap p{color:var(--muted);font-size:.97rem;max-width:44ch}
+
+  /* ---- how it works ---- */
+  .flow{border-bottom:1px solid var(--line)}
+  .flow .wrap{padding:76px 32px}
+  .flow h2{font-size:clamp(1.6rem,3vw,2.1rem);max-width:24ch;letter-spacing:-.01em}
+  .flow .h2sub{margin-top:14px;color:var(--muted);max-width:var(--measure)}
+  .steps{margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);
+    gap:1px;background:var(--line);border:1px solid var(--line)}
+  .step{background:var(--paper);padding:28px 26px 32px}
+  .step .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--hot)}
+  .step h3{font-size:1.15rem;margin:16px 0 10px}
+  .step p{color:var(--muted);font-size:.92rem}
+  .step .tk{display:block;margin-top:16px;font-family:var(--mono);font-size:.7rem;
+    letter-spacing:.03em;color:var(--faint)}
+  .tiers{margin-top:34px;border:1px solid var(--line);border-radius:6px;
+    background:var(--surface);padding:24px;display:grid;
+    grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:28px;align-items:center}
+  .tiers .lead{font-family:var(--serif);font-size:1.05rem;font-weight:500;
+    color:var(--ink);line-height:1.35}
+  .tiers .lead em{font-style:italic;color:var(--hot)}
+  .ladder{display:flex}
+  .rung{flex:1;padding:13px 15px;border:1px solid var(--line);border-right:0;
+    font-family:var(--mono);font-size:.72rem;background:var(--paper)}
+  .rung:last-child{border-right:1px solid var(--line)}
+  .rung b{display:block;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;
+    margin-bottom:5px;color:var(--ink)}
+  .rung span{color:var(--muted)}
+  .rung.p1{border-top:2px solid var(--hot)}
+  .rung.p2{border-top:2px solid #C9A24B}
+  .rung.p3{border-top:2px solid var(--faint)}
 
   /* ---- validation ---- */
   .valid{border-bottom:1px solid var(--line)}
@@ -184,6 +217,10 @@
     color:var(--muted)}
   footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
   footer a:hover{border-color:var(--ink)}
+  footer .fmark{display:flex;align-items:center;gap:11px}
+  footer .fmark b{font-family:var(--sans);font-weight:600;color:var(--ink);
+    letter-spacing:.02em;font-size:.92rem}
+  footer .fmark svg{display:block}
 
   @media(max-width:860px){
     body{font-size:16px}
@@ -191,8 +228,28 @@
     .hero .wrap,.offline .wrap{grid-template-columns:1fr;gap:44px}
     .plot{aspect-ratio:5/4;order:-1}
     .caplist{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr 1fr}
     .stats{grid-template-columns:1fr 1fr}
+    .tiers{grid-template-columns:1fr;gap:20px}
     table.dl th:nth-child(2),table.dl td:nth-child(2){display:none}
+  }
+  @media(max-width:560px){
+    .steps{grid-template-columns:1fr}
+    .ladder{flex-direction:column}
+    .rung{border-right:1px solid var(--line);border-bottom:0}
+    .rung:last-child{border-bottom:1px solid var(--line)}
+  }
+
+  @media(prefers-color-scheme:dark){
+    :root{
+      --paper:#0E141A;--surface:#141B21;--ink:#E7ECEE;--muted:#9BA7AD;
+      --faint:#69747A;--line:#232D34;--line-2:#2E3941;--map:#12191F;
+    }
+    .mark svg rect,footer .fmark svg rect{fill:#1B242B}
+    .plot{box-shadow:0 0 0 1px rgba(255,255,255,.05),0 24px 50px -26px rgba(0,0,0,.7)}
+    .term{border:1px solid var(--line)}
+    .btn:hover{background:#fff}
+    .get.ready:hover{background:#fff}
   }
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -212,6 +269,7 @@
     </a>
     <nav class="nav">
       <a href="#capabilities">Capabilities</a>
+      <a href="#workflow">Workflow</a>
       <a href="#offline">Offline</a>
       <a href="#validation">Validation</a>
       <a href="#download">Download</a>
@@ -246,6 +304,7 @@
 
 <section class="caps" id="capabilities">
   <div class="wrap">
+    <span class="eyebrow seclabel"><b>01</b> · Capabilities</span>
     <h2>A field instrument, not a cloud service.</h2>
     <p class="h2sub">Everything runs locally against your own copy of authoritative
       address data. No API keys, no rate limits, and nothing to connect to.</p>
@@ -279,9 +338,58 @@
   </div>
 </section>
 
+<section class="flow" id="workflow">
+  <div class="wrap">
+    <span class="eyebrow seclabel"><b>02</b> · Workflow</span>
+    <h2>From a spreadsheet of addresses to a map of clusters.</h2>
+    <p class="h2sub">One desktop app carries the whole investigation. Nothing leaves the
+      machine at any step.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="no">Step 01</span>
+        <h3>Load your table</h3>
+        <p>Drag in a Cognos MHT, CSV, or Excel export. MESA parses it, profiles the
+          columns, and tells you what is missing.</p>
+        <span class="tk">.mht · .csv · .xlsx</span>
+      </div>
+      <div class="step">
+        <span class="no">Step 02</span>
+        <h3>Geocode offline</h3>
+        <p>Map the address column and match every row against a local copy of Utah's
+          authoritative points. Each result carries a precision label.</p>
+        <span class="tk">1,489,417 local points</span>
+      </div>
+      <div class="step">
+        <span class="no">Step 03</span>
+        <h3>Detect clusters</h3>
+        <p>Run Getis-Ord Gi* or a Bernoulli scan with Monte-Carlo inference to surface
+          the hot and cold spots that matter.</p>
+        <span class="tk">Gi* · Bernoulli scan</span>
+      </div>
+      <div class="step">
+        <span class="no">Step 04</span>
+        <h3>Export with provenance</h3>
+        <p>Write results back to CSV, Excel, or a spatial format, precision labels and
+          all, ready for the next tool or a report.</p>
+        <span class="tk">.csv · .xlsx · spatial</span>
+      </div>
+    </div>
+    <div class="tiers">
+      <p class="lead">Every coordinate is labeled, because <em>certainty is not
+        accuracy</em>.</p>
+      <div class="ladder">
+        <div class="rung p1"><b>Point</b><span>matched to a real address point, 0 m median error</span></div>
+        <div class="rung p2"><b>Interpolated</b><span>estimated along a street, block-level</span></div>
+        <div class="rung p3"><b>Centroid</b><span>ZIP or city placeholder, locality only</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="offline" id="offline">
   <div class="wrap">
     <div>
+      <span class="eyebrow seclabel"><b>03</b> · Offline</span>
       <h2>Built for protected health information.</h2>
       <p>Spatial epidemiology usually means shipping addresses to a geocoding API. MESA
         doesn't. The address database lives on your disk, the analysis runs in-process,
@@ -300,7 +408,7 @@
 
 <section class="valid" id="validation">
   <div class="wrap">
-    <span class="eyebrow">Validation</span>
+    <span class="eyebrow seclabel"><b>04</b> · Validation</span>
     <h2>Validated, not asserted.</h2>
     <p class="h2sub">The geocoder matches against authoritative data, the statistics are
       checked against the standard reference implementations, and every run reproduces
@@ -348,6 +456,7 @@
 
 <section class="download" id="download">
   <div class="wrap">
+    <span class="eyebrow seclabel"><b>05</b> · Download</span>
     <h2>Download</h2>
     <p class="h2sub">Native builds for each platform. Every release is published with a
       SHA-256 checksum so you can verify it before running.</p>
@@ -385,7 +494,16 @@
 
 <footer>
   <div class="wrap">
-    <span>MESA · offline geocoding and spatial analysis. Built for the Southeast Utah Health Department.</span>
+    <span class="fmark">
+      <svg width="22" height="22" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="4" fill="#0E141A"/>
+        <path d="M6 13H20M13 6V20" stroke="#3A464E" stroke-width="1"/>
+        <circle cx="13" cy="13" r="3.4" fill="#C8402F"/>
+        <circle cx="13" cy="13" r="6.2" stroke="#C8402F" stroke-width="1" opacity=".45"/>
+      </svg>
+      <b>MESA</b>
+    </span>
+    <span>Offline geocoding and spatial analysis, built for the Southeast Utah Health Department.</span>
     <span><a href="mailto:minorsecond@gmail.com">Contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
