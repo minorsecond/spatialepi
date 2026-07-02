@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MESA — Offline address geocoding &amp; spatial cluster detection</title>
-<meta name="description" content="MESA is a desktop application for public-health GIS. It geocodes addresses and detects spatial clusters entirely on your own machine — no network, no third-party services, no data leaving your computer.">
+<title>MESA · Offline address geocoding and spatial cluster detection</title>
+<meta name="description" content="MESA is a desktop application for public-health GIS. It geocodes addresses and detects spatial clusters entirely on your own machine. No network, no third-party services, no data leaving your computer.">
 <meta name="theme-color" content="#0e141a">
-<meta property="og:title" content="MESA — Put your cases on the map without putting them on the internet">
+<meta property="og:title" content="MESA · Put your cases on the map without putting them on the internet">
 <meta property="og:description" content="Offline address geocoding and spatial cluster detection for public health. Runs entirely on your machine.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.spatialepi.org/">
@@ -115,6 +115,24 @@
   .cap h3{font-size:1.28rem;margin-bottom:10px}
   .cap p{color:var(--muted);font-size:.97rem;max-width:44ch}
 
+  /* ---- validation ---- */
+  .valid{border-bottom:1px solid var(--line)}
+  .valid .wrap{padding:76px 32px}
+  .valid .eyebrow{display:block;margin-bottom:18px}
+  .valid h2{font-size:clamp(1.6rem,3vw,2.1rem);letter-spacing:-.01em;max-width:20ch}
+  .valid .h2sub{margin-top:14px;color:var(--muted);max-width:var(--measure)}
+  .stats{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);
+    gap:1px;background:var(--line);border:1px solid var(--line)}
+  .stat{background:var(--paper);padding:28px 26px 30px}
+  .stat .num{font-family:var(--serif);font-weight:600;
+    font-size:clamp(1.32rem,2.3vw,1.85rem);line-height:1.06;letter-spacing:-.01em;
+    color:var(--ink);font-variant-numeric:tabular-nums;text-wrap:balance}
+  .stat:first-child .num{color:var(--hot)}
+  .stat .lbl{margin-top:14px;font-family:var(--mono);font-size:.735rem;line-height:1.55;
+    letter-spacing:.02em;color:var(--muted)}
+  .validnote{margin-top:30px;font-family:var(--mono);font-size:.74rem;
+    letter-spacing:.03em;color:var(--faint)}
+
   /* ---- offline statement ---- */
   .offline{border-bottom:1px solid var(--line)}
   .offline .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
@@ -172,6 +190,7 @@
     .hero .wrap,.offline .wrap{grid-template-columns:1fr;gap:44px}
     .plot{aspect-ratio:5/4;order:-1}
     .caplist{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
     table.dl th:nth-child(2),table.dl td:nth-child(2){display:none}
   }
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -193,6 +212,7 @@
     <nav class="nav">
       <a href="#capabilities">Capabilities</a>
       <a href="#offline">Offline</a>
+      <a href="#validation">Validation</a>
       <a href="#download">Download</a>
     </nav>
   </div>
@@ -204,8 +224,8 @@
       <span class="eyebrow">Offline geocoding · Spatial cluster detection</span>
       <h1>Put your cases on the map without putting them on the internet.</h1>
       <p class="lead">MESA is a desktop application for public-health GIS. It geocodes
-        addresses and finds spatial clusters <strong>entirely on your own machine</strong> —
-        no network, no third-party services, no patient data leaving your computer.</p>
+        addresses and finds spatial clusters <strong>entirely on your own machine</strong>.
+        No network, no third-party services, no patient data leaving your computer.</p>
       <div class="actions">
         <a class="btn" href="#download">Download MESA</a>
         <a class="textlink" href="#capabilities">What it does →</a>
@@ -227,7 +247,7 @@
   <div class="wrap">
     <h2>A field instrument, not a cloud service.</h2>
     <p class="h2sub">Everything runs locally against your own copy of authoritative
-      address data. No API keys, no rate limits, no connection required.</p>
+      address data. No API keys, no rate limits, and nothing to connect to.</p>
     <div class="caplist">
       <div class="cap">
         <div class="label">Geocode</div>
@@ -238,7 +258,7 @@
       <div class="cap">
         <div class="label">Analyze</div>
         <h3>Find the clusters</h3>
-        <p>Global and local autocorrelation — Moran's I and Getis-Ord Gi* — plus a
+        <p>Global and local autocorrelation (Moran's I and Getis-Ord Gi*), plus a
           Bernoulli spatial scan, with Monte-Carlo inference that is bit-reproducible
           across every platform.</p>
       </div>
@@ -264,7 +284,7 @@
       <h2>Built for protected health information.</h2>
       <p>Spatial epidemiology usually means shipping addresses to a geocoding API. MESA
         doesn't. The address database lives on your disk, the analysis runs in-process,
-        and the network stays quiet — so you can work on an air-gapped machine and still
+        and the network stays quiet, so you can work on an air-gapped machine and still
         get reproducible results.</p>
     </div>
     <div class="term" role="img" aria-label="Terminal showing zero outbound connections during a geocode run">
@@ -274,6 +294,35 @@
       <div>outbound connections … <span class="zero">0</span></div>
       <div>bytes sent to network … <span class="zero">0</span></div>
     </div>
+  </div>
+</section>
+
+<section class="valid" id="validation">
+  <div class="wrap">
+    <span class="eyebrow">Validation</span>
+    <h2>Validated, not asserted.</h2>
+    <p class="h2sub">The geocoder matches against authoritative data, the statistics are
+      checked against the standard reference implementations, and every run reproduces
+      byte for byte.</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="num">1,489,417</div>
+        <div class="lbl">authoritative UGRC address points, matched entirely offline</div>
+      </div>
+      <div class="stat">
+        <div class="num">PySAL · R/spdep</div>
+        <div class="lbl">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</div>
+      </div>
+      <div class="stat">
+        <div class="num">SaTScan 10.3.2</div>
+        <div class="lbl">Bernoulli spatial scan matched against the field standard, no discrepancies in the suite</div>
+      </div>
+      <div class="stat">
+        <div class="num">Bit-identical</div>
+        <div class="lbl">the same p-values on Windows, macOS, and Linux, from one core or a hundred</div>
+      </div>
+    </div>
+    <p class="validnote">Cross-validation re-runs in CI against regenerated PySAL, R, and SciPy oracles.</p>
   </div>
 </section>
 
@@ -291,38 +340,38 @@
           <td><span class="os-name">Windows</span></td>
           <td><span class="os-meta">x64 · Windows 10/11 · .exe</span></td>
           <td><span class="status"><span class="led"></span>Coming soon</span></td>
-          <td class="act"><a class="get" href="#" aria-disabled="true">Download</a><span class="sha"></span></td>
+          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
         <tr data-os="macos">
           <td><span class="os-name">macOS</span></td>
           <td><span class="os-meta">Apple Silicon · arm64 · .dmg</span></td>
           <td><span class="status"><span class="led"></span>Coming soon</span></td>
-          <td class="act"><a class="get" href="#" aria-disabled="true">Download</a><span class="sha"></span></td>
+          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
         <tr data-os="linux">
           <td><span class="os-name">Linux</span></td>
           <td><span class="os-meta">x64 · AppImage</span></td>
           <td><span class="status"><span class="led"></span>Coming soon</span></td>
-          <td class="act"><a class="get" href="#" aria-disabled="true">Download</a><span class="sha"></span></td>
+          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
       </tbody>
     </table>
     <p class="dlnote">Automated per-platform builds are being wired up. When they land,
       this table fills in automatically from <code>manifest.json</code> with the current
-      version and checksums — no page to re-edit. Need MESA before then?
+      version and checksums, with no page to re-edit. Need MESA before then?
       <a href="mailto:minorsecond@gmail.com" style="color:var(--ink)">Get in touch</a>.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span>MESA — offline geocoding &amp; spatial analysis. Built for the Southeast Utah Health Department.</span>
+    <span>MESA · offline geocoding and spatial analysis. Built for the Southeast Utah Health Department.</span>
     <span><a href="mailto:minorsecond@gmail.com">Contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
 
 <script>
-  // Hero: plot a Getis-Ord–style hotspot field on a coordinate grid.
+  // Hero: plot a Getis-Ord style hotspot field on a coordinate grid.
   // Points near a cluster read hot (red) or cold (blue); background points stay neutral.
   (function(){
     var canvas = document.getElementById('plot');

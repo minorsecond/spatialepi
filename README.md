@@ -1,6 +1,6 @@
 # spatialepi.org
 
-Public marketing / download site for **MESA** — an offline address geocoder and
+Public marketing / download site for **MESA**, an offline address geocoder and
 spatial-analysis desktop application for public-health GIS.
 
 - **Live site:** https://www.spatialepi.org (served by GitHub Pages from this repo's `main` branch).
@@ -15,7 +15,7 @@ spatial-analysis desktop application for public-health GIS.
 | `manifest.json` | *(added by CI later)* per-platform download URLs + SHA-256 checksums. |
 | `404.html` | Custom not-found page. |
 | `favicon.svg` | Site icon. |
-| `CNAME` | Custom domain (`www.spatialepi.org`) — do not remove. |
+| `CNAME` | Custom domain (`www.spatialepi.org`). Do not remove. |
 | `.nojekyll` | Disables Jekyll processing (this is plain HTML). |
 
 ## Wiring up downloads
@@ -36,7 +36,7 @@ in this repo's root:
 }
 ```
 
-`index.html` fetches it on load and lights up the buttons automatically — the
+`index.html` fetches it on load and lights up the buttons automatically, so the
 site never needs a per-release edit.
 
 ## Local preview
