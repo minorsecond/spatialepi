@@ -12,6 +12,7 @@ spatial-analysis desktop application for public-health GIS.
 | File | Purpose |
 |------|---------|
 | `index.html` | Single-page landing + downloads site (self-contained, no build step). |
+| `hero-map.png` | *(you provide)* real Gi\* hot-spot figure for the hero. Drop it in and it appears automatically; until then a neutral placeholder shows. Use a genuine analysis export, not a mockup. |
 | `manifest.json` | *(added by CI later)* per-platform download URLs + SHA-256 checksums. |
 | `404.html` | Custom not-found page. |
 | `favicon.svg` | Site icon. |

@@ -93,16 +93,16 @@
     aspect-ratio:5/6;overflow:hidden;
     box-shadow:0 1px 0 rgba(255,255,255,.5),0 18px 40px -22px rgba(14,20,26,.55);
   }
-  .plot canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .plot .readout{
-    position:absolute;left:16px;bottom:14px;font-family:var(--mono);
-    font-size:.68rem;letter-spacing:.05em;color:rgba(233,237,238,.62);
-    display:flex;gap:16px;align-items:center;
-  }
-  .plot .readout .dot{width:8px;height:8px;border-radius:50%;display:inline-block;
-    margin-right:6px;vertical-align:middle}
-  .plot .corner{position:absolute;top:14px;right:16px;font-family:var(--mono);
-    font-size:.66rem;letter-spacing:.14em;color:rgba(233,237,238,.4);text-transform:uppercase}
+  .plot .plotimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+  .plot .plotph{position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:9px;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:38px 38px}
+  .plot .plotph .phlabel{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+    text-transform:uppercase;color:rgba(233,237,238,.58)}
+  .plot .plotph .phnote{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;
+    text-transform:uppercase;color:rgba(233,237,238,.32)}
 
   /* ---- capabilities ---- */
   .caps{border-bottom:1px solid var(--line)}
@@ -291,12 +291,11 @@
       </div>
       <p class="platforms">Windows x64 · macOS Apple Silicon · Linux x64</p>
     </div>
-    <div class="plot" aria-hidden="true">
-      <canvas id="plot"></canvas>
-      <span class="corner">Gi* hotspot field</span>
-      <div class="readout">
-        <span><span class="dot" style="background:#3E7CB1"></span>cold spot</span>
-        <span><span class="dot" style="background:#C8402F"></span>hot spot</span>
+    <div class="plot">
+      <img class="plotimg" src="hero-map.png" alt="Gi* hot-spot analysis of case data produced by MESA">
+      <div class="plotph" aria-hidden="true">
+        <span class="phlabel">Gi* hot-spot analysis</span>
+        <span class="phnote">figure coming soon</span>
       </div>
     </div>
   </div>
@@ -509,100 +508,15 @@
 </footer>
 
 <script>
-  // Hero: plot a Getis-Ord style hotspot field on a coordinate grid.
-  // Points near a cluster read hot (red) or cold (blue); background points stay neutral.
+  // Hero figure: show the real analysis image when it is present.
+  // Drop a file named hero-map.png next to index.html and it appears automatically;
+  // until then a neutral placeholder is shown. No fabricated data is drawn.
   (function(){
-    var canvas = document.getElementById('plot');
-    if(!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var W=0, H=0, dpr=1, pts=[];
-
-    // Small seeded PRNG so the layout is stable and intentional, not random each load.
-    function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-
-    function mix(c1,c2,t){return[Math.round(c1[0]+(c2[0]-c1[0])*t),Math.round(c1[1]+(c2[1]-c1[1])*t),Math.round(c1[2]+(c2[2]-c1[2])*t)]}
-    var COLD=[62,124,177], NEUT=[150,163,171], HOT=[200,64,47];
-
-    function build(){
-      var rnd = mulberry32(20260702);
-      pts = [];
-      // two hot clusters, one cold cluster, plus scattered neutral background
-      var clusters = [
-        {x:.66,y:.34,sign: 1,r:.16},
-        {x:.30,y:.70,sign: 1,r:.13},
-        {x:.72,y:.74,sign:-1,r:.14}
-      ];
-      var N = 150;
-      for(var i=0;i<N;i++){
-        var x=rnd(), y=rnd(), inten=0;
-        for(var c=0;c<clusters.length;c++){
-          var d=Math.hypot(x-clusters[c].x,y-clusters[c].y);
-          if(d<clusters[c].r*1.6){ inten += clusters[c].sign*(1-d/(clusters[c].r*1.6)); }
-        }
-        inten += (rnd()-.5)*.25;
-        inten = Math.max(-1,Math.min(1,inten));
-        pts.push({x:x,y:y,i:inten,seed:rnd()});
-      }
-    }
-
-    function resize(){
-      var r = canvas.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio||1, 2);
-      W=r.width; H=r.height;
-      canvas.width=W*dpr; canvas.height=H*dpr;
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-
-    function draw(prog){
-      ctx.clearRect(0,0,W,H);
-      // coordinate grid
-      ctx.strokeStyle='rgba(255,255,255,0.055)';
-      ctx.lineWidth=1;
-      var step=Math.max(34, Math.round(W/12));
-      for(var gx=step;gx<W;gx+=step){ctx.beginPath();ctx.moveTo(gx+.5,0);ctx.lineTo(gx+.5,H);ctx.stroke();}
-      for(var gy=step;gy<H;gy+=step){ctx.beginPath();ctx.moveTo(0,gy+.5);ctx.lineTo(W,gy+.5);ctx.stroke();}
-      // points
-      var pad=W*0.09;
-      for(var i=0;i<pts.length;i++){
-        var p=pts[i];
-        var appear = Math.min(1, Math.max(0, (prog - p.seed*0.55)/0.45));
-        if(appear<=0) continue;
-        var px=pad + p.x*(W-2*pad);
-        var py=pad + p.y*(H-2*pad);
-        var mag=Math.abs(p.i);
-        var col = p.i>=0 ? mix(NEUT,HOT,mag) : mix(NEUT,COLD,mag);
-        var baseR = 1.7 + mag*4.4;
-        var r = baseR*appear;
-        // glow halo for significant points
-        if(mag>0.45){
-          var g=ctx.createRadialGradient(px,py,0,px,py,baseR*4.2);
-          g.addColorStop(0,'rgba('+col[0]+','+col[1]+','+col[2]+','+(0.22*appear*mag)+')');
-          g.addColorStop(1,'rgba('+col[0]+','+col[1]+','+col[2]+',0)');
-          ctx.fillStyle=g;
-          ctx.beginPath();ctx.arc(px,py,baseR*4.2,0,6.2832);ctx.fill();
-        }
-        ctx.fillStyle='rgba('+col[0]+','+col[1]+','+col[2]+','+(0.35+0.55*mag)*appear+')';
-        ctx.beginPath();ctx.arc(px,py,r,0,6.2832);ctx.fill();
-      }
-    }
-
-    function run(){
-      resize(); build();
-      if(reduce){ draw(1); return; }
-      var start=null;
-      function frame(ts){
-        if(start===null) start=ts;
-        var prog=Math.min(1,(ts-start)/1400);
-        draw(prog);
-        if(prog<1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-    }
-
-    var rt;
-    window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){resize();draw(1);},150)});
-    run();
+    var img = document.querySelector('.plot .plotimg');
+    if(!img) return;
+    var ph = document.querySelector('.plot .plotph');
+    img.addEventListener('load', function(){ img.style.display='block'; if(ph) ph.style.display='none'; });
+    img.addEventListener('error', function(){ img.remove(); });
   })();
 
   // Downloads: auto-populate from manifest.json when release builds exist.
