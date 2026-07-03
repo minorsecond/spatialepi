@@ -32,7 +32,7 @@
     --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+  html{-webkit-text-size-adjust:100%;scroll-padding-top:84px;scroll-behavior:smooth}
   body{
     margin:0;background:var(--paper);color:var(--ink);
     font-family:var(--sans);font-size:17px;line-height:1.6;
@@ -53,7 +53,7 @@
   p{margin:0}
 
   /* ---- header ---- */
-  .top{border-bottom:1px solid var(--line)}
+  .top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
   .top .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
   .mark{display:flex;align-items:center;gap:11px;text-decoration:none}
   .mark svg{display:block}
@@ -257,7 +257,7 @@
     .btn:hover{background:#fff}
     .get.ready:hover{background:#fff}
   }
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -265,11 +265,12 @@
 <header class="top">
   <div class="wrap">
     <a class="mark" href="/" aria-label="MESA home">
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-        <rect x="1" y="1" width="24" height="24" rx="4" fill="#0E141A"/>
-        <path d="M6 13H20M13 6V20" stroke="#3A464E" stroke-width="1"/>
-        <circle cx="13" cy="13" r="3.4" fill="#C8402F"/>
-        <circle cx="13" cy="13" r="6.2" stroke="#C8402F" stroke-width="1" opacity=".45"/>
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="6" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
       </svg>
       <b>MESA</b>
     </a>
@@ -506,11 +507,12 @@
 <footer>
   <div class="wrap">
     <span class="fmark">
-      <svg width="22" height="22" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-        <rect x="1" y="1" width="24" height="24" rx="4" fill="#0E141A"/>
-        <path d="M6 13H20M13 6V20" stroke="#3A464E" stroke-width="1"/>
-        <circle cx="13" cy="13" r="3.4" fill="#C8402F"/>
-        <circle cx="13" cy="13" r="6.2" stroke="#C8402F" stroke-width="1" opacity=".45"/>
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="6" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
       </svg>
       <b>MESA</b>
     </span>
