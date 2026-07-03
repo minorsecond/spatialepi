@@ -85,11 +85,11 @@
     forms MESA targets:</p>
   <ul>
     <li><b>Grid-coordinate splitting.</b> A Utah grid address written without a space
-      (<code>300S 1600E</code>) is split to <code>300 S 1600 E</code>. Only a single
-      trailing directional letter is split, so ordinals like <code>1ST</code> /
-      <code>100TH</code> are left intact.</li>
+      (<code>820S 2670E</code>) is split to <code>820 S 2670 E</code>. Only a single
+      trailing directional letter is split, so ordinals like <code>3RD</code> /
+      <code>147TH</code> are left intact.</li>
     <li><b>Decompounding.</b> A run-together street token is split into two attested corpus
-      tokens (<code>OAKGROVE</code>&nbsp;→&nbsp;<code>OAK GROVE</code>) only when both
+      tokens (<code>STONERIDGE</code>&nbsp;→&nbsp;<code>STONE RIDGE</code>) only when both
       halves are known and the compound is not, or when the spaced pair is attested in that
       ZIP. Run-together PO boxes are handled the same way.</li>
     <li><b>Highway alias.</b> A "Highway Drive" with no route number, in a ZIP served by
@@ -114,11 +114,11 @@
     the single most important guard against false matches.</p>
   <ul>
     <li>For pure-grid streets the whole skeleton must match exactly. This rejects adjacent
-      grid streets and quadrant transpositions such as <code>456 E 100 S</code> vs
-      <code>456 S 100 E</code>.</li>
+      grid streets and quadrant transpositions such as <code>710 E 340 S</code> vs
+      <code>710 S 340 E</code>.</li>
     <li>For named streets the numeric/grid tokens must match exactly, but one side may carry
-      an extra directional the other omits (<code>500 W SAMPLE RIDGE RD</code> vs
-      <code>500 SAMPLE RIDGE RD</code>), preserving token order; a conflicting quadrant is
+      an extra directional the other omits (<code>4827 W TIMBER FORK RD</code> vs
+      <code>4827 TIMBER FORK RD</code>), preserving token order; a conflicting quadrant is
       still rejected.</li>
   </ul>
   <p>A name-token alignment check then requires every canonical street-name token to appear
