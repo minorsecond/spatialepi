@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
-<title>MESA · Offline address geocoding and spatial cluster detection</title>
-<meta name="description" content="MESA is a desktop application for public-health GIS. It geocodes addresses and detects spatial clusters entirely on your own machine. No network, no third-party services, no data leaving your computer.">
+<title>MESA · Spatial cluster detection and offline geocoding for public health</title>
+<meta name="description" content="MESA is a desktop application for spatial epidemiology. It detects disease clusters in your case data, geocoding addresses and running the spatial statistics entirely on your own machine. No network, no third-party services, no data leaving your computer.">
 <meta name="theme-color" content="#0e141a">
 <meta property="og:title" content="MESA · Put your cases on the map without putting them on the internet">
-<meta property="og:description" content="Offline address geocoding and spatial cluster detection for public health. Runs entirely on your machine.">
+<meta property="og:description" content="Spatial cluster detection and offline geocoding for public health. Runs entirely on your machine.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.spatialepi.org/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -211,11 +211,12 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="kicker">offline geocoding · spatial cluster detection</p>
+    <p class="kicker">spatial cluster detection · offline geocoding</p>
     <h1>Put your cases on the map without putting them on the internet.</h1>
-    <p class="lead">MESA is a desktop application for public-health GIS. It geocodes
-      addresses and finds spatial clusters <b>entirely on your own machine</b>. No network,
-      no third-party services, no patient data leaving your computer.</p>
+    <p class="lead">MESA is a desktop application for spatial epidemiology. It finds disease
+      clusters in your case data, geocoding the addresses and running the spatial statistics
+      <b>entirely on your own machine</b>. No network, no third-party services, no patient
+      data leaving your computer.</p>
     <div class="actions">
       <a class="btn" href="#download">Download MESA</a>
       <a class="tl" href="#capabilities">what it does →</a>
@@ -237,21 +238,22 @@
     <h2 class="sec"><span class="n">01</span> capabilities</h2>
     <div class="rows">
       <div class="row">
-        <div class="k">geocode</div>
-        <div>
-          <h3>Addresses, offline</h3>
-          <p>You supply the authoritative address data, Utah's UGRC points or your own
-            locality's, and a bundled tool builds it into a local SQLite index the geocoder
-            matches against. Optional supplemental files add coverage.</p>
-        </div>
-      </div>
-      <div class="row">
         <div class="k">analyze</div>
         <div>
           <h3>Find the clusters</h3>
-          <p>Local hot- and cold-spot detection with Getis-Ord Gi* and a Bernoulli spatial
-            scan, reported alongside a global Moran's I autocorrelation diagnostic.
-            Monte-Carlo inference, bit-reproducible across every platform.</p>
+          <p>The core of MESA: local hot- and cold-spot detection with Getis-Ord Gi* and a
+            Bernoulli spatial scan, reported alongside a global Moran's I autocorrelation
+            diagnostic. Monte-Carlo inference, bit-reproducible across every platform.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k">geocode</div>
+        <div>
+          <h3>Addresses, offline</h3>
+          <p>The step that gets your cases onto the map: supply the authoritative address
+            data (Utah's UGRC points or your own locality's) and a bundled tool builds it
+            into a local SQLite index the geocoder matches against. Optional supplemental
+            files add coverage.</p>
         </div>
       </div>
       <div class="row">
@@ -362,6 +364,14 @@
         <tr><td class="v">PySAL · R/spdep</td><td class="note">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</td></tr>
         <tr><td class="v">SaTScan 10.3.2</td><td class="note">Bernoulli spatial scan matched against the field standard, no discrepancies in the suite</td></tr>
         <tr><td class="v">bit-identical</td><td class="note">the same p-values on Windows, macOS, and Linux, from one core or a hundred</td></tr>
+      </tbody>
+    </table>
+    <div class="subhead">spatial statistics</div>
+    <table class="data">
+      <tbody>
+        <tr><td class="v">≈ 0.05</td><td class="note">empirical false-positive rate at &alpha; = 0.05 under complete spatial randomness, so Type-I error tracks the nominal level (checked against 99.999% Wilson intervals)</td></tr>
+        <tr><td class="v">&gt; 90%</td><td class="note">true-positive rate at large effect size for an injected hot spot; statistical power rises monotonically with effect size</td></tr>
+        <tr><td class="v">1e-4</td><td class="note">Gi* z-scores match PySAL's esda.G_Local within this tolerance, and adjusted p-values within 1e-3</td></tr>
       </tbody>
     </table>
     <div class="subhead">geocoder accuracy (held-out validation)</div>
