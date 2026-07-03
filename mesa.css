@@ -73,7 +73,7 @@ code{background:rgba(0,0,0,.05);padding:1px 5px;font-size:.9em}
   padding:14px 18px;margin:0 0 16px;font-size:.9rem;color:var(--ink);overflow-x:auto;white-space:pre}
 .eq .lbl{display:block;color:var(--faint);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
 /* typeset (KaTeX) equation blocks */
-.eq.math{white-space:normal;overflow-x:auto;overflow-y:hidden}
+.eq.math{white-space:normal;overflow-x:auto;overflow-y:hidden;width:fit-content;max-width:100%}
 .eq.math .katex-display,.eq.math .katex-display>.katex{margin:.15em 0 0;text-align:left}
 .eq.math .katex{font-size:1.08em;color:var(--ink)}
 
