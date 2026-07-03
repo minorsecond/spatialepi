@@ -88,19 +88,18 @@
   <p>Several jurisdiction-specific normalizations matter for the rural western address
     forms MESA targets:</p>
   <ul>
-    <li><b>Grid-coordinate splitting.</b> A Utah grid address written without a space
-      (<code>820S 2670E</code>) is split to <code>820 S 2670 E</code>. Only a single
-      trailing directional letter is split, so ordinals like <code>3RD</code> /
-      <code>147TH</code> are left intact.</li>
-    <li><b>Decompounding.</b> A run-together street token is split into two attested corpus
-      tokens (<code>STONERIDGE</code>&nbsp;→&nbsp;<code>STONE RIDGE</code>) only when both
-      halves are known and the compound is not, or when the spaced pair is attested in that
-      ZIP. Run-together PO boxes are handled the same way.</li>
-    <li><b>Highway alias.</b> A "Highway Drive" with no route number, in a ZIP served by
-      exactly one numbered highway, resolves to that highway.</li>
-    <li><b>Non-physical inputs.</b> PO boxes, HC/RR routes, and placeholders are classified
-      as not spatially locatable (following NG9-1-1 practice) rather than forced onto a
-      coordinate.</li>
+    <li>Grid-coordinate splitting adds the missing space in a Utah grid address, so
+      <code>820S 2670E</code> becomes <code>820 S 2670 E</code>; only a single trailing
+      directional letter is split, which leaves ordinals like <code>3RD</code> and
+      <code>147TH</code> intact.</li>
+    <li>Decompounding separates a run-together street token into two attested corpus tokens
+      (<code>STONERIDGE</code>&nbsp;→&nbsp;<code>STONE RIDGE</code>), but only when both halves
+      are known and the compound is not, or when the spaced pair is attested in that ZIP;
+      run-together PO boxes are handled the same way.</li>
+    <li>A "Highway Drive" with no route number resolves to the single numbered highway serving
+      that ZIP.</li>
+    <li>Non-physical inputs such as PO boxes, HC/RR routes, and placeholders are classified as
+      not spatially locatable (following NG9-1-1 practice) rather than forced onto a coordinate.</li>
   </ul>
   <p>A <code>ZIP+4</code> is accepted but only the first five digits are used.</p>
 

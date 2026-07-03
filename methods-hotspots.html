@@ -80,9 +80,10 @@
     and a two-tailed p-value is <code>erfc(|z| / √2)</code>. Mean and variance use the
     population form (divided by n) because the (n−1) correction already appears in the
     denominator, and both are accumulated with Welford's numerically stable algorithm.</p>
-  <p><b>Gi* vs Gi.</b> By default the neighbor sum includes the focal location <code>i</code>
-    itself (its own weight <code>wᵢᵢ</code>), which is the standard Gi* used by ArcGIS and
-    most applied work. Excluding the focal point gives the original Gi statistic of Getis &amp;
+  <p>The choice between Gi* and Gi is whether the focal location is counted. By default the
+    neighbor sum includes location <code>i</code> itself (its own weight <code>wᵢᵢ</code>),
+    which is the standard Gi* used by ArcGIS and most applied work. Excluding the focal point
+    gives the original Gi statistic of Getis &amp;
     Ord (1992), computed leave-one-out with (n−1)/(n−2) scaling to match PySAL
     <code>G_Local(star=False)</code> and R <code>spdep::localG</code>.</p>
 
@@ -173,19 +174,20 @@
     Gi* or scan statistics themselves.</p>
 
   <h2 id="edge"><span class="n">08</span> numerics &amp; edge cases</h2>
-  <p>The engine is written to fail gracefully and identically everywhere:</p>
-  <ul>
-    <li><b>Zero variance</b> (all values identical): returns z = 0, p = 1 with a warning,
-      rather than dividing by zero.</li>
-    <li><b>Isolated features</b> (no neighbors): z = 0, p = 1 with a warning.</li>
-    <li><b>Duplicate coordinates:</b> distances of exactly 0 are handled without singular
-      matrices.</li>
-    <li><b>NaN / infinite inputs</b> propagate under IEEE-754 and are classified as
-      undefined, not crashed on.</li>
-    <li><b>Empty datasets</b> return gracefully with a numerical-instability warning.</li>
-    <li><b>Thread-safe and re-entrant:</b> no global mutable state, and results are
-      bit-for-bit identical from 1 to 128 cores.</li>
-  </ul>
+  <p>Degenerate inputs are handled explicitly rather than left to crash or return a
+    misleading result:</p>
+  <table class="data">
+    <thead><tr><th>input</th><th>behavior</th></tr></thead>
+    <tbody>
+      <tr><td>zero variance (all values identical)</td><td>returns z = 0, p = 1 with a warning, rather than dividing by zero</td></tr>
+      <tr><td>isolated feature (no neighbors)</td><td>returns z = 0, p = 1 with a warning</td></tr>
+      <tr><td>duplicate coordinates</td><td>distances of exactly 0 are handled without singular matrices</td></tr>
+      <tr><td>NaN or infinite values</td><td>propagate under IEEE-754 and are classified as undefined, not crashed on</td></tr>
+      <tr><td>empty dataset</td><td>returns gracefully with a numerical-instability warning</td></tr>
+    </tbody>
+  </table>
+  <p>The analysis functions keep no global mutable state, so they are thread-safe and
+    re-entrant, and results are bit-for-bit identical from 1 to 128 cores.</p>
 
   <h2 id="valid"><span class="n">09</span> validation</h2>
   <p>The Gi* engine is cross-validated against PySAL <code>esda.G_Local</code>: z-scores
@@ -194,11 +196,12 @@
     it is a documented tie-breaking difference: PySAL resolves exact distance ties by KD-tree
     traversal order, which varies by architecture, while MESA breaks ties deterministically
     by feature id.)</p>
-  <p><b>Type-I error.</b> Under simulated complete spatial randomness the empirical false-positive
-    rate tracks the nominal level (≈ 0.05 at α = 0.05, and likewise at 0.01 and 0.001),
-    asserted against 99.999% Wilson score intervals. <b>Power.</b> With a 3×3 hot spot injected
-    into a grid, the true-positive rate rises monotonically with effect size, exceeding 90%
-    at large effect sizes, while noise is correctly suppressed.</p>
+  <p>The engine is also calibrated for statistical validity. Under simulated complete spatial
+    randomness the empirical false-positive rate tracks the nominal level (≈ 0.05 at
+    α = 0.05, and likewise at 0.01 and 0.001), asserted against 99.999% Wilson score intervals,
+    which confirms the Type-I error is controlled. To check power, a 3×3 hot spot injected into
+    a grid produces a true-positive rate that rises monotonically with effect size, exceeding
+    90% at large effect sizes while noise is correctly suppressed.</p>
 
   <h2><span class="n">§</span> references</h2>
   <ol class="refs">
