@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
+<title>Methods · MESA</title>
+<meta name="description" content="How MESA works: the methodology behind its offline geocoder and spatial cluster statistics (Getis-Ord Gi*, Moran's I, Bernoulli spatial scan), with reproducibility, validation, and citations.">
+<meta name="theme-color" content="#0e141a">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mesa.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="MESA home">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </a>
+    <nav class="nav">
+      <a class="hideable" href="/#capabilities">capabilities</a>
+      <a class="hideable" href="/#workflow">workflow</a>
+      <a class="hideable" href="/#validation">validation</a>
+      <a class="hideable" href="/#download">download</a>
+      <a class="on" href="methods.html">methods</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap doc">
+  <div class="crumb"><a href="/">home</a> <span>/</span> methods</div>
+  <h1>Methods</h1>
+  <p class="sub">How MESA geocodes addresses and detects spatial clusters: the statistics,
+    the parameters, the reference implementations it is checked against, and the primary
+    literature. Every method below is documented from MESA's own source and validation
+    reports, not paraphrased from a textbook.</p>
+  <p class="meta">Describes the pre-release spatial engine. Parameters are the documented
+    defaults; where the software offers presets or options, that is stated.</p>
+
+  <div class="note">These pages are a faithful account of what the code does. Where a
+    technique is planned or documented but not yet in the shipped engine, it is called out
+    rather than claimed. All reported geocoder accuracy is <b>internal validation on the
+    Utah UGRC reference only</b> and must be revalidated for any other jurisdiction's data.</div>
+
+  <h2><span class="n">§</span> the methods</h2>
+  <div class="mindex">
+    <a class="m" href="methods-geocoding.html">
+      <div class="k">geocoding</div>
+      <div>
+        <h3>Offline address geocoding</h3>
+        <p>Normalization, blocking, the address-geometry gate, and a Fellegi-Sunter
+          calibrated match score. Precision tiers, match modes, and the held-out
+          validation regime.</p>
+      </div>
+    </a>
+    <a class="m" href="methods-hotspots.html">
+      <div class="k">hot spots</div>
+      <div>
+        <h3>Getis-Ord Gi* &amp; Moran's I</h3>
+        <p>Local and global spatial autocorrelation: the statistics, spatial weights,
+          Monte-Carlo inference, the Gi_Bin classification, multiple-testing correction,
+          and empirical-Bayes rate smoothing.</p>
+      </div>
+    </a>
+    <a class="m" href="methods-scan.html">
+      <div class="k">scan</div>
+      <div>
+        <h3>Bernoulli spatial scan</h3>
+        <p>Kulldorff's case/control scan statistic: the likelihood-ratio test, circular
+          candidate windows, Monte-Carlo inference, and parity with SaTScan.</p>
+      </div>
+    </a>
+  </div>
+
+  <h2><span class="n">01</span> reproducibility</h2>
+  <p>MESA treats reproducibility as a correctness property, not a nicety. The design rule
+    is stated plainly in the codebase: deterministic logic must be <b>bit-identical</b>
+    across operating systems, compilers, and core counts for the same input and seed.
+    "Bytes, not close."</p>
+  <p>The usual way Monte-Carlo inference silently breaks across platforms is the standard
+    library: <code>std::mt19937_64</code> is portable, but <code>std::shuffle</code> and
+    <code>std::uniform_int_distribution</code> are implemented differently by libstdc++,
+    libc++, and MSVC. MESA therefore never uses them for inference. It uses fully specified
+    primitives instead:</p>
+  <div class="vars">
+    <div class="v"><code>portableShuffle</code><span>a textbook Fisher-Yates (Durstenfeld) shuffle, identical on every platform</span></div>
+    <div class="v"><code>portableBoundedUint</code><span>unbiased bounded integer via OpenBSD rejection sampling, identical on every platform</span></div>
+    <div class="v"><code>block-Kahan sum</code><span>compensated summation over deterministically partitioned blocks, so results are identical from 1 core to 128</span></div>
+  </div>
+  <p>Thread-count invariance is proven in-tree across [1, 2, 4, 8, 16] threads at [999,
+    9999, 99999] permutations; a reference-vector test pins the RNG output and a proof test
+    hashes an entire permutation null distribution. Pure floating-point that is genuinely
+    order-dependent is compared with explicit tolerances, never exact equality.</p>
+
+  <h2><span class="n">02</span> how it is validated</h2>
+  <p>The statistical engine is checked against the field's reference implementations rather
+    than trusted on its own:</p>
+  <table class="data">
+    <tbody>
+      <tr><td class="v">PySAL esda</td><td>Gi* z-scores match <code>G_Local</code> within 1e-4; FDR-adjusted p-values within 1e-3; the Gi_Bin classification matches at the 90/95/99% levels wherever the neighbor graphs agree.<sup><a href="#r-pysal">7</a></sup></td></tr>
+      <tr><td class="v">R spdep</td><td>the multiple-testing correction matches <code>stats::p.adjust</code> to 1e-6; the empirical-Bayes smoother matches <code>spdep::EBest</code>.<sup><a href="#r-spdep">8</a></sup></td></tr>
+      <tr><td class="v">SaTScan 10.3.2</td><td>the Bernoulli scan matches candidate generation, tied-distance handling, relative risk, and Monte-Carlo inference, with no discrepancies observed on the tested datasets.</td></tr>
+      <tr><td class="v">SciPy &amp; R</td><td>an exact two-sample Kolmogorov-Smirnov test, used to compare permutation null distributions to the oracles, agrees with <code>scipy.stats.ks_2samp(mode='exact')</code> to 1.1e-16 and R <code>ks.test(exact=TRUE)</code> to 1.8e-15 over 10,010 stress datasets.</td></tr>
+    </tbody>
+  </table>
+  <p><b>Type-I calibration.</b> Under simulated complete spatial randomness, MESA verifies
+    that the empirical rejection rate tracks the nominal level (P(p&nbsp;≤&nbsp;0.05) ≈ 0.05,
+    and likewise at 0.01 and 0.001), asserted against 99.999% Wilson score intervals over
+    5,000 simulations per run (100,000 nightly). Method-specific power and equivalence
+    results are on each method's page.</p>
+
+  <h2><span class="n">03</span> citing MESA</h2>
+  <p>MESA is pre-release and does not yet have a versioned, archived release with a DOI.
+    Until it does, cite it as software:</p>
+  <div class="eq"><span class="lbl">provisional citation</span>MESA: offline address geocoding and spatial cluster detection
+for public health [computer software]. spatialepi.org. Retrieved 2026.</div>
+  <p>Please also cite the primary methods you rely on. The canonical references for each
+    are listed on the method pages and collected below.</p>
+
+  <h2><span class="n">§</span> references</h2>
+  <ol class="refs">
+    <li id="r-kahan">Kahan, W. (1965). Further remarks on reducing truncation errors. <i>Communications of the ACM</i>, 8(1), 40.</li>
+    <li id="r-durstenfeld">Durstenfeld, R. (1964). Algorithm 235: Random permutation. <i>Communications of the ACM</i>, 7(7), 420.</li>
+    <li id="r-dwass">Dwass, M. (1957). Modified randomization tests for nonparametric hypotheses. <i>Annals of Mathematical Statistics</i>, 28(1), 181-187.</li>
+    <li id="r-smirnov">Smirnov, N. (1948). Table for estimating the goodness of fit of empirical distributions. <i>Annals of Mathematical Statistics</i>, 19(2), 279-281.</li>
+    <li id="r-wilson">Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. <i>Journal of the American Statistical Association</i>, 22(158), 209-212.</li>
+    <li id="r-waller">Waller, L. A., &amp; Gotway, C. A. (2004). <i>Applied Spatial Statistics for Public Health Data</i>. Wiley.</li>
+    <li id="r-pysal">Rey, S. J., &amp; Anselin, L. (2007). PySAL: A Python library of spatial analytical methods. <i>The Review of Regional Studies</i>, 37(1), 5-27.</li>
+    <li id="r-spdep">Bivand, R. S., &amp; Wong, D. W. S. (2018). Comparing implementations of global and local indicators of spatial association. <i>TEST</i>, 27(3), 716-748.</li>
+    <li id="r-scipy">Virtanen, P., et&nbsp;al. (2020). SciPy 1.0: fundamental algorithms for scientific computing in Python. <i>Nature Methods</i>, 17, 261-272.</li>
+  </ol>
+
+  <div class="pager">
+    <span class="sp">&nbsp;</span>
+    <a href="methods-geocoding.html">geocoding →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fmark">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </span>
+    <span>offline geocoding and spatial analysis, built for the Southeast Utah Health Department.</span>
+    <span><a href="mailto:minorsecond@gmail.com">contact</a> &nbsp; spatialepi.org</span>
+  </div>
+</footer>
+
+</body>
+</html>

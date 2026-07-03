@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
+<title>Hot-spot statistics · MESA</title>
+<meta name="description" content="MESA's spatial autocorrelation methods: the Getis-Ord Gi* local statistic, global Moran's I, spatial weights, Monte-Carlo inference, the Gi_Bin classification, multiple-testing correction, and empirical-Bayes rate smoothing.">
+<meta name="theme-color" content="#0e141a">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mesa.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="MESA home">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </a>
+    <nav class="nav">
+      <a class="hideable" href="/#capabilities">capabilities</a>
+      <a class="hideable" href="/#workflow">workflow</a>
+      <a class="hideable" href="/#validation">validation</a>
+      <a class="hideable" href="/#download">download</a>
+      <a class="on" href="methods.html">methods</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap doc">
+  <div class="crumb"><a href="/">home</a> <span>/</span> <a href="methods.html">methods</a> <span>/</span> hot spots</div>
+  <h1>Getis-Ord Gi* &amp; Moran's I</h1>
+  <p class="sub">MESA detects where high or low values cluster using the Getis-Ord Gi*
+    local statistic, reports global Moran's I as a diagnostic, and controls false discovery
+    across the many local tests. Inference is by Monte-Carlo permutation and is
+    bit-reproducible across platforms.</p>
+
+  <div class="toc">
+    <div class="t">on this page</div>
+    <ol>
+      <li><span class="num">1</span><a href="#gistar">Getis-Ord Gi*</a></li>
+      <li><span class="num">2</span><a href="#weights">Spatial weights</a></li>
+      <li><span class="num">3</span><a href="#inference">Inference</a></li>
+      <li><span class="num">4</span><a href="#gibin">Gi_Bin classification</a></li>
+      <li><span class="num">5</span><a href="#moran">Global Moran's I</a></li>
+      <li><span class="num">6</span><a href="#fdr">Multiple testing</a></li>
+      <li><span class="num">7</span><a href="#eb">Empirical-Bayes smoothing</a></li>
+      <li><span class="num">8</span><a href="#edge">Numerics &amp; edge cases</a></li>
+      <li><span class="num">9</span><a href="#valid">Validation</a></li>
+    </ol>
+  </div>
+
+  <h2 id="gistar"><span class="n">01</span> the Gi* statistic</h2>
+  <p>The Getis-Ord Gi* statistic<sup><a href="#h-go92">1</a></sup><sup><a href="#h-og95">2</a></sup>
+    measures, for each location <code>i</code>, whether the values in its neighborhood sum to
+    more (a hot spot) or less (a cold spot) than you would expect if the values were
+    distributed at random. MESA computes the standardized form:</p>
+  <div class="eq"><span class="lbl">Getis-Ord Gi*</span>          Σⱼ wᵢⱼ xⱼ  −  X̄ Σⱼ wᵢⱼ
+  Gi* = ───────────────────────────────────────
+         S · √[ ( n Σⱼ wᵢⱼ² − (Σⱼ wᵢⱼ)² ) / (n−1) ]</div>
+  <div class="vars">
+    <div class="v"><code>wᵢⱼ</code><span>spatial weight between i and j</span></div>
+    <div class="v"><code>xⱼ</code><span>attribute value at location j</span></div>
+    <div class="v"><code>X̄, S</code><span>global mean and (population-form) standard deviation of x</span></div>
+    <div class="v"><code>n</code><span>number of features</span></div>
+  </div>
+  <p>The result is a z-score. Under the null of complete spatial randomness Gi* ~ N(0,1),
+    and a two-tailed p-value is <code>erfc(|z| / √2)</code>. Mean and variance use the
+    population form (divided by n) because the (n−1) correction already appears in the
+    denominator, and both are accumulated with Welford's numerically stable algorithm.</p>
+  <p><b>Gi* vs Gi.</b> By default the neighbor sum includes the focal location <code>i</code>
+    itself (its own weight <code>wᵢᵢ</code>), which is the standard Gi* used by ArcGIS and
+    most applied work. Excluding the focal point gives the original Gi statistic of Getis &amp;
+    Ord (1992), computed leave-one-out with (n−1)/(n−2) scaling to match PySAL
+    <code>G_Local(star=False)</code> and R <code>spdep::localG</code>.</p>
+
+  <h2 id="weights"><span class="n">02</span> spatial weights</h2>
+  <p>Neighbors are defined by one of two models (contiguity is planned but not yet in the
+    engine):</p>
+  <div class="vars">
+    <div class="v"><code>fixed distance</code><span>all features within a distance threshold are neighbors; symmetric, but can leave isolated features in sparse rural areas</span></div>
+    <div class="v"><code>k-nearest (k=8)</code><span>the k closest features; the graph is symmetrized by union (if A→B or B→A, both are neighbors), following the PySAL convention</span></div>
+  </div>
+  <p>Weights are then either binary (1 for a neighbor) or, by default, <b>row-standardized</b>
+    (<code>wᵢⱼ = 1/nᵢ</code>, so each feature's weights sum to 1 and Gi* becomes a weighted
+    average of neighbor values, the ArcGIS default). Distance is Euclidean for projected
+    coordinates or ellipsoidal geodesic on WGS84; MESA hard-rejects Euclidean distance on
+    unprojected geographic coordinates, which would otherwise introduce silent, large
+    distortion. Two documented presets bundle these choices: an ArcGIS-compatible preset
+    (fixed distance, row-standardized, Gi*) and an epidemiology preset (k-nearest with k=8,
+    binary weights, minimum neighbor and event counts).</p>
+
+  <h2 id="inference"><span class="n">03</span> inference</h2>
+  <p>MESA offers an analytical z-score (using the randomization-form variance) and, by
+    default, <b>Monte-Carlo permutation</b> inference. Permuting the observed values many
+    times and recomputing Gi* builds an empirical null against which the observed statistic
+    is judged, which avoids leaning on the normal approximation in the tails.</p>
+  <p>Two permutation schemes are available for the local statistic:</p>
+  <div class="vars">
+    <div class="v"><code>total</code><span>every value is shuffled across all locations (MESA's default)</span></div>
+    <div class="v"><code>conditional</code><span>the focal value xᵢ is held fixed and the other n−1 values are permuted (Anselin 1995; the LISA convention in PySAL)<sup><a href="#h-anselin">4</a></sup></span></div>
+  </div>
+  <p>The permutation seed is fixed and the reductions are order-independent, so a given
+    input and seed produce identical p-values on every platform and core count (see
+    <a class="x" href="methods.html#reproducibility">reproducibility</a>). A permutation count
+    of 999 is the documented recommendation; the analytical form is available as a fallback.</p>
+
+  <h2 id="gibin"><span class="n">04</span> the Gi_Bin classification</h2>
+  <p>MESA reduces each location's signed significance to a seven-class <code>Gi_Bin</code>,
+    the same scheme ArcGIS uses. When a multiple-testing correction is applied, the adjusted
+    p-value drives the classification.</p>
+  <table class="data">
+    <thead><tr><th>bin</th><th>class</th><th>rule</th></tr></thead>
+    <tbody>
+      <tr><td class="v">+3 / −3</td><td>hot / cold, 99%</td><td>p ≤ 0.01</td></tr>
+      <tr><td class="v">+2 / −2</td><td>hot / cold, 95%</td><td>p ≤ 0.05</td></tr>
+      <tr><td class="v">+1 / −1</td><td>hot / cold, 90%</td><td>p ≤ 0.10</td></tr>
+      <tr><td class="v">0</td><td>not significant</td><td>p &gt; 0.10</td></tr>
+    </tbody>
+  </table>
+  <p>The sign is the sign of the z-score: positive means local values are higher than
+    expected (hot), negative means lower (cold). A location with undefined statistics (NaN
+    z or p, from insufficient variance or no neighbors) is flagged as undefined rather than
+    forced into a class.</p>
+
+  <h2 id="moran"><span class="n">05</span> global Moran's I</h2>
+  <p>Global Moran's I<sup><a href="#h-moran">3</a></sup> summarizes autocorrelation across the
+    whole study area in a single number:</p>
+  <div class="eq"><span class="lbl">Moran's I</span>       n     Σᵢ Σⱼ wᵢⱼ (xᵢ − X̄)(xⱼ − X̄)
+  I = ───── · ─────────────────────────────
+      Σwᵢⱼ            Σᵢ (xᵢ − X̄)²</div>
+  <p>Its expectation under the null is <code>E[I] = −1/(n−1)</code>, so values above that
+    indicate positive autocorrelation (similar values cluster) and below it, negative. All
+    sums use Kahan compensated summation, and inference is by total-randomization permutation.</p>
+  <div class="note"><b>Diagnostic, not a gatekeeper.</b> MESA reports Moran's I as an
+    informational diagnostic. Significant global autocorrelation does not say <i>where</i>
+    clustering is, and its absence does not preclude meaningful local clusters. Use it to
+    characterize the surface, then use Gi* or the scan to locate clusters.</div>
+
+  <h2 id="fdr"><span class="n">06</span> multiple testing</h2>
+  <p>Computing a local test at every location means thousands of hypotheses, so raw p-values
+    overstate significance. By default MESA applies the Benjamini-Hochberg procedure<sup><a href="#h-bh">5</a></sup>
+    to control the false discovery rate, following its established use for local statistics
+    of spatial association<sup><a href="#h-castro">6</a></sup>.</p>
+  <div class="eq"><span class="lbl">Benjamini-Hochberg adjusted p</span>p̃₍ᵢ₎ = min( 1,  minⱼ≥ᵢ ( n/j · p₍ⱼ₎ ) )     over sorted p₍₁₎ ≤ … ≤ p₍ₙ₎</div>
+  <p>A Bonferroni option (<code>p̃ᵢ = min(1, n·pᵢ)</code>) is available for family-wise error
+    control when a conservative bound is wanted. The correction matches R
+    <code>stats::p.adjust</code> to 1e-6. Benjamini-Yekutieli is discussed in MESA's internal
+    methodology notes but is <b>not</b> implemented in the shipped engine, so it is not
+    offered here.</p>
+
+  <h2 id="eb"><span class="n">07</span> empirical-Bayes rate smoothing</h2>
+  <p>Rates computed from small denominators are unstable: one case in a village of thirty
+    reads as an enormous rate. For rate data MESA provides a global empirical-Bayes
+    smoother<sup><a href="#h-marshall">7</a></sup> (the estimator used by GeoDa and PySAL,
+    assuming a Poisson-Gamma prior<sup><a href="#h-ck">8</a></sup>), which shrinks each local
+    rate toward the global mean in proportion to how unstable it is:</p>
+  <div class="eq"><span class="lbl">shrinkage</span>smoothedᵢ = wᵢ · rᵢ + (1 − wᵢ) · m,     wᵢ = a / (a + b)
+  a = prior variance of the rates      b = m / populationᵢ      m = global rate</div>
+  <p>An area with a large population gets a weight near 1 (its own rate is trusted); a tiny
+    population gets a weight near 0 (it is pulled toward the global rate). The prior variance
+    is a population-weighted variance of the raw rates, matching R <code>spdep::EBest</code>.
+    Smoothing is applied to rate inputs; it is a rate-preparation step, not a change to the
+    Gi* or scan statistics themselves.</p>
+
+  <h2 id="edge"><span class="n">08</span> numerics &amp; edge cases</h2>
+  <p>The engine is written to fail gracefully and identically everywhere:</p>
+  <ul>
+    <li><b>Zero variance</b> (all values identical): returns z = 0, p = 1 with a warning,
+      rather than dividing by zero.</li>
+    <li><b>Isolated features</b> (no neighbors): z = 0, p = 1 with a warning.</li>
+    <li><b>Duplicate coordinates:</b> distances of exactly 0 are handled without singular
+      matrices.</li>
+    <li><b>NaN / infinite inputs</b> propagate under IEEE-754 and are classified as
+      undefined, not crashed on.</li>
+    <li><b>Empty datasets</b> return gracefully with a numerical-instability warning.</li>
+    <li><b>Thread-safe and re-entrant:</b> no global mutable state, and results are
+      bit-for-bit identical from 1 to 128 cores.</li>
+  </ul>
+
+  <h2 id="valid"><span class="n">09</span> validation</h2>
+  <p>The Gi* engine is cross-validated against PySAL <code>esda.G_Local</code>: z-scores
+    agree within 1e-4, FDR-adjusted p-values within 1e-3, and the Gi_Bin classification
+    matches at the 90/95/99% levels wherever the neighbor graphs agree. (Where they differ,
+    it is a documented tie-breaking difference: PySAL resolves exact distance ties by KD-tree
+    traversal order, which varies by architecture, while MESA breaks ties deterministically
+    by feature id.)</p>
+  <p><b>Type-I error.</b> Under simulated complete spatial randomness the empirical false-positive
+    rate tracks the nominal level (≈ 0.05 at α = 0.05, and likewise at 0.01 and 0.001),
+    asserted against 99.999% Wilson score intervals. <b>Power.</b> With a 3×3 hot spot injected
+    into a grid, the true-positive rate rises monotonically with effect size, exceeding 90%
+    at large effect sizes, while noise is correctly suppressed.</p>
+
+  <h2><span class="n">§</span> references</h2>
+  <ol class="refs">
+    <li id="h-go92">Getis, A., &amp; Ord, J. K. (1992). The analysis of spatial association by use of distance statistics. <i>Geographical Analysis</i>, 24(3), 189-206.</li>
+    <li id="h-og95">Ord, J. K., &amp; Getis, A. (1995). Local spatial autocorrelation statistics: distributional issues and an application. <i>Geographical Analysis</i>, 27(4), 286-306.</li>
+    <li id="h-moran">Moran, P. A. P. (1950). Notes on continuous stochastic phenomena. <i>Biometrika</i>, 37(1/2), 17-23.</li>
+    <li id="h-anselin">Anselin, L. (1995). Local indicators of spatial association (LISA). <i>Geographical Analysis</i>, 27(2), 93-115.</li>
+    <li id="h-bh">Benjamini, Y., &amp; Hochberg, Y. (1995). Controlling the false discovery rate: a practical and powerful approach to multiple testing. <i>Journal of the Royal Statistical Society: Series B</i>, 57(1), 289-300.</li>
+    <li id="h-castro">Caldas de Castro, M., &amp; Singer, B. H. (2006). Controlling the false discovery rate: a new application to account for multiple and dependent tests in local statistics of spatial association. <i>Geographical Analysis</i>, 38(2), 180-208.</li>
+    <li id="h-marshall">Marshall, R. J. (1991). Mapping disease and mortality rates using empirical Bayes estimators. <i>Journal of the Royal Statistical Society: Series C (Applied Statistics)</i>, 40(2), 283-294.</li>
+    <li id="h-ck">Clayton, D., &amp; Kaldor, J. (1987). Empirical Bayes estimates of age-standardized relative risks for use in disease mapping. <i>Biometrics</i>, 43(3), 671-681.</li>
+  </ol>
+
+  <div class="pager">
+    <a href="methods-geocoding.html">← geocoding</a>
+    <a href="methods-scan.html">Bernoulli scan →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fmark">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </span>
+    <span><a href="methods.html">methods</a> &nbsp; <a href="mailto:minorsecond@gmail.com">contact</a> &nbsp; spatialepi.org</span>
+  </div>
+</footer>
+
+</body>
+</html>

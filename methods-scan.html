@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
+<title>Bernoulli spatial scan · MESA</title>
+<meta name="description" content="MESA's Bernoulli spatial scan: Kulldorff's case/control scan statistic, the likelihood-ratio test, circular candidate windows, Monte-Carlo inference, and parity with SaTScan 10.3.2.">
+<meta name="theme-color" content="#0e141a">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mesa.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="MESA home">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </a>
+    <nav class="nav">
+      <a class="hideable" href="/#capabilities">capabilities</a>
+      <a class="hideable" href="/#workflow">workflow</a>
+      <a class="hideable" href="/#validation">validation</a>
+      <a class="hideable" href="/#download">download</a>
+      <a class="on" href="methods.html">methods</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap doc">
+  <div class="crumb"><a href="/">home</a> <span>/</span> <a href="methods.html">methods</a> <span>/</span> scan</div>
+  <h1>Bernoulli spatial scan</h1>
+  <p class="sub">The spatial scan statistic looks for a region where cases are unusually
+    concentrated relative to controls. MESA implements Kulldorff's Bernoulli (case/control)
+    model, scanning circular windows of growing size and testing each with a likelihood-ratio
+    statistic and Monte-Carlo inference.</p>
+
+  <div class="toc">
+    <div class="t">on this page</div>
+    <ol>
+      <li><span class="num">1</span><a href="#model">The case/control model</a></li>
+      <li><span class="num">2</span><a href="#llr">Likelihood-ratio statistic</a></li>
+      <li><span class="num">3</span><a href="#windows">Candidate windows</a></li>
+      <li><span class="num">4</span><a href="#mc">Monte-Carlo inference</a></li>
+      <li><span class="num">5</span><a href="#output">Cluster output</a></li>
+      <li><span class="num">6</span><a href="#satscan">SaTScan parity</a></li>
+    </ol>
+  </div>
+
+  <h2 id="model"><span class="n">01</span> the case/control model</h2>
+  <p>In the Bernoulli model<sup><a href="#s-k97">1</a></sup><sup><a href="#s-kn95">2</a></sup>
+    every location holds some number of cases and some number of controls (non-cases). There
+    is no external population denominator; cases are compared against controls. The scan asks:
+    is there a circular region where the case proportion inside is higher than outside by more
+    than chance would produce?</p>
+  <div class="note">MESA's scan is <b>one-sided</b>: it detects high-rate clusters (hot spots)
+    only. A window whose internal case rate is at or below the overall rate scores zero and is
+    never reported as a cluster.</div>
+
+  <h2 id="llr"><span class="n">02</span> the likelihood-ratio statistic</h2>
+  <p>Each candidate window is scored by the log of the likelihood ratio between a model where
+    the window has its own elevated rate and the null where the rate is uniform. For a window
+    containing <code>c</code> cases out of <code>n</code> people, in a study area of
+    <code>C</code> cases out of <code>N</code>:</p>
+  <div class="eq"><span class="lbl">Bernoulli log-likelihood ratio</span>LLR = c·log(c/n) + (n−c)·log((n−c)/n)
+    + (C−c)·log((C−c)/(N−n)) + ((N−n)−(C−c))·log(((N−n)−(C−c))/(N−n))
+    − [ C·log(C/N) + (N−C)·log((N−C)/N) ]         (only when c/n > C/N, else 0)</div>
+  <p>The window with the largest LLR over all candidates is the <b>most-likely cluster</b>.
+    MESA also reports the <b>relative risk</b>, the ratio of the case rate inside the window
+    to the case rate outside it, and the expected case count under the null,
+    <code>C · n/N</code>. Sums that could underflow use an <code>x·log(x)</code> helper that
+    is defined to be 0 at 0.</p>
+
+  <h2 id="windows"><span class="n">03</span> candidate windows</h2>
+  <p>Windows are circular and centered on each location. For a given center, the other
+    locations are sorted by distance and added one at a time, so every concentric circle from
+    the smallest to the largest allowed becomes a candidate window. A window stops growing
+    once its population exceeds the maximum cluster size.</p>
+  <div class="vars">
+    <div class="v"><code>max cluster size</code><span>a fraction of the total population, default <b>50%</b> (Kulldorff's recommended, SaTScan-compatible default); optionally an absolute population cap. Smaller caps (10%, 25%) favor tighter local clusters</span></div>
+    <div class="v"><code>tie-breaking</code><span>ties in distance are broken by coordinate (y then x), and all intermediate windows are evaluated, matching SaTScan exactly</span></div>
+  </div>
+
+  <h2 id="mc"><span class="n">04</span> Monte-Carlo inference</h2>
+  <p>Because the maximum LLR is taken over a very large number of overlapping windows, its
+    null distribution has no closed form. MESA obtains a p-value by simulation<sup><a href="#s-dwass">3</a></sup>:
+    it repeatedly reassigns the fixed total number of cases at random among all people
+    (conditioning on the total case count), recomputes the maximum LLR each time, and compares:</p>
+  <div class="eq"><span class="lbl">Monte-Carlo p-value</span>p = ( 1 + #{ maxLLR_perm ≥ maxLLR_obs } ) / ( 1 + replications )</div>
+  <p>The default is <b>999 replications</b>. Each replication draws cases without replacement
+    using Floyd's algorithm and MESA's portable bounded-integer primitive rather than the
+    standard library, so the whole simulation is bit-identical across platforms and core
+    counts (see <a class="x" href="methods.html#reproducibility">reproducibility</a>).
+    Secondary clusters are scored against the same null distribution of maximum LLRs, and by
+    default reported clusters may not share any location (the strictest, no-geographical-overlap
+    criterion).</p>
+
+  <h2 id="output"><span class="n">05</span> cluster output</h2>
+  <p>Each detected cluster reports:</p>
+  <div class="vars">
+    <div class="v"><code>center, radius</code><span>the projected center and display (WGS84) coordinate, and the distance to the farthest member</span></div>
+    <div class="v"><code>observed / expected</code><span>observed cases and cases expected under the null</span></div>
+    <div class="v"><code>relative risk</code><span>inside-vs-outside case-rate ratio</span></div>
+    <div class="v"><code>LLR, p-value</code><span>the test statistic and its Monte-Carlo p-value</span></div>
+    <div class="v"><code>rank</code><span>1 for the most-likely cluster, then secondaries by descending LLR</span></div>
+  </div>
+  <p>A post-hoc diagnostic flag may annotate a cluster, but it is computed after the scan and
+    never affects inference or which clusters are selected.</p>
+
+  <h2 id="satscan"><span class="n">06</span> parity with SaTScan</h2>
+  <p>MESA deliberately mirrors SaTScan's behavior<sup><a href="#s-satscan">4</a></sup> so results
+    are comparable and reproducible: candidate generation, tied-distance handling, relative-risk
+    calculation, and the Monte-Carlo inference all follow SaTScan's conventions. In MESA's
+    validation suite, the Bernoulli scan showed no discrepancies against <b>SaTScan 10.3.2</b>.</p>
+  <div class="note warn">This parity is <b>scoped</b>, not a universal guarantee: it means
+    no discrepancies were observed on the tested datasets against the pinned SaTScan version
+    (10.3.2), not that the two are provably identical for every possible input.</div>
+
+  <h2><span class="n">§</span> references</h2>
+  <ol class="refs">
+    <li id="s-k97">Kulldorff, M. (1997). A spatial scan statistic. <i>Communications in Statistics, Theory and Methods</i>, 26(6), 1481-1496.</li>
+    <li id="s-kn95">Kulldorff, M., &amp; Nagarwalla, N. (1995). Spatial disease clusters: detection and inference. <i>Statistics in Medicine</i>, 14(8), 799-810.</li>
+    <li id="s-dwass">Dwass, M. (1957). Modified randomization tests for nonparametric hypotheses. <i>Annals of Mathematical Statistics</i>, 28(1), 181-187.</li>
+    <li id="s-satscan">Kulldorff, M. <i>SaTScan: software for the spatial, temporal, and space-time scan statistics.</i> Version 10.3.2. <a href="https://www.satscan.org/">satscan.org</a></li>
+  </ol>
+
+  <div class="pager">
+    <a href="methods-hotspots.html">← Gi* &amp; Moran's I</a>
+    <a href="methods.html">methods →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fmark">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </span>
+    <span><a href="methods.html">methods</a> &nbsp; <a href="mailto:minorsecond@gmail.com">contact</a> &nbsp; spatialepi.org</span>
+  </div>
+</footer>
+
+</body>
+</html>

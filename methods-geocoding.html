@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
+<title>Geocoding methodology · MESA</title>
+<meta name="description" content="How MESA's offline geocoder works: address normalization, blocking, the address-geometry gate, a Fellegi-Sunter calibrated match score, precision tiers, and held-out validation on Utah UGRC data.">
+<meta name="theme-color" content="#0e141a">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mesa.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="MESA home">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </a>
+    <nav class="nav">
+      <a class="hideable" href="/#capabilities">capabilities</a>
+      <a class="hideable" href="/#workflow">workflow</a>
+      <a class="hideable" href="/#validation">validation</a>
+      <a class="hideable" href="/#download">download</a>
+      <a class="on" href="methods.html">methods</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap doc">
+  <div class="crumb"><a href="/">home</a> <span>/</span> <a href="methods.html">methods</a> <span>/</span> geocoding</div>
+  <h1>Offline address geocoding</h1>
+  <p class="sub">MESA attaches coordinates to addresses by matching them against a local
+    copy of authoritative address points, entirely in memory, with no network calls. The
+    matcher is deterministic (same input and reference produce the same output) and every
+    result is labeled with how precisely it was placed.</p>
+
+  <div class="toc">
+    <div class="t">on this page</div>
+    <ol>
+      <li><span class="num">1</span><a href="#data">Reference data</a></li>
+      <li><span class="num">2</span><a href="#norm">Normalization &amp; parsing</a></li>
+      <li><span class="num">3</span><a href="#cand">Candidate generation</a></li>
+      <li><span class="num">4</span><a href="#gate">The geometry gate</a></li>
+      <li><span class="num">5</span><a href="#score">Fellegi-Sunter scoring</a></li>
+      <li><span class="num">6</span><a href="#modes">Match modes</a></li>
+      <li><span class="num">7</span><a href="#precision">Precision tiers</a></li>
+      <li><span class="num">8</span><a href="#valid">Validation</a></li>
+    </ol>
+  </div>
+
+  <h2 id="data"><span class="n">01</span> reference data</h2>
+  <p>The geocoder reads one required layer and, optionally, two supplemental layers, each a
+    separate SQLite file that is loaded once into compact in-memory indexes. Nothing is
+    merged, and no web service is ever called. You supply the data; a bundled Python script
+    builds it from the authoritative source.</p>
+  <div class="vars">
+    <div class="v"><code>addresses</code><span>required. Authoritative address points (street, city, ZIP, lat, lon, optional grid/unit/landmark columns). All validation uses Utah's UGRC statewide points, 1,489,417 records.</span></div>
+    <div class="v"><code>road_segments</code><span>optional. Road centerlines with address ranges, consulted only after the point layer fails, to interpolate a block-level position.</span></div>
+    <div class="v"><code>address_points</code><span>optional local supplement, consulted first but only for exact ZIP+street matches; it never fuzzy-matches.</span></div>
+  </div>
+  <p>Coordinates must be WGS84 (EPSG:4326) decimal degrees. Provenance tables record the
+    dataset, build, and source licenses (for Utah: UGRC address points and roads, public
+    domain under Utah GRAMA / SGID).</p>
+
+  <h2 id="norm"><span class="n">02</span> normalization &amp; parsing</h2>
+  <p>The pipeline is Normalize → Parse → Retrieve → Score → Place. Normalization uppercases
+    text, strips punctuation, collapses whitespace, and canonicalizes standard abbreviations
+    (<code>AVENUE</code>&nbsp;→&nbsp;<code>AVE</code>) and compound directionals
+    (<code>NORTHEAST</code>&nbsp;→&nbsp;<code>NE</code>) before any lookup. Parsing splits the
+    address into house number, directional, street name, type, unit, city, state, and ZIP.
+    The canonical full address stays the primary match field; the parsed components are
+    structured inputs to scoring.</p>
+  <p>Several jurisdiction-specific normalizations matter for the rural western address
+    forms MESA targets:</p>
+  <ul>
+    <li><b>Grid-coordinate splitting.</b> A Utah grid address written without a space
+      (<code>300S 1600E</code>) is split to <code>300 S 1600 E</code>. Only a single
+      trailing directional letter is split, so ordinals like <code>1ST</code> /
+      <code>100TH</code> are left intact.</li>
+    <li><b>Decompounding.</b> A run-together street token is split into two attested corpus
+      tokens (<code>MILLCREEK</code>&nbsp;→&nbsp;<code>MILL CREEK</code>) only when both
+      halves are known and the compound is not, or when the spaced pair is attested in that
+      ZIP. Run-together PO boxes are handled the same way.</li>
+    <li><b>Highway alias.</b> A "Highway Drive" with no route number, in a ZIP served by
+      exactly one numbered highway, resolves to that highway.</li>
+    <li><b>Non-physical inputs.</b> PO boxes, HC/RR routes, and placeholders are classified
+      as not spatially locatable (following NG9-1-1 practice) rather than forced onto a
+      coordinate.</li>
+  </ul>
+  <p>A <code>ZIP+4</code> is accepted but only the first five digits are used.</p>
+
+  <h2 id="cand"><span class="n">03</span> candidate generation</h2>
+  <p>Candidates are retrieved through several <b>blocking channels</b> (sorted in-memory
+    lookup tables built once at load), keyed by ZIP, city, house+ZIP, house+city, and so on.
+    The shipped cascade is: exact hash lookup first; then, if needed, house-number-keyed
+    fuzzy buckets. Fuzzy matching is skipped entirely if a candidate set exceeds 500 records
+    (it would be both slow and low-precision), and exact string equality within the set is
+    always tried before any fuzzy comparison.</p>
+
+  <h2 id="gate"><span class="n">04</span> the address-geometry gate</h2>
+  <p>Before any fuzzy name comparison, a candidate must pass a <b>geometry-skeleton gate</b>:
+    the numeric and directional tokens of the address (its "skeleton") must agree. This is
+    the single most important guard against false matches.</p>
+  <ul>
+    <li>For pure-grid streets the whole skeleton must match exactly. This rejects adjacent
+      grid streets and quadrant transpositions such as <code>456 E 100 S</code> vs
+      <code>456 S 100 E</code>.</li>
+    <li>For named streets the numeric/grid tokens must match exactly, but one side may carry
+      an extra directional the other omits (<code>1100 W GORDON CREEK RD</code> vs
+      <code>1100 GORDON CREEK RD</code>), preserving token order; a conflicting quadrant is
+      still rejected.</li>
+  </ul>
+  <p>A name-token alignment check then requires every canonical street-name token to appear
+    in the query within a typo allowance, which tolerates trailing locality junk (like a
+    county name) while rejecting a fabricated street name grafted onto a real house and ZIP.</p>
+  <div class="note warn">The geometry gate is what makes the matcher safe to trust. In
+    validation it raised hard-negative specificity from <b>71.6% to 99.4%</b> on the
+    adversarial suite by requiring exact house / grid / directional agreement before any
+    fuzzy match is even considered.</div>
+
+  <h3>String similarity</h3>
+  <p>The live matcher uses two string metrics, both fully specified for reproducibility:</p>
+  <div class="vars">
+    <div class="v"><code>bounded Levenshtein</code><span>early-exit banded edit distance, used for token-level checks<sup><a href="#g-lev">4</a></sup></span></div>
+    <div class="v"><code>OSA distance</code><span>optimal string alignment (transposition-aware Damerau-Levenshtein); a swap of two adjacent characters is a single edit, which matches how real address typos and OCR errors behave<sup><a href="#g-dam">3</a></sup></span></div>
+  </div>
+  <div class="note">For faithfulness: Jaro-Winkler, Double Metaphone, and token-set matching
+    are <b>not</b> in the shipped scoring path. They were used only as offline forensic
+    tools to characterize why the unmatched residual is unmatched, and are documented here
+    so the record is accurate.</div>
+
+  <h2 id="score"><span class="n">05</span> the match score</h2>
+  <p>Surviving candidates are ranked by a <b>Fellegi-Sunter</b> record-linkage score<sup><a href="#g-fs">1</a></sup>:
+    a sum of per-field log-odds weights. Each weight is <code>log2(m/u)</code> in bits, where
+    <code>m</code> is the probability a true match agrees on a field (taken as 0.97 under
+    realistic input noise) and <code>u</code> is the probability two records agree by chance,
+    measured from random same-ZIP address pairs in the Utah corpus.</p>
+  <div class="eq"><span class="lbl">measured field weights (bits)</span>house number   +5.88      suffix   +2.93
+directional    +1.92      grid     +1.51</div>
+  <p>A field's weight is added on agreement and subtracted on disagreement (a suffix
+    mismatch is penalized more softly, at half weight). The street name contributes a
+    <b>rarity × similarity</b> term: each name token is weighted by how rare it is in the
+    corpus (its inverse document frequency) and scaled by <code>2·similarity − 1</code>,
+    where similarity is <code>1 − OSA / max(len)</code>. So an exact token earns its full
+    (rarity-weighted) positive weight, a half-corrupted one earns roughly zero, and a
+    genuinely different name earns a negative weight. This is what lets the score separate a
+    real typo from a fabricated name dropped onto a real block. ZIP and city agreement are
+    weak nudges, since candidates are already ZIP/city-scoped.</p>
+  <p>The total log-odds is mapped to a 0-1 <b>certainty</b> by a Platt sigmoid<sup><a href="#g-platt">2</a></sup>,
+    fit by logistic regression on the development split only:</p>
+  <div class="eq"><span class="lbl">Platt calibration</span>certainty = 1 / (1 + exp(-(2.875 + 0.1048 · logOdds)))</div>
+  <p>An ambiguity guard withholds a point (degrading it to a centroid) when a
+    <i>different-ZIP</i> record sharing the query's house number scores within a small
+    log-odds margin of the winner; same-ZIP rivals are treated as data duplicates, not
+    ambiguity.</p>
+  <div class="note warn"><b>Certainty is not accuracy.</b> Certainty is a Platt-scaled
+    pseudo-confidence in the text match; it is explicitly <i>not</i> a calibrated probability
+    that the coordinate is correct. A ZIP centroid can carry high certainty (the ZIP was
+    unambiguous) yet coarse precision. For any analysis that needs point-level accuracy,
+    filter on the precision tier, not on certainty.</div>
+
+  <h2 id="modes"><span class="n">06</span> match modes</h2>
+  <p>A match whose certainty is below the active mode's threshold is degraded to an
+    <code>APPROXIMATE</code> centroid rather than emitted as a possibly-wrong point. The mode
+    changes only this threshold, not the scoring.</p>
+  <table class="data">
+    <thead><tr><th>mode</th><th>threshold</th><th>use</th></tr></thead>
+    <tbody>
+      <tr><td class="v">Permissive</td><td>0.00</td><td>emit every point match; maximize yield, review downstream</td></tr>
+      <tr><td class="v">Balanced</td><td>0.90</td><td><b>default.</b> Calibrated, but effectively non-withholding, so real-world point yield is preserved</td></tr>
+      <tr><td class="v">Strict</td><td>0.98</td><td>withhold low-confidence points; maximize precision, accept lower yield</td></tr>
+    </tbody>
+  </table>
+  <p>Balanced is the default for an evidence-based reason. On the held-out <i>synthetic</i>
+    test set, Strict looked nearly free; but on the real patient sample it cut point yield
+    from 62% to 50%, because real patient-entered addresses score lower than synthetic
+    positives and a threshold tuned on synthetic data does not transfer. Balanced keeps the
+    calibrated score without paying that yield cost.</p>
+
+  <h2 id="precision"><span class="n">07</span> precision tiers</h2>
+  <p>Every geocoded row carries a <code>Geocode_Precision</code> label. Read it first; it,
+    not the certainty score, tells you whether a coordinate is a real location.</p>
+  <table class="data">
+    <thead><tr><th>tier</th><th>meaning</th><th>positional error</th></tr></thead>
+    <tbody>
+      <tr><td class="v">POINT</td><td>matched an authoritative address point</td><td>median 0 m, P95 28.4 m</td></tr>
+      <tr><td class="v">INTERPOLATED</td><td>estimated between known house numbers, or along a road centerline whose range brackets the house</td><td>median 9 m, P95 85 m (96% &lt; 100 m)</td></tr>
+      <tr><td class="v">RELOCATED</td><td>unique street+house recovered in a neighbouring ZIP (a ZIP/city typo), gated by proximity</td><td>address-level</td></tr>
+      <tr><td class="v">LANDMARK</td><td>the "street" was a named place found in the stated ZIP</td><td>approximate</td></tr>
+      <tr><td class="v">APPROXIMATE</td><td>no street match; a ZIP, city, or ZIP+city centroid</td><td>locality only</td></tr>
+      <tr><td class="v">VERY_LOW</td><td>last-resort whole-database centroid</td><td>do not map as a location</td></tr>
+      <tr><td class="v">NONE</td><td>could not be placed; coordinates blank</td><td>n/a</td></tr>
+    </tbody>
+  </table>
+  <p>MESA also emits a derived analytic-support class (address_point, interpolated_street,
+    zip_centroid, and so on) and a plain-language description, computed deterministically
+    from the precision and method so downstream analysis can filter to the tier it needs.</p>
+
+  <h2 id="valid"><span class="n">08</span> validation</h2>
+  <p>Accuracy is measured by an adversarial harness whose ground truth is <b>positional</b>
+    (haversine distance to each row's true coordinate, tolerance 50 m), not string identity.
+    Its noise generators deliberately corrupt the exact tokens the production gate guards
+    (house numbers, directionals, grid ordinals), and its negative controls are built by
+    mechanisms the gate was not tuned on (directional swaps to real adjacent locations,
+    transposed grid ordinals, house numbers lifted from distant real addresses, phonetic
+    fake streets, cross-county ZIP splices).</p>
+  <p>Evaluated queries are split into disjoint development and test partitions by a stable
+    hash of the address id; the reference database is always the full corpus. Calibration
+    constants and thresholds were fit on development only, and confidence intervals come
+    from a county-stratified bootstrap of at least 10,000 resamples. Changes that improved
+    only the synthetic harness, or one metric at another's significant expense, were rejected.</p>
+  <table class="data">
+    <thead><tr><th>metric (held-out test, Balanced)</th><th>estimate</th><th>99% CI</th></tr></thead>
+    <tbody>
+      <tr><td>sensitivity</td><td class="v">92.7%</td><td>[92.3, 93.1]</td></tr>
+      <tr><td>specificity</td><td class="v">98.2%</td><td>[97.9, 98.4]</td></tr>
+      <tr><td>precision (PPV)</td><td class="v">95.7%</td><td>[95.4, 96.0]</td></tr>
+      <tr><td>accuracy</td><td class="v">94.9%</td><td>[94.6, 95.1]</td></tr>
+      <tr><td>POINT positional error, median</td><td class="v">0 m</td><td>[0.0, 0.0]</td></tr>
+    </tbody>
+  </table>
+  <p>On a real patient (SEUHD) sample, roughly 84% of addresses resolve to an exact point
+    and about 90% to a point or interpolated position, with complete coordinate coverage
+    (the remainder receive labeled centroids). A forensic pass showed the unmatched residual
+    is not addresses the matcher is failing but non-standard grid addressing, naming-convention
+    mismatches, and house numbers genuinely absent from the reference; spot-checked gaps are
+    absent from both UGRC and OpenStreetMap. The ~90% blended yield is therefore at the
+    authoritative-data ceiling for this input, and closing it further is a data-acquisition
+    question, not a matching one.</p>
+  <div class="note warn">Every figure here is <b>internal validation on the Utah UGRC
+    reference only.</b> Accuracy must be revalidated against ground truth for any other
+    jurisdiction's address data before it can be assumed to transfer.</div>
+
+  <h2><span class="n">§</span> references</h2>
+  <ol class="refs">
+    <li id="g-fs">Fellegi, I. P., &amp; Sunter, A. B. (1969). A theory for record linkage. <i>Journal of the American Statistical Association</i>, 64(328), 1183-1210.</li>
+    <li id="g-platt">Platt, J. C. (1999). Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. In <i>Advances in Large Margin Classifiers</i> (pp. 61-74). MIT Press.</li>
+    <li id="g-dam">Damerau, F. J. (1964). A technique for computer detection and correction of spelling errors. <i>Communications of the ACM</i>, 7(3), 171-176.</li>
+    <li id="g-lev">Levenshtein, V. I. (1966). Binary codes capable of correcting deletions, insertions, and reversals. <i>Soviet Physics Doklady</i>, 10(8), 707-710.</li>
+    <li>Goldberg, D. W., Wilson, J. P., &amp; Knoblock, C. A. (2007). From text to geographic coordinates: the current state of geocoding. <i>URISA Journal</i>, 19(1), 33-46.</li>
+    <li>Zandbergen, P. A. (2008). A comparison of address point, parcel and street geocoding techniques. <i>Computers, Environment and Urban Systems</i>, 32(3), 214-232.</li>
+    <li>United States Postal Service. <i>Publication 28: Postal Addressing Standards.</i></li>
+    <li>Utah Geospatial Resource Center (UGRC). <i>Utah Statewide Address Points</i>, Utah SGID. <a href="https://gis.utah.gov/">gis.utah.gov</a></li>
+  </ol>
+
+  <div class="pager">
+    <a href="methods.html">← methods</a>
+    <a href="methods-hotspots.html">Gi* &amp; Moran's I →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fmark">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
+        <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
+        <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
+        <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
+        <circle cx="16" cy="13.2" r="2.3" fill="#C8402F"/>
+      </svg>
+      <b>MESA</b>
+    </span>
+    <span><a href="methods.html">methods</a> &nbsp; <a href="mailto:minorsecond@gmail.com">contact</a> &nbsp; spatialepi.org</span>
+  </div>
+</footer>
+
+</body>
+</html>
