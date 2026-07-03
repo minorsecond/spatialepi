@@ -12,6 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mesa.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});});</script>
 </head>
 <body>
 
@@ -72,9 +76,7 @@
     the window has its own elevated rate and the null where the rate is uniform. For a window
     containing <code>c</code> cases out of <code>n</code> people, in a study area of
     <code>C</code> cases out of <code>N</code>:</p>
-  <div class="eq"><span class="lbl">Bernoulli log-likelihood ratio</span>LLR = c·log(c/n) + (n−c)·log((n−c)/n)
-    + (C−c)·log((C−c)/(N−n)) + ((N−n)−(C−c))·log(((N−n)−(C−c))/(N−n))
-    − [ C·log(C/N) + (N−C)·log((N−C)/N) ]         (only when c/n > C/N, else 0)</div>
+  <div class="eq math"><span class="lbl">Bernoulli log-likelihood ratio</span>\[ \begin{aligned} \mathrm{LLR} = {}& c\log\tfrac{c}{n} + (n-c)\log\tfrac{n-c}{n} \\ &+ (C-c)\log\tfrac{C-c}{N-n} + \big((N-n)-(C-c)\big)\log\tfrac{(N-n)-(C-c)}{N-n} \\ &- \Big[\, C\log\tfrac{C}{N} + (N-C)\log\tfrac{N-C}{N} \,\Big] \end{aligned} \]</div>
   <p>The window with the largest LLR over all candidates is the <b>most-likely cluster</b>.
     MESA also reports the <b>relative risk</b>, the ratio of the case rate inside the window
     to the case rate outside it, and the expected case count under the null,
@@ -96,7 +98,7 @@
     null distribution has no closed form. MESA obtains a p-value by simulation<sup><a href="#s-dwass">3</a></sup>:
     it repeatedly reassigns the fixed total number of cases at random among all people
     (conditioning on the total case count), recomputes the maximum LLR each time, and compares:</p>
-  <div class="eq"><span class="lbl">Monte-Carlo p-value</span>p = ( 1 + #{ maxLLR_perm ≥ maxLLR_obs } ) / ( 1 + replications )</div>
+  <div class="eq math"><span class="lbl">Monte-Carlo p-value</span>\[ p = \frac{1 + \#\{\, \mathrm{maxLLR}_{\text{perm}} \ge \mathrm{maxLLR}_{\text{obs}} \,\}}{1 + \text{replications}} \]</div>
   <p>The default is <b>999 replications</b>. Each replication draws cases without replacement
     using Floyd's algorithm and MESA's portable bounded-integer primitive rather than the
     standard library, so the whole simulation is bit-identical across platforms and core

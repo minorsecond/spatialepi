@@ -12,6 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mesa.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});});</script>
 </head>
 <body>
 
@@ -65,9 +69,7 @@
     measures, for each location <code>i</code>, whether the values in its neighborhood sum to
     more (a hot spot) or less (a cold spot) than you would expect if the values were
     distributed at random. MESA computes the standardized form:</p>
-  <div class="eq"><span class="lbl">Getis-Ord Gi*</span>          Σⱼ wᵢⱼ xⱼ  −  X̄ Σⱼ wᵢⱼ
-  Gi* = ───────────────────────────────────────
-         S · √[ ( n Σⱼ wᵢⱼ² − (Σⱼ wᵢⱼ)² ) / (n−1) ]</div>
+  <div class="eq math"><span class="lbl">Getis-Ord Gi*</span>\[ G_i^{*} = \frac{\sum_j w_{ij}\,x_j - \bar{X}\sum_j w_{ij}}{S\,\sqrt{\dfrac{n\sum_j w_{ij}^{2} - \left(\sum_j w_{ij}\right)^{2}}{n-1}}} \]</div>
   <div class="vars">
     <div class="v"><code>wᵢⱼ</code><span>spatial weight between i and j</span></div>
     <div class="v"><code>xⱼ</code><span>attribute value at location j</span></div>
@@ -136,9 +138,7 @@
   <h2 id="moran"><span class="n">05</span> global Moran's I</h2>
   <p>Global Moran's I<sup><a href="#h-moran">3</a></sup> summarizes autocorrelation across the
     whole study area in a single number:</p>
-  <div class="eq"><span class="lbl">Moran's I</span>       n     Σᵢ Σⱼ wᵢⱼ (xᵢ − X̄)(xⱼ − X̄)
-  I = ───── · ─────────────────────────────
-      Σwᵢⱼ            Σᵢ (xᵢ − X̄)²</div>
+  <div class="eq math"><span class="lbl">Moran's I</span>\[ I = \frac{n}{\sum_{ij} w_{ij}} \cdot \frac{\sum_i \sum_j w_{ij}\,(x_i - \bar{X})(x_j - \bar{X})}{\sum_i (x_i - \bar{X})^{2}} \]</div>
   <p>Its expectation under the null is <code>E[I] = −1/(n−1)</code>, so values above that
     indicate positive autocorrelation (similar values cluster) and below it, negative. All
     sums use Kahan compensated summation, and inference is by total-randomization permutation.</p>
@@ -152,7 +152,7 @@
     overstate significance. By default MESA applies the Benjamini-Hochberg procedure<sup><a href="#h-bh">5</a></sup>
     to control the false discovery rate, following its established use for local statistics
     of spatial association<sup><a href="#h-castro">6</a></sup>.</p>
-  <div class="eq"><span class="lbl">Benjamini-Hochberg adjusted p</span>p̃₍ᵢ₎ = min( 1,  minⱼ≥ᵢ ( n/j · p₍ⱼ₎ ) )     over sorted p₍₁₎ ≤ … ≤ p₍ₙ₎</div>
+  <div class="eq math"><span class="lbl">Benjamini-Hochberg adjusted p</span>\[ \tilde{p}_{(i)} = \min\!\left( 1,\ \min_{j \ge i} \frac{n}{j}\, p_{(j)} \right), \qquad p_{(1)} \le \cdots \le p_{(n)} \]</div>
   <p>A Bonferroni option (<code>p̃ᵢ = min(1, n·pᵢ)</code>) is available for family-wise error
     control when a conservative bound is wanted. The correction matches R
     <code>stats::p.adjust</code> to 1e-6. Benjamini-Yekutieli is discussed in MESA's internal
@@ -165,8 +165,7 @@
     smoother<sup><a href="#h-marshall">7</a></sup> (the estimator used by GeoDa and PySAL,
     assuming a Poisson-Gamma prior<sup><a href="#h-ck">8</a></sup>), which shrinks each local
     rate toward the global mean in proportion to how unstable it is:</p>
-  <div class="eq"><span class="lbl">shrinkage</span>smoothedᵢ = wᵢ · rᵢ + (1 − wᵢ) · m,     wᵢ = a / (a + b)
-  a = prior variance of the rates      b = m / populationᵢ      m = global rate</div>
+  <div class="eq math"><span class="lbl">shrinkage</span>\[ \begin{gathered} \text{smoothed}_i = w_i\,r_i + (1 - w_i)\,m, \qquad w_i = \frac{a}{a+b} \\ a = \text{prior variance of the rates}, \quad b = m / \text{population}_i, \quad m = \text{global rate} \end{gathered} \]</div>
   <p>An area with a large population gets a weight near 1 (its own rate is trusted); a tiny
     population gets a weight near 0 (it is pulled toward the global rate). The prior variance
     is a population-weighted variance of the raw rates, matching R <code>spdep::EBest</code>.

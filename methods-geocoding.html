@@ -12,6 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mesa.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});});</script>
 </head>
 <body>
 
@@ -145,8 +149,7 @@
     <code>m</code> is the probability a true match agrees on a field (taken as 0.97 under
     realistic input noise) and <code>u</code> is the probability two records agree by chance,
     measured from random same-ZIP address pairs in the Utah corpus.</p>
-  <div class="eq"><span class="lbl">measured field weights (bits)</span>house number   +5.88      suffix   +2.93
-directional    +1.92      grid     +1.51</div>
+  <div class="eq math"><span class="lbl">measured field weights (bits)</span>\[ \begin{array}{lrlr} \text{house number} & +5.88 & \quad\text{suffix} & +2.93 \\ \text{directional} & +1.92 & \quad\text{grid} & +1.51 \end{array} \]</div>
   <p>A field's weight is added on agreement and subtracted on disagreement (a suffix
     mismatch is penalized more softly, at half weight). The street name contributes a
     <b>rarity × similarity</b> term: each name token is weighted by how rare it is in the
@@ -158,7 +161,7 @@ directional    +1.92      grid     +1.51</div>
     weak nudges, since candidates are already ZIP/city-scoped.</p>
   <p>The total log-odds is mapped to a 0-1 <b>certainty</b> by a Platt sigmoid<sup><a href="#g-platt">2</a></sup>,
     fit by logistic regression on the development split only:</p>
-  <div class="eq"><span class="lbl">Platt calibration</span>certainty = 1 / (1 + exp(-(2.875 + 0.1048 · logOdds)))</div>
+  <div class="eq math"><span class="lbl">Platt calibration</span>\[ \text{certainty} = \frac{1}{1 + \exp\!\big(-(2.875 + 0.1048 \cdot \text{logOdds})\big)} \]</div>
   <p>An ambiguity guard withholds a point (degrading it to a centroid) when a
     <i>different-ZIP</i> record sharing the query's house number scores within a small
     log-odds margin of the winner; same-ZIP rivals are treated as data duplicates, not
