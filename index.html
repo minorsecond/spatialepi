@@ -116,6 +116,8 @@
     text-transform:uppercase;color:var(--hot);margin-bottom:14px}
   .cap h3{font-size:1.28rem;margin-bottom:10px}
   .cap p{color:var(--muted);font-size:.97rem;max-width:44ch}
+  .cap.wide{grid-column:1/-1}
+  .cap.wide p{max-width:68ch}
 
   /* ---- how it works ---- */
   .flow{border-bottom:1px solid var(--line)}
@@ -315,8 +317,9 @@
       <div class="cap">
         <div class="label">Geocode</div>
         <h3>Addresses, offline</h3>
-        <p>Matches against a local copy of Utah's authoritative address points (UGRC)
-          stored in SQLite, with optional supplemental files for extra coverage.</p>
+        <p>You supply the authoritative address data, Utah's UGRC points or your own
+          locality's, and a bundled tool builds it into a local SQLite index the
+          geocoder matches against. Optional supplemental files add coverage.</p>
       </div>
       <div class="cap">
         <div class="label">Analyze</div>
@@ -336,6 +339,14 @@
         <h3>PHI stays yours</h3>
         <p>No telemetry and no outbound connections during analysis. Protected health
           information never touches a server you don't control.</p>
+      </div>
+      <div class="cap wide">
+        <div class="label">Serve</div>
+        <h3>A geocoder for ArcGIS Pro</h3>
+        <p>MESA can expose the same offline geocoder as a local ArcGIS GeocodeServer
+          endpoint. Point ArcGIS Pro straight at the URL and batch-geocode your tables
+          against the address data you've loaded, with no ArcGIS Enterprise and no
+          tokens. It binds to localhost by default, so requests never leave the machine.</p>
       </div>
     </div>
   </div>
@@ -358,9 +369,9 @@
       <div class="step">
         <span class="no">Step 02</span>
         <h3>Geocode offline</h3>
-        <p>Map the address column and match every row against a local copy of Utah's
-          authoritative points. Each result carries a precision label.</p>
-        <span class="tk">1,489,417 local points</span>
+        <p>Map the address column and match every row against the authoritative address
+          data you've loaded. Each result carries a precision label.</p>
+        <span class="tk">authoritative data you supply</span>
       </div>
       <div class="step">
         <span class="no">Step 03</span>
@@ -416,7 +427,7 @@
     <div class="stats">
       <div class="stat">
         <div class="num">1,489,417</div>
-        <div class="lbl">authoritative UGRC address points, matched entirely offline</div>
+        <div class="lbl">Utah UGRC address points the geocoder was validated against, matched entirely offline</div>
       </div>
       <div class="stat">
         <div class="num">PySAL · R/spdep</div>
