@@ -327,7 +327,7 @@
     </ol>
     <div class="tiers">
       <div class="cap-line">Every coordinate is labeled, because <em>certainty is not accuracy</em>.</div>
-      <div class="t t1"><b>point</b><span>matched to a real address point, 0 m median error</span></div>
+      <div class="t t1"><b>point</b><span>matched to the exact authoritative address point</span></div>
       <div class="t t2"><b>interpolated</b><span>estimated along a street, block-level</span></div>
       <div class="t t3"><b>centroid</b><span>ZIP or city placeholder, locality only</span></div>
     </div>
@@ -364,17 +364,19 @@
         <tr><td class="v">bit-identical</td><td class="note">the same p-values on Windows, macOS, and Linux, from one core or a hundred</td></tr>
       </tbody>
     </table>
-    <div class="subhead">measured accuracy</div>
+    <div class="subhead">geocoder accuracy (held-out validation)</div>
     <table class="data">
       <tbody>
-        <tr><td class="v">0 m</td><td class="note">median location error for matched address points, with a 95th-percentile error of 28.4 m</td></tr>
-        <tr><td class="v">~90%</td><td class="note">of real SEUHD patient addresses resolve to a rooftop or street point, the rest to labeled centroids</td></tr>
-        <tr><td class="v">92.7%</td><td class="note">sensitivity on the held-out reference test set (99% CI 92.3 to 93.1)</td></tr>
-        <tr><td class="v">95.7%</td><td class="note">precision on the same held-out set, at 98.2% specificity</td></tr>
+        <tr><td class="v">92.7%</td><td class="note">sensitivity: correct reference points recovered under adversarial input noise, on a held-out test partition (99% CI 92.3 to 93.1)</td></tr>
+        <tr><td class="v">95.7%</td><td class="note">precision (positive predictive value) on the same held-out partition</td></tr>
+        <tr><td class="v">98.2%</td><td class="note">specificity: fabricated or out-of-reference addresses correctly rejected instead of snapped to a point</td></tr>
       </tbody>
     </table>
-    <p class="fine">Measured on an adversarial held-out test partition against positional
-      ground truth, not a synthetic self-benchmark. Cross-validation re-runs in CI against
+    <p class="fine">Measured on a held-out, adversarial partition of the Utah UGRC reference
+      (the study area used for testing), with fabricated negative controls and
+      county-stratified bootstrap intervals; not a synthetic self-benchmark. The geocoder
+      works against whatever authoritative data you load, so these figures must be
+      revalidated per jurisdiction. Spatial-statistics cross-validation re-runs in CI against
       regenerated PySAL, R, and SciPy oracles.</p>
     <p class="fine">Full methodology, parameters, and citations:
       <a href="methods-geocoding.html" style="color:var(--accent);border-bottom:1px solid var(--line-2)">geocoding</a>,
@@ -433,7 +435,7 @@
       </svg>
       <b>MESA</b>
     </span>
-    <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate, for the Southeast Utah Health Department.</span>
+    <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate.</span>
     <span><a href="mailto:ross@rwardrup.com">contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>

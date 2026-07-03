@@ -194,9 +194,9 @@
   <p>Every geocoded row carries a <code>Geocode_Precision</code> label. Read it first; it,
     not the certainty score, tells you whether a coordinate is a real location.</p>
   <table class="data">
-    <thead><tr><th>tier</th><th>meaning</th><th>positional error</th></tr></thead>
+    <thead><tr><th>tier</th><th>meaning</th><th>position</th></tr></thead>
     <tbody>
-      <tr><td class="v">POINT</td><td>matched an authoritative address point</td><td>median 0 m, P95 28.4 m</td></tr>
+      <tr><td class="v">POINT</td><td>matched an authoritative address point</td><td>the reference coordinate itself</td></tr>
       <tr><td class="v">INTERPOLATED</td><td>estimated between known house numbers, or along a road centerline whose range brackets the house</td><td>median 9 m, P95 85 m (96% &lt; 100 m)</td></tr>
       <tr><td class="v">RELOCATED</td><td>unique street+house recovered in a neighbouring ZIP (a ZIP/city typo), gated by proximity</td><td>address-level</td></tr>
       <tr><td class="v">LANDMARK</td><td>the "street" was a named place found in the stated ZIP</td><td>approximate</td></tr>
@@ -210,13 +210,16 @@
     from the precision and method so downstream analysis can filter to the tier it needs.</p>
 
   <h2 id="valid"><span class="n">08</span> validation</h2>
-  <p>Accuracy is measured by an adversarial harness whose ground truth is <b>positional</b>
-    (haversine distance to each row's true coordinate, tolerance 50 m), not string identity.
-    Its noise generators deliberately corrupt the exact tokens the production gate guards
-    (house numbers, directionals, grid ordinals), and its negative controls are built by
+  <p>Accuracy here means <b>recovery of the correct reference record</b> under noisy input,
+    not independent real-world coordinate accuracy (which these figures do not measure). A
+    query counts as a success only if it resolves to within 50 m of the correct record's
+    coordinate, so snapping to a different nearby record is scored a miss. The noise
+    generators deliberately corrupt the exact tokens the production gate guards (house
+    numbers, directionals, grid ordinals), and the negative controls are fabricated by
     mechanisms the gate was not tuned on (directional swaps to real adjacent locations,
     transposed grid ordinals, house numbers lifted from distant real addresses, phonetic
-    fake streets, cross-county ZIP splices).</p>
+    fake streets, cross-county ZIP splices), so a high specificity means plausible fakes are
+    rejected rather than forced onto a point.</p>
   <p>Evaluated queries are split into disjoint development and test partitions by a stable
     hash of the address id; the reference database is always the full corpus. Calibration
     constants and thresholds were fit on development only, and confidence intervals come
@@ -229,20 +232,24 @@
       <tr><td>specificity</td><td class="v">98.2%</td><td>[97.9, 98.4]</td></tr>
       <tr><td>precision (PPV)</td><td class="v">95.7%</td><td>[95.4, 96.0]</td></tr>
       <tr><td>accuracy</td><td class="v">94.9%</td><td>[94.6, 95.1]</td></tr>
-      <tr><td>POINT positional error, median</td><td class="v">0 m</td><td>[0.0, 0.0]</td></tr>
     </tbody>
   </table>
-  <p>On a real patient (SEUHD) sample, roughly 84% of addresses resolve to an exact point
-    and about 90% to a point or interpolated position, with complete coordinate coverage
-    (the remainder receive labeled centroids). A forensic pass showed the unmatched residual
-    is not addresses the matcher is failing but non-standard grid addressing, naming-convention
-    mismatches, and house numbers genuinely absent from the reference; spot-checked gaps are
-    absent from both UGRC and OpenStreetMap. The ~90% blended yield is therefore at the
-    authoritative-data ceiling for this input, and closing it further is a data-acquisition
-    question, not a matching one.</p>
-  <div class="note warn">Every figure here is <b>internal validation on the Utah UGRC
-    reference only.</b> Accuracy must be revalidated against ground truth for any other
-    jurisdiction's address data before it can be assumed to transfer.</div>
+  <p>There is deliberately no "positional error" headline: because the reference coordinate
+    is both what the matcher returns and what it is scored against, a correct match is 0 m by
+    construction, so that number would restate precision rather than measure independent
+    accuracy. The honest measures are the recovery and rejection rates above.</p>
+  <p>On real free-text input (rather than the clean reference), some addresses fall back to
+    labeled centroids. A forensic review of that residual found it dominated not by matcher
+    failures but by addresses genuinely absent from the reference data: non-standard grid and
+    rural addressing, naming-convention mismatches, and house numbers outside any reference
+    range. Spot-checked cases were absent from both UGRC and OpenStreetMap. The residual is
+    therefore an authoritative-data-coverage limit, not a matching one, and it moves with the
+    completeness of whatever address data you load.</p>
+  <div class="note warn">These figures are <b>internal validation against the Utah UGRC
+    reference</b>, the study area used for testing. The geocoder works with whatever
+    authoritative address data you supply; its accuracy must be revalidated for any other
+    jurisdiction's data before it can be assumed to transfer, and real-world coordinate
+    accuracy against an independent gold standard has not been measured.</div>
 
   <h2><span class="n">§</span> references</h2>
   <ol class="refs">
