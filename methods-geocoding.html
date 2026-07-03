@@ -124,10 +124,9 @@
   <p>A name-token alignment check then requires every canonical street-name token to appear
     in the query within a typo allowance, which tolerates trailing locality junk (like a
     county name) while rejecting a fabricated street name grafted onto a real house and ZIP.</p>
-  <div class="note warn">The geometry gate is what makes the matcher safe to trust. In
-    validation it raised hard-negative specificity from <b>71.6% to 99.4%</b> on the
-    adversarial suite by requiring exact house / grid / directional agreement before any
-    fuzzy match is even considered.</div>
+  <div class="note warn">The geometry gate does most of this work: in validation it raised
+    hard-negative specificity from <b>71.6% to 99.4%</b> on the adversarial suite by requiring
+    exact house / grid / directional agreement before any fuzzy match is even considered.</div>
 
   <h3>String similarity</h3>
   <p>The live matcher uses two string metrics, both fully specified for reproducibility:</p>
