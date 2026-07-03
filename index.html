@@ -13,249 +13,172 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EBEDEE;
-    --surface:#FFFFFF;
-    --ink:#14181B;
-    --muted:#5C666B;
-    --faint:#8A9297;
-    --line:#D3D8DB;
-    --line-2:#C3CACE;
-    --map:#0E141A;
-    --hot:#C8402F;
+    --bg:#E9E8E4;
+    --panel:#0E141A;
+    --ink:#16191C;
+    --muted:#565C62;
+    --faint:#878E94;
+    --line:#CBC9C2;
+    --line-2:#B7B5AD;
+    --accent:#C8402F;
+    --amber:#B07D2A;
     --cold:#3E7CB1;
-    --measure:64ch;
-    --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
-    --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%;scroll-padding-top:84px;scroll-behavior:smooth}
+  html{-webkit-text-size-adjust:100%;scroll-padding-top:58px;scroll-behavior:smooth}
   body{
-    margin:0;background:var(--paper);color:var(--ink);
-    font-family:var(--sans);font-size:17px;line-height:1.6;
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--mono);font-size:15px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
   }
   a{color:inherit}
-  ::selection{background:var(--ink);color:var(--paper)}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 32px}
-
-  .eyebrow{
-    font-family:var(--mono);font-size:.72rem;font-weight:500;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
-  }
-  .seclabel{display:block;margin-bottom:20px;color:var(--faint)}
-  .seclabel b{color:var(--hot);font-weight:500}
-  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.12;
-    text-wrap:balance;margin:0}
+  ::selection{background:var(--ink);color:var(--bg)}
+  .wrap{max-width:840px;margin:0 auto;padding:0 24px}
   p{margin:0}
+  h1,h2,h3{font-weight:500;margin:0;line-height:1.3}
+  b,strong{font-weight:600}
 
   /* ---- header ---- */
-  .top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
-  .top .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
-  .mark{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .mark{display:flex;align-items:center;gap:9px;text-decoration:none}
   .mark svg{display:block}
-  .mark b{font-weight:600;letter-spacing:.02em;font-size:1.02rem}
-  .nav{display:flex;gap:30px;font-family:var(--mono);font-size:.78rem;
-    letter-spacing:.04em;text-transform:uppercase}
-  .nav a{color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
-  .nav a:hover{color:var(--ink);border-color:var(--ink)}
+  .mark b{font-weight:600;letter-spacing:.14em;font-size:.9rem}
+  .nav{display:flex;gap:22px;font-size:.76rem;letter-spacing:.02em}
+  .nav a{color:var(--muted);text-decoration:none}
+  .nav a:hover{color:var(--accent)}
+
+  /* ---- section frame ---- */
+  section{padding:46px 0}
+  .sec{display:flex;align-items:center;gap:14px;margin:0 0 26px;
+    font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .sec .n{color:var(--accent)}
+  .sec::after{content:"";flex:1;height:0;border-top:1px solid var(--line)}
+  .lead{color:var(--muted);max-width:64ch}
 
   /* ---- hero ---- */
-  .hero{border-bottom:1px solid var(--line)}
-  .hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
-    gap:56px;align-items:center;padding-top:78px;padding-bottom:78px}
-  .hero .eyebrow{display:block;margin-bottom:22px}
-  .hero h1{font-size:clamp(2.1rem,4.4vw,3.35rem);letter-spacing:-.012em}
-  .hero .lead{margin-top:22px;color:var(--muted);font-size:1.075rem;max-width:46ch}
-  .hero .lead strong{color:var(--ink);font-weight:600}
-  .actions{margin-top:34px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-  .btn{
-    font-family:var(--sans);font-size:.95rem;font-weight:600;
-    background:var(--ink);color:var(--paper);border:1px solid var(--ink);
-    padding:13px 22px;border-radius:3px;text-decoration:none;
-    transition:transform .12s ease,background .12s ease;
-  }
-  .btn:hover{background:#000;transform:translateY(-1px)}
-  .btn:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
-  .textlink{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;
-    text-transform:uppercase;color:var(--ink);text-decoration:none;
-    border-bottom:1px solid var(--line-2);padding-bottom:3px}
-  .textlink:hover{border-color:var(--ink)}
-  .platforms{margin-top:30px;font-family:var(--mono);font-size:.74rem;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .hero{border-bottom:1px solid var(--line);padding-top:52px}
+  .kicker{color:var(--faint);font-size:.75rem;letter-spacing:.06em;margin-bottom:22px}
+  .kicker::before{content:"// "}
+  .hero h1{font-size:clamp(1.5rem,3.6vw,2.15rem);letter-spacing:-.01em;max-width:22ch}
+  .hero .lead{margin-top:20px;font-size:.98rem}
+  .hero .lead b{color:var(--ink)}
+  .actions{margin-top:30px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.04em;
+    background:var(--ink);color:var(--bg);border:1px solid var(--ink);
+    padding:11px 18px;text-decoration:none}
+  .btn:hover{background:#000}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .tl{font-size:.78rem;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:2px}
+  .tl:hover{border-color:var(--accent);color:var(--accent)}
+  .plat{margin-top:26px;color:var(--faint);font-size:.74rem;letter-spacing:.04em}
 
-  /* ---- map panel ---- */
-  .plot{
-    position:relative;background:var(--map);border-radius:6px;
-    aspect-ratio:5/6;overflow:hidden;
-    box-shadow:0 1px 0 rgba(255,255,255,.5),0 18px 40px -22px rgba(14,20,26,.55);
-  }
-  .plot .plotimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-  .plot .plotph{position:absolute;inset:0;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:9px;
+  /* ---- figure panel ---- */
+  .panel{margin:32px auto 6px;max-width:560px;border:1px solid var(--line-2);background:var(--panel)}
+  .panel img{display:block;width:100%;height:auto}
+  .panel .ph{aspect-ratio:5/6;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:8px;
     background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
       linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
-    background-size:38px 38px}
-  .plot .plotph .phlabel{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
-    text-transform:uppercase;color:rgba(233,237,238,.58)}
-  .plot .plotph .phnote{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;
-    text-transform:uppercase;color:rgba(233,237,238,.32)}
+    background-size:34px 34px}
+  .panel .ph .a{color:rgba(233,237,238,.58);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+  .panel .ph .b{color:rgba(233,237,238,.32);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
+  .cap{margin:10px auto 0;max-width:560px;color:var(--faint);font-size:.72rem;letter-spacing:.02em}
+  .cap::before{content:"fig. "}
 
-  /* ---- capabilities ---- */
-  .caps{border-bottom:1px solid var(--line)}
-  .caps .wrap{padding:76px 32px}
-  .caps h2{font-size:clamp(1.6rem,3vw,2.1rem);max-width:20ch;letter-spacing:-.01em}
-  .caps .h2sub{margin-top:14px;color:var(--muted);max-width:var(--measure)}
-  .caplist{margin-top:52px;display:grid;grid-template-columns:repeat(2,1fr);
-    gap:1px;background:var(--line);border:1px solid var(--line)}
-  .cap{background:var(--paper);padding:30px 30px 34px}
-  .cap .label{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--hot);margin-bottom:14px}
-  .cap h3{font-size:1.28rem;margin-bottom:10px}
-  .cap p{color:var(--muted);font-size:.97rem;max-width:44ch}
-  .cap.wide{grid-column:1/-1}
-  .cap.wide p{max-width:68ch}
+  /* ---- label/value rows (capabilities) ---- */
+  .rows{border-top:1px solid var(--line)}
+  .row{display:grid;grid-template-columns:130px 1fr;gap:18px;
+    padding:20px 0;border-bottom:1px solid var(--line)}
+  .row .k{color:var(--accent);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
+  .row h3{font-size:1rem;margin-bottom:7px}
+  .row p{color:var(--muted);font-size:.9rem}
 
-  /* ---- how it works ---- */
-  .flow{border-bottom:1px solid var(--line)}
-  .flow .wrap{padding:76px 32px}
-  .flow h2{font-size:clamp(1.6rem,3vw,2.1rem);max-width:24ch;letter-spacing:-.01em}
-  .flow .h2sub{margin-top:14px;color:var(--muted);max-width:var(--measure)}
-  .steps{margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);
-    gap:1px;background:var(--line);border:1px solid var(--line)}
-  .step{background:var(--paper);padding:28px 26px 32px}
-  .step .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--hot)}
-  .step h3{font-size:1.15rem;margin:16px 0 10px}
-  .step p{color:var(--muted);font-size:.92rem}
-  .step .tk{display:block;margin-top:16px;font-family:var(--mono);font-size:.7rem;
-    letter-spacing:.03em;color:var(--faint)}
-  .tiers{margin-top:34px;border:1px solid var(--line);border-radius:6px;
-    background:var(--surface);padding:24px;display:grid;
-    grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:28px;align-items:center}
-  .tiers .lead{font-family:var(--serif);font-size:1.05rem;font-weight:500;
-    color:var(--ink);line-height:1.35}
-  .tiers .lead em{font-style:italic;color:var(--hot)}
-  .ladder{display:flex}
-  .rung{flex:1;padding:13px 15px;border:1px solid var(--line);border-right:0;
-    font-family:var(--mono);font-size:.72rem;background:var(--paper)}
-  .rung:last-child{border-right:1px solid var(--line)}
-  .rung b{display:block;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;
-    margin-bottom:5px;color:var(--ink)}
-  .rung span{color:var(--muted)}
-  .rung.p1{border-top:2px solid var(--hot)}
-  .rung.p2{border-top:2px solid #C9A24B}
-  .rung.p3{border-top:2px solid var(--faint)}
+  /* ---- workflow ---- */
+  .flow{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .flow li{display:grid;grid-template-columns:130px 1fr;gap:18px;
+    padding:20px 0;border-bottom:1px solid var(--line)}
+  .flow .n{color:var(--accent);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
+  .flow h3{font-size:1rem;margin-bottom:7px}
+  .flow p{color:var(--muted);font-size:.9rem}
+  .flow .tk{display:block;margin-top:10px;color:var(--faint);font-size:.72rem}
+  .flow .tk::before{content:"› "}
+  .tiers{margin-top:26px;border:1px solid var(--line)}
+  .tiers .t{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:13px 16px;
+    border-bottom:1px solid var(--line);font-size:.82rem}
+  .tiers .t:last-child{border-bottom:none}
+  .tiers .t b{color:var(--ink);border-left:3px solid;padding-left:9px}
+  .tiers .t span{color:var(--muted)}
+  .tiers .t1 b{border-color:var(--accent)}
+  .tiers .t2 b{border-color:var(--amber)}
+  .tiers .t3 b{border-color:var(--faint)}
+  .tiers .cap-line{padding:13px 16px;border-bottom:1px solid var(--line);color:var(--muted);font-size:.82rem}
+  .tiers .cap-line em{color:var(--accent);font-style:normal}
 
-  /* ---- validation ---- */
-  .valid{border-bottom:1px solid var(--line)}
-  .valid .wrap{padding:76px 32px}
-  .valid .eyebrow{display:block;margin-bottom:18px}
-  .valid h2{font-size:clamp(1.6rem,3vw,2.1rem);letter-spacing:-.01em;max-width:20ch}
-  .valid .h2sub{margin-top:14px;color:var(--muted);max-width:var(--measure)}
-  .stats{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);
-    gap:1px;background:var(--line);border:1px solid var(--line)}
-  .stat{background:var(--paper);padding:28px 26px 30px}
-  .stat .num{font-family:var(--serif);font-weight:600;
-    font-size:clamp(1.32rem,2.3vw,1.85rem);line-height:1.06;letter-spacing:-.01em;
-    color:var(--ink);font-variant-numeric:tabular-nums;text-wrap:balance}
-  .stat:first-child .num{color:var(--hot)}
-  .stat .lbl{margin-top:14px;font-family:var(--mono);font-size:.735rem;line-height:1.55;
-    letter-spacing:.02em;color:var(--muted)}
-  .valid .sub{display:block;margin:48px 0 16px}
-  .validnote{margin-top:30px;font-family:var(--mono);font-size:.74rem;
-    letter-spacing:.03em;color:var(--faint)}
+  /* ---- offline ---- */
+  .offline p{color:var(--muted);max-width:64ch;font-size:.95rem}
 
-  /* ---- offline statement ---- */
-  .offline{border-bottom:1px solid var(--line)}
-  .offline .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    gap:56px;align-items:center;padding:78px 32px}
-  .offline h2{font-size:clamp(1.7rem,3.2vw,2.3rem);letter-spacing:-.01em;max-width:16ch}
-  .offline p{margin-top:20px;color:var(--muted);max-width:48ch}
-  .term{background:var(--map);border-radius:6px;padding:22px 24px;
-    font-family:var(--mono);font-size:.8rem;line-height:1.9;color:#B9C2C7}
-  .term .pmt{color:#5E6E76}
-  .term .ok{color:#7FB08A}
-  .term .zero{color:#E4B65A}
-  .term .cmt{color:#586771}
-  .figpanel{margin:0;background:var(--map);border-radius:6px;overflow:hidden;
-    box-shadow:0 1px 0 rgba(255,255,255,.4),0 18px 40px -22px rgba(14,20,26,.5)}
-  .figpanel img{display:block;width:100%;height:auto}
+  /* ---- data tables (validation, download) ---- */
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  table.data{border-top:1px solid var(--line);margin-top:4px}
+  table.data th{text-align:left;font-weight:500;color:var(--faint);font-size:.68rem;
+    letter-spacing:.14em;text-transform:uppercase;padding:0 14px 10px 0;border-bottom:1px solid var(--line)}
+  table.data td{padding:13px 14px 13px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  table.data td.v{color:var(--accent);font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.data td.note{color:var(--muted)}
+  .subhead{margin:30px 0 4px;color:var(--muted);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase}
+  .fine{margin-top:22px;color:var(--faint);font-size:.76rem;max-width:70ch}
 
   /* ---- download ---- */
-  .download .wrap{padding:78px 32px}
-  .download h2{font-size:clamp(1.7rem,3.2vw,2.3rem);letter-spacing:-.01em}
-  .download .h2sub{margin-top:14px;color:var(--muted);max-width:var(--measure)}
-  table.dl{width:100%;border-collapse:collapse;margin-top:40px;
-    font-variant-numeric:tabular-nums}
-  table.dl th{font-family:var(--mono);font-size:.7rem;font-weight:500;
-    letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
-    text-align:left;padding:0 16px 14px;border-bottom:1px solid var(--line)}
-  table.dl td{padding:22px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.dl td{padding:16px 14px 16px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.dl th{text-align:left;font-weight:500;color:var(--faint);font-size:.68rem;
+    letter-spacing:.14em;text-transform:uppercase;padding:0 14px 10px 0;border-bottom:1px solid var(--line)}
   table.dl tr:last-child td{border-bottom:none}
-  .os-name{font-family:var(--serif);font-size:1.18rem}
-  .os-meta{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
-  .status{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
-    font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-  .status .led{width:7px;height:7px;border-radius:50%;background:var(--faint)}
-  .status.ready .led{background:var(--hot)}
+  .os{color:var(--ink);font-weight:600}
+  .arch{color:var(--muted);font-size:.8rem}
+  .status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.74rem;letter-spacing:.04em}
+  .led{width:7px;height:7px;background:var(--faint);display:inline-block}
+  .status.ready .led{background:var(--accent)}
   td.act{text-align:right}
-  .get{font-family:var(--sans);font-weight:600;font-size:.9rem;
-    padding:9px 16px;border:1px solid var(--line-2);border-radius:3px;
-    color:var(--faint);text-decoration:none;white-space:nowrap;cursor:not-allowed}
-  .get.ready{background:var(--ink);border-color:var(--ink);color:var(--paper);cursor:pointer}
+  .get{font-family:var(--mono);font-weight:600;font-size:.78rem;padding:8px 14px;
+    border:1px solid var(--line-2);color:var(--faint);text-decoration:none;white-space:nowrap;cursor:not-allowed}
+  .get.ready{background:var(--ink);border-color:var(--ink);color:var(--bg);cursor:pointer}
   .get.ready:hover{background:#000}
-  .sha{display:block;font-family:var(--mono);font-size:.68rem;color:var(--faint);
-    margin-top:8px;word-break:break-all}
-  .dlnote{margin-top:34px;padding-top:26px;border-top:1px solid var(--line);
-    color:var(--muted);font-size:.92rem;max-width:var(--measure)}
-  .dlnote code{font-family:var(--mono);font-size:.86em;background:var(--surface);
-    border:1px solid var(--line);border-radius:3px;padding:1px 6px}
+  .sha{display:block;color:var(--faint);font-size:.66rem;margin-top:7px;word-break:break-all}
+  .dlnote{margin-top:26px;color:var(--muted);font-size:.84rem;max-width:70ch}
+  .dlnote code{background:var(--panel);color:#B9C2C7;padding:1px 6px;font-size:.9em}
 
   /* ---- footer ---- */
-  footer{border-top:1px solid var(--line);background:var(--paper)}
-  footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
-    padding:36px 32px;font-family:var(--mono);font-size:.76rem;letter-spacing:.03em;
-    color:var(--muted)}
+  footer{border-top:1px solid var(--line);padding:30px 0 40px}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    color:var(--muted);font-size:.74rem;letter-spacing:.02em;align-items:center}
+  footer .fmark{display:flex;align-items:center;gap:9px}
+  footer .fmark b{color:var(--ink);font-weight:600;letter-spacing:.12em;font-size:.8rem}
   footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
-  footer a:hover{border-color:var(--ink)}
-  footer .fmark{display:flex;align-items:center;gap:11px}
-  footer .fmark b{font-family:var(--sans);font-weight:600;color:var(--ink);
-    letter-spacing:.02em;font-size:.92rem}
-  footer .fmark svg{display:block}
+  footer a:hover{border-color:var(--accent);color:var(--accent)}
 
-  @media(max-width:860px){
-    body{font-size:16px}
+  @media(max-width:720px){
     .nav{display:none}
-    .hero .wrap,.offline .wrap{grid-template-columns:1fr;gap:44px}
-    .plot{aspect-ratio:5/4;order:-1}
-    .caplist{grid-template-columns:1fr}
-    .steps{grid-template-columns:1fr 1fr}
-    .stats{grid-template-columns:1fr 1fr}
-    .tiers{grid-template-columns:1fr;gap:20px}
+    .row,.flow li{grid-template-columns:1fr;gap:6px}
+    .row .k,.flow .n{padding-top:0}
+    .tiers .t,.tiers .t1 b,.tiers .t2 b,.tiers .t3 b{grid-template-columns:1fr}
+    .tiers .t{grid-template-columns:1fr;gap:5px}
     table.dl th:nth-child(2),table.dl td:nth-child(2){display:none}
-  }
-  @media(max-width:560px){
-    .steps{grid-template-columns:1fr}
-    .ladder{flex-direction:column}
-    .rung{border-right:1px solid var(--line);border-bottom:0}
-    .rung:last-child{border-bottom:1px solid var(--line)}
   }
 
   @media(prefers-color-scheme:dark){
     :root{
-      --paper:#0E141A;--surface:#141B21;--ink:#E7ECEE;--muted:#9BA7AD;
-      --faint:#69747A;--line:#232D34;--line-2:#2E3941;--map:#12191F;
+      --bg:#0E141A;--panel:#12191F;--ink:#E7ECEE;--muted:#9BA7AD;--faint:#69747A;
+      --line:#232D34;--line-2:#33404A;
     }
     .mark svg rect,footer .fmark svg rect{fill:#1B242B}
-    .plot{box-shadow:0 0 0 1px rgba(255,255,255,.05),0 24px 50px -26px rgba(0,0,0,.7)}
-    .term,.figpanel{border:1px solid var(--line)}
-    .figpanel{box-shadow:0 0 0 1px rgba(255,255,255,.05),0 24px 50px -26px rgba(0,0,0,.7)}
     .btn:hover{background:#fff}
     .get.ready:hover{background:#fff}
+    .dlnote code{background:#05090D}
   }
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
@@ -265,8 +188,8 @@
 <header class="top">
   <div class="wrap">
     <a class="mark" href="/" aria-label="MESA home">
-      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect width="32" height="32" rx="6" fill="#0E141A"/>
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
         <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
         <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
         <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
@@ -275,240 +198,227 @@
       <b>MESA</b>
     </a>
     <nav class="nav">
-      <a href="#capabilities">Capabilities</a>
-      <a href="#workflow">Workflow</a>
-      <a href="#offline">Offline</a>
-      <a href="#validation">Validation</a>
-      <a href="#download">Download</a>
+      <a href="#capabilities">capabilities</a>
+      <a href="#workflow">workflow</a>
+      <a href="#offline">offline</a>
+      <a href="#validation">validation</a>
+      <a href="#download">download</a>
     </nav>
   </div>
 </header>
 
 <section class="hero">
   <div class="wrap">
-    <div>
-      <span class="eyebrow">Offline geocoding · Spatial cluster detection</span>
-      <h1>Put your cases on the map without putting them on the internet.</h1>
-      <p class="lead">MESA is a desktop application for public-health GIS. It geocodes
-        addresses and finds spatial clusters <strong>entirely on your own machine</strong>.
-        No network, no third-party services, no patient data leaving your computer.</p>
-      <div class="actions">
-        <a class="btn" href="#download">Download MESA</a>
-        <a class="textlink" href="#capabilities">What it does →</a>
-      </div>
-      <p class="platforms">Windows x64 · macOS Apple Silicon · Linux x64</p>
+    <p class="kicker">offline geocoding · spatial cluster detection</p>
+    <h1>Put your cases on the map without putting them on the internet.</h1>
+    <p class="lead">MESA is a desktop application for public-health GIS. It geocodes
+      addresses and finds spatial clusters <b>entirely on your own machine</b>. No network,
+      no third-party services, no patient data leaving your computer.</p>
+    <div class="actions">
+      <a class="btn" href="#download">Download MESA</a>
+      <a class="tl" href="#capabilities">what it does →</a>
     </div>
-    <div class="plot">
+    <p class="plat">windows x64 · macos apple silicon · linux x64</p>
+    <figure class="panel" id="hero-fig">
       <img class="plotimg" src="hero-map.png" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster over rural southeast Utah">
-      <div class="plotph" aria-hidden="true">
-        <span class="phlabel">Gi* hot-spot analysis</span>
-        <span class="phnote">figure coming soon</span>
+      <div class="ph" aria-hidden="true">
+        <span class="a">Gi* hot-spot analysis</span>
+        <span class="b">figure coming soon</span>
+      </div>
+    </figure>
+    <p class="cap">Getis-Ord Gi* on MESA's demo dataset, computed offline.</p>
+  </div>
+</section>
+
+<section id="capabilities">
+  <div class="wrap">
+    <h2 class="sec"><span class="n">01</span> capabilities</h2>
+    <div class="rows">
+      <div class="row">
+        <div class="k">geocode</div>
+        <div>
+          <h3>Addresses, offline</h3>
+          <p>You supply the authoritative address data, Utah's UGRC points or your own
+            locality's, and a bundled tool builds it into a local SQLite index the geocoder
+            matches against. Optional supplemental files add coverage.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k">analyze</div>
+        <div>
+          <h3>Find the clusters</h3>
+          <p>Local hot- and cold-spot detection with Getis-Ord Gi* and a Bernoulli spatial
+            scan, reported alongside a global Moran's I autocorrelation diagnostic.
+            Monte-Carlo inference, bit-reproducible across every platform.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k">prepare</div>
+        <div>
+          <h3>Clean and join tables</h3>
+          <p>Opens Cognos MHT, CSV, and Excel exports. Fix columns, join tables on shared
+            keys, and export to CSV, Excel, or spatial formats.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k">protect</div>
+        <div>
+          <h3>PHI stays yours</h3>
+          <p>No telemetry and no outbound connections during analysis. Protected health
+            information never touches a server you don't control.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k">serve</div>
+        <div>
+          <h3>A geocoder for ArcGIS Pro</h3>
+          <p>MESA can expose the same offline geocoder as a local ArcGIS GeocodeServer
+            endpoint. Point ArcGIS Pro straight at the URL and batch-geocode your tables
+            against the address data you've loaded, with no ArcGIS Enterprise and no tokens.
+            It binds to localhost by default, so requests never leave the machine.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="caps" id="capabilities">
+<section id="workflow">
   <div class="wrap">
-    <span class="eyebrow seclabel"><b>01</b> · Capabilities</span>
-    <h2>A field instrument, not a cloud service.</h2>
-    <p class="h2sub">Everything runs locally against your own copy of authoritative
-      address data. No API keys, no rate limits, and nothing to connect to.</p>
-    <div class="caplist">
-      <div class="cap">
-        <div class="label">Geocode</div>
-        <h3>Addresses, offline</h3>
-        <p>You supply the authoritative address data, Utah's UGRC points or your own
-          locality's, and a bundled tool builds it into a local SQLite index the
-          geocoder matches against. Optional supplemental files add coverage.</p>
-      </div>
-      <div class="cap">
-        <div class="label">Analyze</div>
-        <h3>Find the clusters</h3>
-        <p>Local hot- and cold-spot detection with Getis-Ord Gi* and a Bernoulli
-          spatial scan, reported alongside a global Moran's I autocorrelation
-          diagnostic. Monte-Carlo inference, bit-reproducible across every platform.</p>
-      </div>
-      <div class="cap">
-        <div class="label">Prepare</div>
-        <h3>Clean and join tables</h3>
-        <p>Opens Cognos MHT, CSV, and Excel exports. Fix columns, join tables on shared
-          keys, and export to CSV, Excel, or spatial formats.</p>
-      </div>
-      <div class="cap">
-        <div class="label">Protect</div>
-        <h3>PHI stays yours</h3>
-        <p>No telemetry and no outbound connections during analysis. Protected health
-          information never touches a server you don't control.</p>
-      </div>
-      <div class="cap wide">
-        <div class="label">Serve</div>
-        <h3>A geocoder for ArcGIS Pro</h3>
-        <p>MESA can expose the same offline geocoder as a local ArcGIS GeocodeServer
-          endpoint. Point ArcGIS Pro straight at the URL and batch-geocode your tables
-          against the address data you've loaded, with no ArcGIS Enterprise and no
-          tokens. It binds to localhost by default, so requests never leave the machine.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="flow" id="workflow">
-  <div class="wrap">
-    <span class="eyebrow seclabel"><b>02</b> · Workflow</span>
-    <h2>From a spreadsheet of addresses to a map of clusters.</h2>
-    <p class="h2sub">One desktop app carries the whole investigation. Nothing leaves the
-      machine at any step.</p>
-    <div class="steps">
-      <div class="step">
-        <span class="no">Step 01</span>
-        <h3>Load your table</h3>
-        <p>Drag in a Cognos MHT, CSV, or Excel export. MESA parses it, profiles the
-          columns, and tells you what is missing.</p>
-        <span class="tk">.mht · .csv · .xlsx</span>
-      </div>
-      <div class="step">
-        <span class="no">Step 02</span>
-        <h3>Geocode offline</h3>
-        <p>Map the address column and match every row against the authoritative address
-          data you've loaded. Each result carries a precision label.</p>
-        <span class="tk">authoritative data you supply</span>
-      </div>
-      <div class="step">
-        <span class="no">Step 03</span>
-        <h3>Detect clusters</h3>
-        <p>Run Getis-Ord Gi* or a Bernoulli scan with Monte-Carlo inference to surface
-          the hot and cold spots that matter.</p>
-        <span class="tk">Gi* · Bernoulli scan</span>
-      </div>
-      <div class="step">
-        <span class="no">Step 04</span>
-        <h3>Export with provenance</h3>
-        <p>Write results back to CSV, Excel, or a spatial format, precision labels and
-          all, ready for the next tool or a report.</p>
-        <span class="tk">.csv · .xlsx · spatial</span>
-      </div>
-    </div>
+    <h2 class="sec"><span class="n">02</span> workflow</h2>
+    <ol class="flow">
+      <li>
+        <div class="n">step 01</div>
+        <div>
+          <h3>Load your table</h3>
+          <p>Drag in a Cognos MHT, CSV, or Excel export. MESA parses it, profiles the
+            columns, and tells you what is missing.</p>
+          <span class="tk">.mht · .csv · .xlsx</span>
+        </div>
+      </li>
+      <li>
+        <div class="n">step 02</div>
+        <div>
+          <h3>Geocode offline</h3>
+          <p>Map the address column and match every row against the authoritative address
+            data you've loaded. Each result carries a precision label.</p>
+          <span class="tk">authoritative data you supply</span>
+        </div>
+      </li>
+      <li>
+        <div class="n">step 03</div>
+        <div>
+          <h3>Detect clusters</h3>
+          <p>Run Getis-Ord Gi* or a Bernoulli scan with Monte-Carlo inference to surface
+            the hot and cold spots that matter.</p>
+          <span class="tk">Gi* · Bernoulli scan</span>
+        </div>
+      </li>
+      <li>
+        <div class="n">step 04</div>
+        <div>
+          <h3>Export with provenance</h3>
+          <p>Write results back to CSV, Excel, or a spatial format, precision labels and
+            all, ready for the next tool or a report.</p>
+          <span class="tk">.csv · .xlsx · spatial</span>
+        </div>
+      </li>
+    </ol>
     <div class="tiers">
-      <p class="lead">Every coordinate is labeled, because <em>certainty is not
-        accuracy</em>.</p>
-      <div class="ladder">
-        <div class="rung p1"><b>Point</b><span>matched to a real address point, 0 m median error</span></div>
-        <div class="rung p2"><b>Interpolated</b><span>estimated along a street, block-level</span></div>
-        <div class="rung p3"><b>Centroid</b><span>ZIP or city placeholder, locality only</span></div>
-      </div>
+      <div class="cap-line">Every coordinate is labeled, because <em>certainty is not accuracy</em>.</div>
+      <div class="t t1"><b>point</b><span>matched to a real address point, 0 m median error</span></div>
+      <div class="t t2"><b>interpolated</b><span>estimated along a street, block-level</span></div>
+      <div class="t t3"><b>centroid</b><span>ZIP or city placeholder, locality only</span></div>
     </div>
   </div>
 </section>
 
-<section class="offline" id="offline">
+<section id="offline" class="offline">
   <div class="wrap">
-    <div>
-      <span class="eyebrow seclabel"><b>03</b> · Offline</span>
-      <h2>Built for protected health information.</h2>
-      <p>Spatial epidemiology usually means shipping addresses to a geocoding API. MESA
-        doesn't. The address database lives on your disk and the analysis runs in-process,
-        so you can work on an air-gapped machine and still get reproducible results. Every
-        figure on this page, including the scan below, is real MESA output computed
-        entirely offline.</p>
-    </div>
-    <figure class="figpanel">
+    <h2 class="sec"><span class="n">03</span> offline</h2>
+    <p>Spatial epidemiology usually means shipping addresses to a geocoding API. MESA
+      doesn't. The address database lives on your disk and the analysis runs in-process,
+      so you can work on an air-gapped machine and still get reproducible results. Every
+      figure on this page, including the scan below, is real MESA output computed entirely
+      offline.</p>
+    <figure class="panel" style="max-width:600px">
       <img src="scan.png" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled over rural southeast Utah">
     </figure>
+    <p class="cap">Bernoulli spatial scan on MESA's demo dataset, validated against SaTScan.</p>
   </div>
 </section>
 
-<section class="valid" id="validation">
+<section id="validation">
   <div class="wrap">
-    <span class="eyebrow seclabel"><b>04</b> · Validation</span>
-    <h2>Validated, not asserted.</h2>
-    <p class="h2sub">The geocoder matches against authoritative data, the statistics are
-      checked against the standard reference implementations, and every run reproduces
-      byte for byte.</p>
-    <div class="stats">
-      <div class="stat">
-        <div class="num">1,489,417</div>
-        <div class="lbl">Utah UGRC address points the geocoder was validated against, matched entirely offline</div>
-      </div>
-      <div class="stat">
-        <div class="num">PySAL · R/spdep</div>
-        <div class="lbl">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</div>
-      </div>
-      <div class="stat">
-        <div class="num">SaTScan 10.3.2</div>
-        <div class="lbl">Bernoulli spatial scan matched against the field standard, no discrepancies in the suite</div>
-      </div>
-      <div class="stat">
-        <div class="num">Bit-identical</div>
-        <div class="lbl">the same p-values on Windows, macOS, and Linux, from one core or a hundred</div>
-      </div>
-    </div>
-    <span class="eyebrow sub">Measured accuracy</span>
-    <div class="stats">
-      <div class="stat">
-        <div class="num">0 m</div>
-        <div class="lbl">median location error for matched address points, with a 95th-percentile error of 28.4 m</div>
-      </div>
-      <div class="stat">
-        <div class="num">~90%</div>
-        <div class="lbl">of real SEUHD patient addresses resolve to a rooftop or street point, the rest to labeled centroids</div>
-      </div>
-      <div class="stat">
-        <div class="num">92.7%</div>
-        <div class="lbl">sensitivity on the held-out reference test set (99% CI 92.3 to 93.1)</div>
-      </div>
-      <div class="stat">
-        <div class="num">95.7%</div>
-        <div class="lbl">precision on the same held-out set, at 98.2% specificity</div>
-      </div>
-    </div>
-    <p class="validnote">Measured on an adversarial held-out test partition against positional ground truth, not a synthetic self-benchmark. Cross-validation re-runs in CI against regenerated PySAL, R, and SciPy oracles.</p>
+    <h2 class="sec"><span class="n">04</span> validation</h2>
+    <p class="lead">The geocoder matches against authoritative data, the statistics are
+      checked against the standard reference implementations, and every run reproduces byte
+      for byte.</p>
+    <div class="subhead">reference &amp; reproducibility</div>
+    <table class="data">
+      <tbody>
+        <tr><td class="v">1,489,417</td><td class="note">Utah UGRC address points the geocoder was validated against, matched entirely offline</td></tr>
+        <tr><td class="v">PySAL · R/spdep</td><td class="note">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</td></tr>
+        <tr><td class="v">SaTScan 10.3.2</td><td class="note">Bernoulli spatial scan matched against the field standard, no discrepancies in the suite</td></tr>
+        <tr><td class="v">bit-identical</td><td class="note">the same p-values on Windows, macOS, and Linux, from one core or a hundred</td></tr>
+      </tbody>
+    </table>
+    <div class="subhead">measured accuracy</div>
+    <table class="data">
+      <tbody>
+        <tr><td class="v">0 m</td><td class="note">median location error for matched address points, with a 95th-percentile error of 28.4 m</td></tr>
+        <tr><td class="v">~90%</td><td class="note">of real SEUHD patient addresses resolve to a rooftop or street point, the rest to labeled centroids</td></tr>
+        <tr><td class="v">92.7%</td><td class="note">sensitivity on the held-out reference test set (99% CI 92.3 to 93.1)</td></tr>
+        <tr><td class="v">95.7%</td><td class="note">precision on the same held-out set, at 98.2% specificity</td></tr>
+      </tbody>
+    </table>
+    <p class="fine">Measured on an adversarial held-out test partition against positional
+      ground truth, not a synthetic self-benchmark. Cross-validation re-runs in CI against
+      regenerated PySAL, R, and SciPy oracles.</p>
   </div>
 </section>
 
-<section class="download" id="download">
+<section id="download">
   <div class="wrap">
-    <span class="eyebrow seclabel"><b>05</b> · Download</span>
-    <h2>Download</h2>
-    <p class="h2sub">Native builds for each platform. Every release is published with a
+    <h2 class="sec"><span class="n">05</span> download</h2>
+    <p class="lead">Native builds for each platform. Every release is published with a
       SHA-256 checksum so you can verify it before running.</p>
-    <table class="dl">
+    <table class="dl" style="margin-top:22px">
       <thead>
-        <tr><th>Platform</th><th>Architecture</th><th>Status</th><th></th></tr>
+        <tr><th>platform</th><th>architecture</th><th>status</th><th></th></tr>
       </thead>
       <tbody id="dlbody">
         <tr data-os="windows">
-          <td><span class="os-name">Windows</span></td>
-          <td><span class="os-meta">x64 · Windows 10/11 · .exe</span></td>
-          <td><span class="status"><span class="led"></span>Coming soon</span></td>
+          <td><span class="os">Windows</span></td>
+          <td><span class="arch">x64 · Windows 10/11 · .exe</span></td>
+          <td><span class="status"><span class="led"></span>coming soon</span></td>
           <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
         <tr data-os="macos">
-          <td><span class="os-name">macOS</span></td>
-          <td><span class="os-meta">Apple Silicon · arm64 · .dmg</span></td>
-          <td><span class="status"><span class="led"></span>Coming soon</span></td>
+          <td><span class="os">macOS</span></td>
+          <td><span class="arch">Apple Silicon · arm64 · .dmg</span></td>
+          <td><span class="status"><span class="led"></span>coming soon</span></td>
           <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
         <tr data-os="linux">
-          <td><span class="os-name">Linux</span></td>
-          <td><span class="os-meta">x64 · AppImage</span></td>
-          <td><span class="status"><span class="led"></span>Coming soon</span></td>
+          <td><span class="os">Linux</span></td>
+          <td><span class="arch">x64 · AppImage</span></td>
+          <td><span class="status"><span class="led"></span>coming soon</span></td>
           <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
       </tbody>
     </table>
-    <p class="dlnote">Automated per-platform builds are being wired up. When they land,
-      this table fills in automatically from <code>manifest.json</code> with the current
-      version and checksums, with no page to re-edit. Need MESA before then?
-      <a href="mailto:minorsecond@gmail.com" style="color:var(--ink)">Get in touch</a>.</p>
+    <p class="dlnote">Automated per-platform builds are being wired up. When they land, this
+      table fills in automatically from <code>manifest.json</code> with the current version
+      and checksums, with no page to re-edit. Need MESA before then?
+      <a href="mailto:minorsecond@gmail.com" style="color:var(--accent)">Get in touch</a>.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     <span class="fmark">
-      <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect width="32" height="32" rx="6" fill="#0E141A"/>
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="3" fill="#0E141A"/>
         <path d="M9 15H23L26 24H6Z" fill="#47535B"/>
         <path d="M7.4 19H24.6" stroke="#2C343B" stroke-width="1"/>
         <circle cx="16" cy="13.2" r="4.3" stroke="#C8402F" stroke-width="1" opacity=".4"/>
@@ -516,23 +426,20 @@
       </svg>
       <b>MESA</b>
     </span>
-    <span>Offline geocoding and spatial analysis, built for the Southeast Utah Health Department.</span>
-    <span><a href="mailto:minorsecond@gmail.com">Contact</a> &nbsp; spatialepi.org</span>
+    <span>offline geocoding and spatial analysis, built for the Southeast Utah Health Department.</span>
+    <span><a href="mailto:minorsecond@gmail.com">contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
 
 <script>
-  // Hero figure: show the real analysis image when it is present.
-  // Drop a file named hero-map.png next to index.html and it appears automatically;
-  // until then a neutral placeholder is shown. No fabricated data is drawn.
+  // Hero figure: show the real analysis image when present; upgrade the static
+  // poster to the animated inference GIF unless the user prefers reduced motion.
   (function(){
-    var img = document.querySelector('.plot .plotimg');
+    var img = document.querySelector('.plotimg');
     if(!img) return;
-    var ph = document.querySelector('.plot .plotph');
+    var ph = document.querySelector('#hero-fig .ph');
     img.addEventListener('load', function(){ img.style.display='block'; if(ph) ph.style.display='none'; });
     img.addEventListener('error', function(){ img.remove(); });
-    // Upgrade the static poster to the animated inference GIF, unless the user
-    // prefers reduced motion. Only swaps once the GIF has actually loaded.
     if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
       var probe = new Image();
       probe.onload = function(){ img.src = 'hero-map.gif'; };
@@ -549,7 +456,7 @@
       var get=row.querySelector('.get'), st=row.querySelector('.status'), sha=row.querySelector('.sha');
       get.textContent='Download'+(m.version?' v'+m.version:''); get.href=b.url;
       get.classList.add('ready'); get.removeAttribute('aria-disabled');
-      st.classList.add('ready'); st.lastChild.textContent='Available';
+      st.classList.add('ready'); st.lastChild.textContent='available';
       if(b.sha256) sha.textContent='SHA-256 '+b.sha256;
     });
   }).catch(function(){});
