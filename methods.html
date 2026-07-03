@@ -107,10 +107,10 @@
     than trusted on its own:</p>
   <table class="data">
     <tbody>
-      <tr><td class="v">PySAL esda</td><td>Gi* z-scores match <code>G_Local</code> within 1e-4; FDR-adjusted p-values within 1e-3; the Gi_Bin classification matches at the 90/95/99% levels wherever the neighbor graphs agree.<sup><a href="#r-pysal">7</a></sup></td></tr>
-      <tr><td class="v">R spdep</td><td>the multiple-testing correction matches <code>stats::p.adjust</code> to 1e-6; the empirical-Bayes smoother matches <code>spdep::EBest</code>.<sup><a href="#r-spdep">8</a></sup></td></tr>
+      <tr><td class="v">PySAL esda</td><td>Gi* z-scores match <code>G_Local</code> within 10<sup>−4</sup>; FDR-adjusted p-values within 10<sup>−3</sup>; the Gi_Bin classification matches at the 90/95/99% levels wherever the neighbor graphs agree.<sup><a href="#r-pysal">7</a></sup></td></tr>
+      <tr><td class="v">R spdep</td><td>the multiple-testing correction matches <code>stats::p.adjust</code> to 10<sup>−6</sup>; the empirical-Bayes smoother matches <code>spdep::EBest</code>.<sup><a href="#r-spdep">8</a></sup></td></tr>
       <tr><td class="v">SaTScan 10.3.2</td><td>the Bernoulli scan matches candidate generation, tied-distance handling, relative risk, and Monte-Carlo inference, with no discrepancies observed on the tested datasets.</td></tr>
-      <tr><td class="v">SciPy &amp; R</td><td>an exact two-sample Kolmogorov-Smirnov test, used to compare permutation null distributions to the oracles, agrees with <code>scipy.stats.ks_2samp(mode='exact')</code> to 1.1e-16 and R <code>ks.test(exact=TRUE)</code> to 1.8e-15 over 10,010 stress datasets.</td></tr>
+      <tr><td class="v">SciPy &amp; R</td><td>an exact two-sample Kolmogorov-Smirnov test, used to compare permutation null distributions to the oracles, agrees with <code>scipy.stats.ks_2samp(mode='exact')</code> to 1.1 × 10<sup>−16</sup> and R <code>ks.test(exact=TRUE)</code> to 1.8 × 10<sup>−15</sup> over 10,010 stress datasets.</td></tr>
     </tbody>
   </table>
   <p><b>Type-I calibration.</b> Under simulated complete spatial randomness, MESA verifies

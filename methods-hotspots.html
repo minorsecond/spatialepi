@@ -156,7 +156,7 @@
   <div class="eq math"><span class="lbl">Benjamini-Hochberg adjusted p</span>\[ \tilde{p}_{(i)} = \min\!\left( 1,\ \min_{j \ge i} \frac{n}{j}\, p_{(j)} \right), \qquad p_{(1)} \le \cdots \le p_{(n)} \]</div>
   <p>A Bonferroni option (<code>p̃ᵢ = min(1, n·pᵢ)</code>) is available for family-wise error
     control when a conservative bound is wanted. The correction matches R
-    <code>stats::p.adjust</code> to 1e-6. Benjamini-Yekutieli is discussed in MESA's internal
+    <code>stats::p.adjust</code> to 10<sup>−6</sup>. Benjamini-Yekutieli is discussed in MESA's internal
     methodology notes but is <b>not</b> implemented in the shipped engine, so it is not
     offered here.</p>
 
@@ -191,7 +191,7 @@
 
   <h2 id="valid"><span class="n">09</span> validation</h2>
   <p>The Gi* engine is cross-validated against PySAL <code>esda.G_Local</code>: z-scores
-    agree within 1e-4, FDR-adjusted p-values within 1e-3, and the Gi_Bin classification
+    agree within 10<sup>−4</sup>, FDR-adjusted p-values within 10<sup>−3</sup>, and the Gi_Bin classification
     matches at the 90/95/99% levels wherever the neighbor graphs agree. (Where they differ,
     it is a documented tie-breaking difference: PySAL resolves exact distance ties by KD-tree
     traversal order, which varies by architecture, while MESA breaks ties deterministically
