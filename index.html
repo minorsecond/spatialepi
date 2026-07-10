@@ -158,6 +158,18 @@
   .sha{display:block;color:var(--faint);font-size:.66rem;margin-top:7px;word-break:break-all}
   .dlnote{margin-top:26px;color:var(--muted);font-size:.84rem;max-width:70ch}
   .dlnote code{background:var(--panel);color:#B9C2C7;padding:1px 6px;font-size:.9em}
+  .notify{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:26px}
+  .notify input[type=email]{font-family:var(--mono);font-size:.82rem;
+    padding:9px 12px;border:1px solid var(--line-2);background:var(--bg);color:var(--ink);
+    min-width:240px;flex:1 1 240px}
+  .notify input[type=email]:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .notify button{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.04em;
+    background:var(--ink);color:var(--bg);border:1px solid var(--ink);
+    padding:10px 16px;cursor:pointer;white-space:nowrap}
+  .notify button:hover{background:#000}
+  .notify button:disabled{cursor:default;opacity:.6}
+  .notify-msg{margin-top:10px;font-size:.8rem;color:var(--muted)}
+  .notify-msg.err{color:var(--accent)}
 
   /* ---- footer ---- */
   footer{border-top:1px solid var(--line);padding:30px 0 40px}
@@ -435,7 +447,12 @@
         </tr>
       </tbody>
     </table>
-    <p class="dlnote"><a class="tl" href="mailto:ross@spatialepi.org?subject=Notify%20me%20when%20MESA%20ships&amp;body=I'd%20like%20to%20be%20notified%20when%20per-platform%20MESA%20builds%20are%20available.%0A%0AOS%20I%20care%20about%3A%20" style="color:var(--accent)">Notify me when it ships →</a></p>
+    <form class="notify" id="notify-form">
+      <input type="email" name="email" placeholder="you@domain.com" aria-label="Email address" required>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button type="submit">Notify me when it ships →</button>
+    </form>
+    <p class="notify-msg" id="notify-msg" hidden></p>
     <p class="dlnote">Automated per-platform builds are being wired up. When they land, this
       table fills in automatically from <code>manifest.json</code> with the current version
       and checksums, with no page to re-edit. Need MESA before then?
@@ -499,6 +516,39 @@
       if(b.sha256) sha.textContent='SHA-256 '+b.sha256;
     });
   }).catch(function(){});
+
+  // Notify-me signup: posts to Formspree (https://formspree.io) so visitors don't
+  // have to leave the page or have a mail client configured. Replace FORM_ID below
+  // with the ID from your Formspree form (Settings > Integration).
+  (function(){
+    var FORM_ID = 'FORM_ID';
+    var form = document.getElementById('notify-form');
+    var msg = document.getElementById('notify-msg');
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var btn = form.querySelector('button');
+      var email = form.email.value;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      fetch('https://formspree.io/f/' + FORM_ID, {
+        method: 'POST',
+        headers: {'Accept':'application/json'},
+        body: new FormData(form)
+      }).then(function(r){
+        if(r.ok){
+          form.hidden = true;
+          msg.hidden = false; msg.classList.remove('err');
+          msg.textContent = "Thanks — we'll email " + email + " when builds are live.";
+        } else {
+          throw new Error('request failed');
+        }
+      }).catch(function(){
+        btn.disabled = false; btn.textContent = 'Notify me when it ships →';
+        msg.hidden = false; msg.classList.add('err');
+        msg.textContent = 'Something went wrong — email ross@spatialepi.org instead.';
+      });
+    });
+  })();
 </script>
 </body>
 </html>
