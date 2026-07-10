@@ -41,13 +41,13 @@
     var lines = [
       "p = 1.000 (not significant)",
       "z = 0.00 · isolated feature, no neighbors",
-      "empty dataset · returned gracefully with a warning",
-      "NaN · classified as undefined, not crashed on",
-      "geocode precision: NONE",
       "95% CI: [0, 0]",
       "Gi_Bin: 0 · not significant at any threshold",
-      "outside the reference data's coverage",
-      "no match"
+      "Moran's I ≈ 0 (complete spatial randomness)",
+      "H₀ not rejected",
+      "FDR-adjusted p = 1.000",
+      "flagged as a cold spot",
+      "n = 0 · underpowered"
     ];
     document.getElementById('coord').textContent =
       'error 404 · ' + lines[Math.floor(Math.random() * lines.length)];
