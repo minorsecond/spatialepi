@@ -33,9 +33,24 @@
 <body>
   <div>
     <img class="sad" src="mesa-icon-sad.png" width="88" height="88" alt="A frowning mesa icon">
-    <p class="coord">error 404 · no match · p = 1.000 (not significant)</p>
+    <p class="coord" id="coord">error 404 · p = 1.000 (not significant)</p>
     <h1>This point isn't on the map.</h1>
     <p><a href="/">← return to spatialepi.org</a></p>
   </div>
+  <script>
+    var lines = [
+      "p = 1.000 (not significant)",
+      "z = 0.00 · isolated feature, no neighbors",
+      "empty dataset · returned gracefully with a warning",
+      "NaN · classified as undefined, not crashed on",
+      "geocode precision: NONE",
+      "95% CI: [0, 0]",
+      "Gi_Bin: 0 · not significant at any threshold",
+      "outside the reference data's coverage",
+      "no match"
+    ];
+    document.getElementById('coord').textContent =
+      'error 404 · ' + lines[Math.floor(Math.random() * lines.length)];
+  </script>
 </body>
 </html>
