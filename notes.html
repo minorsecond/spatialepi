@@ -75,6 +75,24 @@
       return a.date < b.date ? 1 : -1;
     });
     if(!notes.length){ empty.hidden = false; return; }
+
+    var PREVIEW_LEN = 220;
+
+    function excerptOf(md){
+      // drop the leading "# Title" line, then take the first paragraph
+      var body = md.replace(/^#\s+.*\n+/, '');
+      var firstPara = body.split(/\n\s*\n/)[0] || '';
+      var text = firstPara
+        .replace(/[#>*_`]/g, '')          // strip common markdown punctuation
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links -> just the text
+        .replace(/\s+/g, ' ')
+        .trim();
+      if(text.length > PREVIEW_LEN){
+        text = text.slice(0, PREVIEW_LEN).replace(/\s+\S*$/, '') + '…';
+      }
+      return text;
+    }
+
     notes.forEach(function(n){
       var a = document.createElement('a');
       a.className = 'n';
@@ -82,6 +100,12 @@
       a.innerHTML = '<div class="d">' + n.date + '</div>' +
         '<div><h3>' + n.title + '</h3><p>' + n.summary + '</p></div>';
       list.appendChild(a);
+
+      var p = a.querySelector('p');
+      fetch('notes/' + n.slug + '.md', {cache:'no-store'})
+        .then(function(r){ return r.ok ? r.text() : null; })
+        .then(function(md){ if(md) p.textContent = excerptOf(md); })
+        .catch(function(){});
     });
   })();
 </script>
