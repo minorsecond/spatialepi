@@ -536,14 +536,14 @@
         if(r.ok){
           form.hidden = true;
           msg.hidden = false; msg.classList.remove('err');
-          msg.textContent = "Thanks — we'll email " + email + " when builds are live.";
+          msg.textContent = "Thanks, we'll email " + email + " when builds are live.";
         } else {
           throw new Error('request failed');
         }
       }).catch(function(){
         btn.disabled = false; btn.textContent = 'Notify me when it ships →';
         msg.hidden = false; msg.classList.add('err');
-        msg.textContent = 'Something went wrong — email ross@spatialepi.org instead.';
+        msg.textContent = 'Something went wrong. Email ross@spatialepi.org instead.';
       });
     });
   })();
