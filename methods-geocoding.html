@@ -104,7 +104,7 @@
   <p>A <code>ZIP+4</code> is accepted but only the first five digits are used.</p>
 
   <h2 id="cand"><span class="n">03</span> candidate generation</h2>
-  <p>Candidates are retrieved through several <b>blocking channels</b> (sorted in-memory
+  <p>Candidates are retrieved through several blocking channels (sorted in-memory
     lookup tables built once at load), keyed by ZIP, city, house+ZIP, house+city, and so on.
     The shipped cascade is: exact hash lookup first; then, if needed, house-number-keyed
     fuzzy buckets. Fuzzy matching is skipped entirely if a candidate set exceeds 500 records
@@ -112,7 +112,7 @@
     always tried before any fuzzy comparison.</p>
 
   <h2 id="gate"><span class="n">04</span> the address-geometry gate</h2>
-  <p>Before any fuzzy name comparison, a candidate must pass a <b>geometry-skeleton gate</b>:
+  <p>Before any fuzzy name comparison, a candidate must pass a geometry-skeleton gate:
     the numeric and directional tokens of the address (its "skeleton") must agree. This is
     the single most important guard against false matches.</p>
   <ul>
@@ -128,7 +128,7 @@
     in the query within a typo allowance, which tolerates trailing locality junk (like a
     county name) while rejecting a fabricated street name grafted onto a real house and ZIP.</p>
   <div class="note warn">The geometry gate does most of this work: in validation it raised
-    hard-negative specificity from <b>71.6% to 99.4%</b> on the adversarial suite by requiring
+    hard-negative specificity from 71.6% to 99.4% on the adversarial suite by requiring
     exact house / grid / directional agreement before any fuzzy match is even considered.</div>
 
   <h3>String similarity</h3>
@@ -138,12 +138,12 @@
     <div class="v"><code>OSA distance</code><span>optimal string alignment (transposition-aware Damerau-Levenshtein); a swap of two adjacent characters is a single edit, which matches how real address typos and OCR errors behave<sup><a href="#g-dam">3</a></sup></span></div>
   </div>
   <div class="note">For faithfulness: Jaro-Winkler, Double Metaphone, and token-set matching
-    are <b>not</b> in the shipped scoring path. They were used only as offline forensic
+    are not in the shipped scoring path. They were used only as offline forensic
     tools to characterize why the unmatched residual is unmatched, and are documented here
     so the record is accurate.</div>
 
   <h2 id="score"><span class="n">05</span> the match score</h2>
-  <p>Surviving candidates are ranked by a <b>Fellegi-Sunter</b> record-linkage score<sup><a href="#g-fs">1</a></sup>:
+  <p>Surviving candidates are ranked by a Fellegi-Sunter record-linkage score<sup><a href="#g-fs">1</a></sup>:
     a sum of per-field log-odds weights. Each weight is <code>log2(m/u)</code> in bits, where
     <code>m</code> is the probability a true match agrees on a field (taken as 0.97 under
     realistic input noise) and <code>u</code> is the probability two records agree by chance,
@@ -151,14 +151,14 @@
   <div class="eq math"><span class="lbl">measured field weights (bits)</span>\[ \begin{array}{lrlr} \text{house number} & +5.88 & \quad\text{suffix} & +2.93 \\ \text{directional} & +1.92 & \quad\text{grid} & +1.51 \end{array} \]</div>
   <p>A field's weight is added on agreement and subtracted on disagreement (a suffix
     mismatch is penalized more softly, at half weight). The street name contributes a
-    <b>rarity × similarity</b> term: each name token is weighted by how rare it is in the
+    rarity × similarity term: each name token is weighted by how rare it is in the
     corpus (its inverse document frequency) and scaled by <code>2·similarity − 1</code>,
     where similarity is <code>1 − OSA / max(len)</code>. So an exact token earns its full
     (rarity-weighted) positive weight, a half-corrupted one earns roughly zero, and a
     genuinely different name earns a negative weight. This is what lets the score separate a
     real typo from a fabricated name dropped onto a real block. ZIP and city agreement are
     weak nudges, since candidates are already ZIP/city-scoped.</p>
-  <p>The total log-odds is mapped to a 0-1 <b>certainty</b> by a Platt sigmoid<sup><a href="#g-platt">2</a></sup>,
+  <p>The total log-odds is mapped to a 0-1 certainty by a Platt sigmoid<sup><a href="#g-platt">2</a></sup>,
     fit by logistic regression on the development split only:</p>
   <div class="eq math"><span class="lbl">Platt calibration</span>\[ \text{certainty} = \frac{1}{1 + \exp\!\big(-(2.875 + 0.1048 \cdot \text{logOdds})\big)} \]</div>
   <p>An ambiguity guard withholds a point (degrading it to a centroid) when a
@@ -179,7 +179,7 @@
     <thead><tr><th>mode</th><th>threshold</th><th>use</th></tr></thead>
     <tbody>
       <tr><td class="v">Permissive</td><td>0.00</td><td>emit every point match; maximize yield, review downstream</td></tr>
-      <tr><td class="v">Balanced</td><td>0.90</td><td><b>default.</b> Calibrated, but effectively non-withholding, so real-world point yield is preserved</td></tr>
+      <tr><td class="v">Balanced</td><td>0.90</td><td>default. Calibrated, but effectively non-withholding, so real-world point yield is preserved</td></tr>
       <tr><td class="v">Strict</td><td>0.98</td><td>withhold low-confidence points; maximize precision, accept lower yield</td></tr>
     </tbody>
   </table>
@@ -209,7 +209,7 @@
     from the precision and method so downstream analysis can filter to the tier it needs.</p>
 
   <h2 id="valid"><span class="n">08</span> validation</h2>
-  <p>Accuracy here means <b>recovery of the correct reference record</b> under noisy input,
+  <p>Accuracy here means recovery of the correct reference record under noisy input,
     not independent real-world coordinate accuracy (which these figures do not measure). A
     query counts as a success only if it resolves to within 50 m of the correct record's
     coordinate, so snapping to a different nearby record is scored a miss. The noise
@@ -244,8 +244,8 @@
     range. Spot-checked cases were absent from both UGRC and OpenStreetMap. The residual is
     therefore an authoritative-data-coverage limit, not a matching one, and it moves with the
     completeness of whatever address data you load.</p>
-  <div class="note warn">These figures are <b>internal validation against the Utah UGRC
-    reference</b>, the study area used for testing. The geocoder works with whatever
+  <div class="note warn">These figures are internal validation against the Utah UGRC
+    reference, the study area used for testing. The geocoder works with whatever
     authoritative address data you supply; its accuracy must be revalidated for any other
     jurisdiction's data before it can be assumed to transfer, and real-world coordinate
     accuracy against an independent gold standard has not been measured.</div>

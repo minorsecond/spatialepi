@@ -67,7 +67,7 @@
     is no external population denominator; cases are compared against controls. The scan asks:
     is there a circular region where the case proportion inside is higher than outside by more
     than chance would produce?</p>
-  <div class="note">MESA's scan is <b>one-sided</b>: it detects high-rate clusters (hot spots)
+  <div class="note">MESA's scan is one-sided: it detects high-rate clusters (hot spots)
     only. A window whose internal case rate is at or below the overall rate scores zero and is
     never reported as a cluster.</div>
 
@@ -77,8 +77,8 @@
     containing <code>c</code> cases out of <code>n</code> people, in a study area of
     <code>C</code> cases out of <code>N</code>:</p>
   <div class="eq math"><span class="lbl">Bernoulli log-likelihood ratio</span>\[ \begin{aligned} \mathrm{LLR} = {}& c\log\tfrac{c}{n} + (n-c)\log\tfrac{n-c}{n} \\ &+ (C-c)\log\tfrac{C-c}{N-n} + \big((N-n)-(C-c)\big)\log\tfrac{(N-n)-(C-c)}{N-n} \\ &- \Big[\, C\log\tfrac{C}{N} + (N-C)\log\tfrac{N-C}{N} \,\Big] \end{aligned} \]</div>
-  <p>The window with the largest LLR over all candidates is the <b>most-likely cluster</b>.
-    MESA also reports the <b>relative risk</b>, the ratio of the case rate inside the window
+  <p>The window with the largest LLR over all candidates is the most-likely cluster.
+    MESA also reports the relative risk, the ratio of the case rate inside the window
     to the case rate outside it, and the expected case count under the null,
     <code>C · n/N</code>. Sums that could underflow use an <code>x·log(x)</code> helper that
     is defined to be 0 at 0.</p>
@@ -89,7 +89,7 @@
     the smallest to the largest allowed becomes a candidate window. A window stops growing
     once its population exceeds the maximum cluster size.</p>
   <div class="vars">
-    <div class="v"><code>max cluster size</code><span>a fraction of the total population, default <b>50%</b> (Kulldorff's recommended, SaTScan-compatible default); optionally an absolute population cap. Smaller caps (10%, 25%) favor tighter local clusters</span></div>
+    <div class="v"><code>max cluster size</code><span>a fraction of the total population, default 50% (Kulldorff's recommended, SaTScan-compatible default); optionally an absolute population cap. Smaller caps (10%, 25%) favor tighter local clusters</span></div>
     <div class="v"><code>tie-breaking</code><span>ties in distance are broken by coordinate (y then x), and all intermediate windows are evaluated, matching SaTScan exactly</span></div>
   </div>
 
@@ -99,7 +99,7 @@
     it repeatedly reassigns the fixed total number of cases at random among all people
     (conditioning on the total case count), recomputes the maximum LLR each time, and compares:</p>
   <div class="eq math"><span class="lbl">Monte-Carlo p-value</span>\[ p = \frac{1 + \#\{\, \mathrm{maxLLR}_{\text{perm}} \ge \mathrm{maxLLR}_{\text{obs}} \,\}}{1 + \text{replications}} \]</div>
-  <p>The default is <b>999 replications</b>. Each replication draws cases without replacement
+  <p>The default is 999 replications. Each replication draws cases without replacement
     using Floyd's algorithm and MESA's portable bounded-integer primitive rather than the
     standard library, so the whole simulation is bit-identical across platforms and core
     counts (see <a class="x" href="methods.html#reproducibility">reproducibility</a>).
@@ -123,8 +123,8 @@
   <p>MESA deliberately mirrors SaTScan's behavior<sup><a href="#s-satscan">4</a></sup> so results
     are comparable and reproducible: candidate generation, tied-distance handling, relative-risk
     calculation, and the Monte-Carlo inference all follow SaTScan's conventions. In MESA's
-    validation suite, the Bernoulli scan showed no discrepancies against <b>SaTScan 10.3.2</b>.</p>
-  <div class="note warn">This parity is <b>scoped</b>, not a universal guarantee: it means
+    validation suite, the Bernoulli scan showed no discrepancies against SaTScan 10.3.2.</p>
+  <div class="note warn">This parity is scoped, not a universal guarantee: it means
     no discrepancies were observed on the tested datasets against the pinned SaTScan version
     (10.3.2), not that the two are provably identical for every possible input.</div>
 

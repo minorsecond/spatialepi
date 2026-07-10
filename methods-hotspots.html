@@ -94,7 +94,7 @@
     <div class="v"><code>fixed distance</code><span>all features within a distance threshold are neighbors; symmetric, but can leave isolated features in sparse rural areas</span></div>
     <div class="v"><code>k-nearest (k=8)</code><span>the k closest features; the graph is symmetrized by union (if A→B or B→A, both are neighbors), following the PySAL convention</span></div>
   </div>
-  <p>Weights are then either binary (1 for a neighbor) or, by default, <b>row-standardized</b>
+  <p>Weights are then either binary (1 for a neighbor) or, by default, row-standardized
     (<code>wᵢⱼ = 1/nᵢ</code>, so each feature's weights sum to 1 and Gi* becomes a weighted
     average of neighbor values, the ArcGIS default). Distance is Euclidean for projected
     coordinates or ellipsoidal geodesic on WGS84; MESA hard-rejects Euclidean distance on
@@ -105,7 +105,7 @@
 
   <h2 id="inference"><span class="n">03</span> inference</h2>
   <p>MESA offers an analytical z-score (using the randomization-form variance) and, by
-    default, <b>Monte-Carlo permutation</b> inference. Permuting the observed values many
+    default, Monte-Carlo permutation inference. Permuting the observed values many
     times and recomputing Gi* builds an empirical null against which the observed statistic
     is judged, which avoids leaning on the normal approximation in the tails.</p>
   <p>Two permutation schemes are available for the local statistic:</p>
@@ -157,7 +157,7 @@
   <p>A Bonferroni option (<code>p̃ᵢ = min(1, n·pᵢ)</code>) is available for family-wise error
     control when a conservative bound is wanted. The correction matches R
     <code>stats::p.adjust</code> to 10<sup>−6</sup>. Benjamini-Yekutieli is discussed in MESA's internal
-    methodology notes but is <b>not</b> implemented in the shipped engine, so it is not
+    methodology notes but is not implemented in the shipped engine, so it is not
     offered here.</p>
 
   <h2 id="eb"><span class="n">07</span> empirical-Bayes rate smoothing</h2>
