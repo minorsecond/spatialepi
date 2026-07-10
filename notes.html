@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
+<title>Notes · MESA</title>
+<meta name="description" content="Occasional dev notes on MESA: validation results, design decisions, and methods changes, written up as they happen rather than on a schedule.">
+<meta property="og:title" content="Notes · MESA">
+<meta property="og:description" content="Occasional dev notes on MESA: validation results, design decisions, and methods changes, written up as they happen rather than on a schedule.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.spatialepi.org/notes.html">
+<meta property="og:image" content="https://www.spatialepi.org/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Notes · MESA">
+<meta name="twitter:description" content="Occasional dev notes on MESA: validation results, design decisions, and methods changes, written up as they happen rather than on a schedule.">
+<meta name="twitter:image" content="https://www.spatialepi.org/og-image.png">
+<meta name="theme-color" content="#0e141a">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mesa.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="MESA home">
+      <img src="mesa-icon.png" width="24" height="24" alt="" aria-hidden="true" style="image-rendering:pixelated">
+      <b>MESA</b>
+    </a>
+    <nav class="nav">
+      <a class="hideable" href="/#capabilities">capabilities</a>
+      <a class="hideable" href="/#workflow">workflow</a>
+      <a class="hideable" href="/#validation">validation</a>
+      <a class="hideable" href="/#download">download</a>
+      <a href="methods.html">methods</a>
+      <a class="on" href="notes.html">notes</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap doc">
+  <div class="crumb"><a href="/">home</a> <span>/</span> notes</div>
+  <h1>Notes</h1>
+  <p class="sub">Occasional dev notes: validation results, design decisions,
+    and methods changes, written up as they happen. No schedule -- this is
+    not a blog.</p>
+
+  <div class="notes-list" id="notes-list"></div>
+  <p class="notes-empty" id="notes-empty" hidden>Nothing here yet.</p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fmark">
+      <img src="mesa-icon.png" width="20" height="20" alt="" aria-hidden="true" style="image-rendering:pixelated">
+      <b>MESA</b>
+    </span>
+    <span><a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate · Spatial Epi LLC</span>
+    <span><a href="methods.html">methods</a> &nbsp; <a href="mailto:ross@spatialepi.org">contact</a> &nbsp; spatialepi.org</span>
+  </div>
+</footer>
+
+<script src="notes/manifest.js"></script>
+<script>
+  (function(){
+    var list = document.getElementById('notes-list');
+    var empty = document.getElementById('notes-empty');
+    var notes = (window.NOTES || []).slice().sort(function(a,b){
+      return a.date < b.date ? 1 : -1;
+    });
+    if(!notes.length){ empty.hidden = false; return; }
+    notes.forEach(function(n){
+      var a = document.createElement('a');
+      a.className = 'n';
+      a.href = 'note.html?slug=' + encodeURIComponent(n.slug);
+      a.innerHTML = '<div class="d">' + n.date + '</div>' +
+        '<div><h3>' + n.title + '</h3><p>' + n.summary + '</p></div>';
+      list.appendChild(a);
+    });
+  })();
+</script>
+
+<script>
+  // Tab-away favicon: swap to the sad mesa while you're not looking.
+  (function(){
+    var icons = document.querySelectorAll('link[rel="icon"]');
+    if(!icons.length) return;
+    var originals = Array.prototype.map.call(icons, function(l){ return l.getAttribute('href'); });
+    document.addEventListener('visibilitychange', function(){
+      icons.forEach(function(link, i){
+        var sad = link.getAttribute('sizes') === '16x16' ? 'favicon-16-sad.png' : 'favicon-32-sad.png';
+        link.setAttribute('href', document.hidden ? sad : originals[i]);
+      });
+    });
+  })();
+
+  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
+  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
+</script>
+</body>
+</html>
