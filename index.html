@@ -55,8 +55,13 @@
   .top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
   .top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
   .mark{display:flex;align-items:center;gap:9px;text-decoration:none}
-  .mark svg{display:block}
+  .mark img{display:block}
   .mark b{font-weight:600;letter-spacing:.14em;font-size:.9rem}
+  .mark:hover img,.fmark:hover img{animation:hotspot-pulse 1.1s ease-in-out infinite}
+  @keyframes hotspot-pulse{
+    0%,100%{filter:drop-shadow(0 0 0 rgba(200,64,47,0))}
+    50%{filter:drop-shadow(0 0 4px rgba(200,64,47,.75))}
+  }
   .nav{display:flex;gap:22px;font-size:.76rem;letter-spacing:.02em}
   .nav a{color:var(--muted);text-decoration:none}
   .nav a:hover{color:var(--accent)}
@@ -196,7 +201,6 @@
       --bg:#0E141A;--panel:#12191F;--ink:#E7ECEE;--muted:#9BA7AD;--faint:#69747A;
       --line:#232D34;--line-2:#33404A;
     }
-    .mark svg rect,footer .fmark svg rect{fill:#1B242B}
     .btn:hover{background:#fff}
     .get.ready:hover{background:#fff}
     .dlnote code{background:#05090D}
@@ -537,6 +541,22 @@
       });
     });
   })();
+
+  // Tab-away favicon: swap to the sad mesa while you're not looking.
+  (function(){
+    var icons = document.querySelectorAll('link[rel="icon"]');
+    if(!icons.length) return;
+    var originals = Array.prototype.map.call(icons, function(l){ return l.getAttribute('href'); });
+    document.addEventListener('visibilitychange', function(){
+      icons.forEach(function(link, i){
+        var sad = link.getAttribute('sizes') === '16x16' ? 'favicon-16-sad.png' : 'favicon-32-sad.png';
+        link.setAttribute('href', document.hidden ? sad : originals[i]);
+      });
+    });
+  })();
+
+  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
+  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
 </script>
 </body>
 </html>

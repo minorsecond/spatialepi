@@ -180,5 +180,22 @@ cluster detection for public health [computer software]. spatialepi.org</div>
   </div>
 </footer>
 
+<script>
+  // Tab-away favicon: swap to the sad mesa while you're not looking.
+  (function(){
+    var icons = document.querySelectorAll('link[rel="icon"]');
+    if(!icons.length) return;
+    var originals = Array.prototype.map.call(icons, function(l){ return l.getAttribute('href'); });
+    document.addEventListener('visibilitychange', function(){
+      icons.forEach(function(link, i){
+        var sad = link.getAttribute('sizes') === '16x16' ? 'favicon-16-sad.png' : 'favicon-32-sad.png';
+        link.setAttribute('href', document.hidden ? sad : originals[i]);
+      });
+    });
+  })();
+
+  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
+  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
+</script>
 </body>
 </html>
