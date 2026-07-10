@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
-<title>MESA · Spatial cluster detection and offline geocoding for public health</title>
+<title>MESA · Mapping Epidemiology for Sparse Areas</title>
 <meta name="description" content="MESA is a desktop application for spatial epidemiology. It detects disease clusters in your case data, geocoding addresses and running the spatial statistics entirely on your own machine. No network, no third-party services, no data leaving your computer.">
 <meta name="theme-color" content="#0e141a">
-<meta property="og:title" content="MESA · Find disease clusters without sending your addresses to a geocoding service">
+<meta property="og:title" content="MESA · Mapping Epidemiology for Sparse Areas">
 <meta property="og:description" content="Spatial cluster detection and offline geocoding for public health. Runs entirely on your machine.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.spatialepi.org/">
 <meta property="og:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MESA · Find disease clusters without sending your addresses to a geocoding service">
+<meta name="twitter:title" content="MESA · Mapping Epidemiology for Sparse Areas">
 <meta name="twitter:description" content="Spatial cluster detection and offline geocoding for public health. Runs entirely on your machine.">
 <meta name="twitter:image" content="https://www.spatialepi.org/og-image.png">
 
@@ -183,7 +183,9 @@
   footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
     color:var(--muted);font-size:.74rem;letter-spacing:.02em;align-items:center}
   footer .fmark{display:flex;align-items:center;gap:9px}
+  footer .fmark .t{display:flex;flex-direction:column;line-height:1.35}
   footer .fmark b{color:var(--ink);font-weight:600;letter-spacing:.12em;font-size:.8rem}
+  footer .fmark em{font-style:normal;color:var(--faint);font-size:.62rem;letter-spacing:.03em}
   footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
   footer a:hover{border-color:var(--accent);color:var(--accent)}
 
@@ -474,7 +476,7 @@
   <div class="wrap">
     <span class="fmark">
       <img src="mesa-icon.png" width="20" height="20" alt="" aria-hidden="true" style="image-rendering:pixelated">
-      <b>MESA</b>
+      <span class="t"><b>MESA</b><em>mapping epidemiology for sparse areas</em></span>
     </span>
     <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate · Spatial Epi LLC.</span>
     <span><a href="mailto:ross@spatialepi.org">contact</a> &nbsp; spatialepi.org</span>
