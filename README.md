@@ -15,7 +15,9 @@ spatial-analysis desktop application for public-health GIS.
 | `hero-map.png` | *(you provide)* real Gi\* hot-spot figure for the hero. Drop it in and it appears automatically; until then a neutral placeholder shows. Use a genuine analysis export, not a mockup. |
 | `manifest.json` | *(added by CI later)* per-platform download URLs + SHA-256 checksums. |
 | `404.html` | Custom not-found page. |
-| `favicon.svg` | Site icon. |
+| `mesa-icon.png` | Master app icon (256×256), source for the header/footer marks and OG image. |
+| `favicon-16.png`, `favicon-32.png`, `favicon.ico`, `apple-touch-icon.png` | Generated from `mesa-icon.png`. |
+| `og-image.png` | Social-share card (1200×630) for all pages. |
 | `CNAME` | Custom domain (`www.spatialepi.org`). Do not remove. |
 | `.nojekyll` | Disables Jekyll processing (this is plain HTML). |
 
