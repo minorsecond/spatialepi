@@ -5,8 +5,8 @@
 window.NOTES = [
   {
     slug: "2026-07-10-hello",
-    title: "Starting a dev log",
+    title: "Why I'm building this",
     date: "2026-07-10",
-    summary: "Why this exists, and what kind of thing will end up here."
+    summary: "Who this is for, and why a spatial epi tool needed to exist."
   }
 ];
