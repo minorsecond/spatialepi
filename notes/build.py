@@ -80,6 +80,7 @@ TEMPLATE = """<!DOCTYPE html>
       <a class="hideable" href="/#download">download</a>
       <a href="/methods.html">methods</a>
       <a class="on" href="/notes.html">notes</a>
+      <a href="/about.html">about</a>
     </nav>
   </div>
 </header>
