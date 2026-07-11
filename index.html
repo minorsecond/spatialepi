@@ -246,14 +246,14 @@
 <section class="hero">
   <div class="wrap">
     <p class="kicker">spatial cluster detection · offline geocoding</p>
-    <h1>Find disease clusters without sending your addresses to a geocoding service.</h1>
-    <p class="lead">MESA is a desktop application for spatial epidemiology. It finds disease
-      clusters in your case data, geocoding the addresses and running the spatial statistics
-      entirely on your own machine. No network, no third-party services, no patient data
-      leaving your computer.</p>
+    <h1>Spatial disease-cluster detection and address geocoding, computed entirely on the local machine.</h1>
+    <p class="lead">MESA is a desktop application for spatial epidemiology. It geocodes case
+      addresses and detects spatial clusters in the resulting point data, running the
+      geocoder and the statistics in-process. No network access is required, and case data
+      remains on the local machine.</p>
     <div class="actions">
-      <a class="btn" href="#download">Download MESA</a>
-      <a class="tl" href="#capabilities">what it does →</a>
+      <a class="btn" href="#download">Download</a>
+      <a class="tl" href="#capabilities">Capabilities →</a>
     </div>
     <p class="plat">windows x64 · macos apple silicon · linux x64</p>
     <figure class="panel" id="hero-fig">
@@ -274,46 +274,45 @@
       <div class="row">
         <div class="k">analyze</div>
         <div>
-          <h3>Find the clusters</h3>
-          <p>The core of MESA: local hot- and cold-spot detection with Getis-Ord Gi* and a
-            Bernoulli spatial scan, reported alongside a global Moran's I autocorrelation
-            diagnostic. Monte-Carlo inference, bit-reproducible across every platform.</p>
+          <h3>Cluster detection</h3>
+          <p>Local hot- and cold-spot detection with Getis-Ord Gi* and a Bernoulli spatial
+            scan, reported alongside a global Moran's I autocorrelation diagnostic. Inference
+            is Monte-Carlo and reproduces bit-for-bit across platforms.</p>
         </div>
       </div>
       <div class="row">
         <div class="k">geocode</div>
         <div>
-          <h3>Addresses, offline</h3>
-          <p>The step that gets your cases onto the map: supply the authoritative address
-            data (Utah's UGRC points or your own locality's) and a bundled tool builds it
-            into a local SQLite index the geocoder matches against. Optional supplemental
-            files add coverage.</p>
+          <h3>Offline address geocoding</h3>
+          <p>Authoritative address data (Utah's UGRC points, or another locality's) is
+            built into a local SQLite index that the geocoder matches against. Optional
+            supplemental files extend coverage.</p>
         </div>
       </div>
       <div class="row">
         <div class="k">prepare</div>
         <div>
-          <h3>Clean and join tables</h3>
-          <p>Opens Cognos MHT, CSV, and Excel exports. Fix columns, join tables on shared
-            keys, and export to CSV, Excel, or spatial formats.</p>
+          <h3>Table cleaning and joins</h3>
+          <p>Reads Cognos MHT, CSV, and Excel exports. Columns can be corrected, tables
+            joined on shared keys, and results exported to CSV, Excel, or spatial formats.</p>
         </div>
       </div>
       <div class="row">
-        <div class="k">protect</div>
+        <div class="k">data flow</div>
         <div>
-          <h3>PHI stays yours</h3>
-          <p>No telemetry and no outbound connections during analysis. Protected health
-            information never touches a server you don't control.</p>
+          <h3>No outbound connections during analysis</h3>
+          <p>MESA emits no telemetry and opens no outbound connections while analyzing.
+            Protected health information stays on the operator's machine.</p>
         </div>
       </div>
       <div class="row">
         <div class="k">serve</div>
         <div>
-          <h3>A geocoder for ArcGIS Pro</h3>
-          <p>MESA can expose the same offline geocoder as a local ArcGIS GeocodeServer
-            endpoint. Point ArcGIS Pro straight at the URL and batch-geocode your tables
-            against the address data you've loaded, with no ArcGIS Enterprise and no tokens.
-            It binds to localhost by default, so requests never leave the machine.</p>
+          <h3>ArcGIS Pro geocode endpoint</h3>
+          <p>The same offline geocoder can be exposed as a local ArcGIS GeocodeServer
+            endpoint. ArcGIS Pro can batch-geocode tables against it directly, with no
+            ArcGIS Enterprise and no tokens. It binds to localhost by default, so requests
+            do not leave the machine.</p>
         </div>
       </div>
     </div>
@@ -327,9 +326,9 @@
       <li>
         <div class="n">step 01</div>
         <div>
-          <h3>Load your table</h3>
-          <p>Drag in a Cognos MHT, CSV, or Excel export. MESA parses it, profiles the
-            columns, and tells you what is missing.</p>
+          <h3>Load the table</h3>
+          <p>A Cognos MHT, CSV, or Excel export is parsed and column-profiled, and missing
+            fields are reported.</p>
           <span class="tk">.mht · .csv · .xlsx</span>
         </div>
       </li>
@@ -337,17 +336,17 @@
         <div class="n">step 02</div>
         <div>
           <h3>Geocode offline</h3>
-          <p>Map the address column and match every row against the authoritative address
-            data you've loaded. Each result carries a precision label.</p>
-          <span class="tk">authoritative data you supply</span>
+          <p>The address column is matched against the loaded authoritative address data.
+            Each result carries a precision label.</p>
+          <span class="tk">operator-supplied authoritative data</span>
         </div>
       </li>
       <li>
         <div class="n">step 03</div>
         <div>
           <h3>Detect clusters</h3>
-          <p>Run Getis-Ord Gi* or a Bernoulli scan with Monte-Carlo inference to find where
-            your cases cluster into hot and cold spots.</p>
+          <p>Getis-Ord Gi* or a Bernoulli scan, with Monte-Carlo inference, identifies where
+            cases aggregate into hot and cold spots.</p>
           <span class="tk">Gi* · Bernoulli scan</span>
         </div>
       </li>
@@ -355,8 +354,8 @@
         <div class="n">step 04</div>
         <div>
           <h3>Export with provenance</h3>
-          <p>Write results back to CSV, Excel, or a spatial format, precision labels and
-            all, ready for the next tool or a report.</p>
+          <p>Results are written back to CSV, Excel, or a spatial format, precision labels
+            included, for use in a downstream tool or a report.</p>
           <span class="tk">.csv · .xlsx · spatial</span>
         </div>
       </li>
@@ -466,18 +465,16 @@
     <form class="notify" id="notify-form">
       <input type="email" name="email" placeholder="you@domain.com" aria-label="Email address" required>
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
-      <button type="submit">Notify me when it ships →</button>
+      <button type="submit">Email me when releases are available →</button>
     </form>
     <p class="notify-msg" id="notify-msg" hidden></p>
-    <p class="dlnote">Automated per-platform builds are being wired up; this table will show
-      the current version and checksums as soon as they're live. Need MESA before then?
-      <a href="mailto:ross@spatialepi.org" style="color:var(--accent)">Get in touch</a>.</p>
-    <p class="dlnote">MESA is built by <a href="https://rwardrup.com" style="color:var(--accent);border-bottom:1px solid var(--line-2)">Ross Wardrup</a>,
-      an MPH Epidemiology candidate at the University of Memphis and a geospatial-software
-      developer with over a decade building spatial analysis tools across federal hazard
-      modeling, healthcare operations, and public health surveillance, including an
-      epidemiology practicum with the Southeast Utah Health Department. He is sole- and
-      co-author on peer-reviewed and preprint epidemiologic research.
+    <p class="dlnote">Per-platform builds are still being set up; this table will show the
+      current version and checksums once they are published. MESA is pre-release —
+      for early access, <a href="mailto:ross@spatialepi.org" style="color:var(--accent)">contact ross@spatialepi.org</a>.</p>
+    <p class="dlnote">MESA is developed by <a href="https://rwardrup.com" style="color:var(--accent);border-bottom:1px solid var(--line-2)">Ross Wardrup</a>,
+      an MPH Epidemiology candidate at the University of Memphis, with a background in
+      geospatial software and public-health surveillance and an epidemiology practicum at
+      the Southeast Utah Health Department. Publications:
       <a href="https://orcid.org/0009-0005-8235-6047" style="color:var(--accent);border-bottom:1px solid var(--line-2)">ORCID</a> ·
       <a href="https://scholar.google.com/citations?user=NAcxI4IAAAAJ" style="color:var(--accent);border-bottom:1px solid var(--line-2)">Google Scholar</a> ·
       <a href="https://github.com/minorsecond" style="color:var(--accent);border-bottom:1px solid var(--line-2)">GitHub</a> ·
