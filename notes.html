@@ -96,7 +96,7 @@
     notes.forEach(function(n){
       var a = document.createElement('a');
       a.className = 'n';
-      a.href = 'note.html?slug=' + encodeURIComponent(n.slug);
+      a.href = 'notes/' + n.slug + '.html';
       a.innerHTML = '<div class="d">' + n.date + '</div>' +
         '<div><h3>' + n.title + '</h3><p>' + n.summary + '</p></div>';
       list.appendChild(a);
