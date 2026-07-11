@@ -29,6 +29,18 @@
     :root{--bg:#0E141A;--ink:#E7ECEE;--muted:#9BA7AD;--faint:#69747A;--line-2:#33404A}
   }
 </style>
+<script data-goatcounter="https://spatialepi.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<script>
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href^="http"]');
+    if(!a || !window.goatcounter || !window.goatcounter.count) return;
+    var url;
+    try { url = new URL(a.href); } catch(err){ return; }
+    if(url.hostname === location.hostname) return;
+    window.goatcounter.count({path: 'outbound/' + url.hostname, title: 'outbound: ' + a.href, event: true});
+  }, true);
+</script>
 </head>
 <body>
   <div>

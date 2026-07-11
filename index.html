@@ -209,6 +209,18 @@
   }
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
+<script data-goatcounter="https://spatialepi.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<script>
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href^="http"]');
+    if(!a || !window.goatcounter || !window.goatcounter.count) return;
+    var url;
+    try { url = new URL(a.href); } catch(err){ return; }
+    if(url.hostname === location.hostname) return;
+    window.goatcounter.count({path: 'outbound/' + url.hostname, title: 'outbound: ' + a.href, event: true});
+  }, true);
+</script>
 </head>
 <body>
 
