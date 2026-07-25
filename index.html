@@ -257,7 +257,7 @@
     </div>
     <p class="plat">windows x64 · macos apple silicon · linux x64</p>
     <figure class="panel" id="hero-fig">
-      <img class="plotimg" src="hero-map.png" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster over rural southeast Utah">
+      <img class="plotimg" src="hero-map.png" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster">
       <div class="ph" aria-hidden="true">
         <span class="a">Gi* hot-spot analysis</span>
         <span class="b">figure coming soon</span>
@@ -284,11 +284,11 @@
         <div class="k">geocode</div>
         <div>
           <h3>Offline address geocoding</h3>
-          <p>Authoritative address data (Utah's UGRC points, or another locality's) is
-            built into a local SQLite index that the geocoder matches against. Optional
-            supplemental files extend coverage. For work outside Utah, MESA can build a
-            local database for any US state from the National Address Database (USDOT,
-            public domain), downloaded directly from the source and never redistributed.</p>
+          <p>MESA builds a local SQLite address index that the geocoder matches against,
+            for any US state, from the National Address Database (USDOT, public domain) &mdash;
+            downloaded directly from the source and never redistributed. You can also load
+            your own locality's authoritative points, and optional supplemental files
+            extend coverage.</p>
         </div>
       </div>
       <div class="row">
@@ -380,7 +380,7 @@
       figure on this page, including the scan below, is real MESA output computed entirely
       offline.</p>
     <figure class="panel" style="max-width:600px">
-      <img src="scan.png" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled over rural southeast Utah">
+      <img src="scan.png" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled">
     </figure>
     <p class="cap"><b>Figure 2.</b> Bernoulli spatial scan on MESA's demo dataset, validated against SaTScan.</p>
   </div>
@@ -395,7 +395,7 @@
     <div class="subhead">reference &amp; reproducibility</div>
     <table class="data">
       <tbody>
-        <tr><td class="v">1,489,417</td><td class="note">Utah UGRC address points the geocoder was validated against, matched entirely offline</td></tr>
+        <tr><td class="v">&asymp; 98 million</td><td class="note">US National Address Database points MESA builds from, per state, matched entirely offline</td></tr>
         <tr><td class="v">PySAL · R/spdep</td><td class="note">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</td></tr>
         <tr><td class="v">SaTScan 10.3.2</td><td class="note">Bernoulli spatial scan matched against the field standard, no discrepancies in the suite</td></tr>
         <tr><td class="v">bit-identical</td><td class="note">the same p-values on Windows, macOS, and Linux, from one core or a hundred</td></tr>
@@ -411,29 +411,21 @@
     </table>
     <div class="subhead">geocoder accuracy (held-out validation)</div>
     <p class="fine" style="margin-top:0">MESA geocodes anywhere in the US, building a local database
-      for any state from the National Address Database. It is validated across the country;
-      Utah, the original study area, is the deepest single-jurisdiction test.</p>
-    <div class="subhead" style="font-size:0.85em;opacity:0.8">nationwide (National Address Database, eight representative states)</div>
+      for any state from the National Address Database, and is validated nationwide with the
+      adversarial harness below &mdash; across eight representative states of differing address
+      styles and data quality.</p>
     <table class="data">
       <tbody>
-        <tr><td class="v">98.8%</td><td class="note">sensitivity across eight states built from the US National Address Database &mdash; higher than the Utah figure, as national named-street data is cleaner than Utah's numeric grid</td></tr>
+        <tr><td class="v">98.8%</td><td class="note">sensitivity across eight states built from the US National Address Database: the correct address point recovered under adversarial input noise</td></tr>
         <tr><td class="v">95.0%</td><td class="note">specificity: fabricated addresses correctly refused rather than snapped to a wrong, distant point, on the same adversarial controls</td></tr>
       </tbody>
     </table>
-    <div class="subhead" style="font-size:0.85em;opacity:0.8">Utah (original study area, full statewide reference)</div>
-    <table class="data">
-      <tbody>
-        <tr><td class="v">92.7%</td><td class="note">sensitivity: correct reference points recovered under adversarial input noise, on a held-out test partition (99% CI 92.3 to 93.1)</td></tr>
-        <tr><td class="v">95.7%</td><td class="note">precision (positive predictive value) on the same held-out partition</td></tr>
-        <tr><td class="v">98.2%</td><td class="note">specificity: fabricated or out-of-reference addresses correctly rejected instead of snapped to a point</td></tr>
-      </tbody>
-    </table>
-    <p class="fine">Both use the same adversarial harness with fabricated negative controls and
-      stratified bootstrap intervals, against each record's authoritative coordinate; not a
-      synthetic self-benchmark. The nationwide figures cover eight states (Alaska,
+    <p class="fine">The adversarial harness scores each match against the record's own
+      authoritative coordinate, with fabricated negative controls and stratified bootstrap
+      intervals; not a synthetic self-benchmark. The figures cover eight states (Alaska,
       Connecticut, DC, Delaware, Nebraska, Rhode Island, Wisconsin, Wyoming) built from the
-      National Address Database; the scoring was fit on Utah and applied unchanged, so these
-      are held-out, out-of-distribution results. The specificity shown is the genuine
+      National Address Database; the scoring was fit on separate development data and applied
+      unchanged, so these are held-out, out-of-distribution results. The specificity shown is the genuine
       wrong-street rate; the full per-state numbers, both raw and genuine, and the method are
       in the <a href="https://www.spatialepi.org/nad/validation.json" style="color:var(--accent);border-bottom:1px solid var(--line-2)">published validation data</a>,
       which MESA refreshes as each National Address Database release is validated. Because the
