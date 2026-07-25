@@ -1,0 +1,672 @@
+{
+  "release": "r23",
+  "source": {
+    "producer": "U.S. Department of Transportation",
+    "dataset": "National Address Database (NAD)",
+    "contact": "NAD@dot.gov",
+    "homepage": "https://www.transportation.gov/gis/national-address-database",
+    "license": "Public domain (U.S. Government work)",
+    "disclaimer": "MESA packages and geocodes this data but is not its producer. Address content, coverage, and any errors originate with the U.S. Department of Transportation and its state and local contributors. Report data problems to NAD@dot.gov, not to MESA."
+  },
+  "rows_read": 97928946,
+  "totals": {
+    "states_present": 48,
+    "mapped_addresses": 97924014
+  },
+  "states": {
+    "AK": {
+      "addresses": 325379,
+      "with_city": 0.947,
+      "with_zip": 0.779,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "AL": {
+      "addresses": 2937805,
+      "with_city": 0.994,
+      "with_zip": 0.72,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "AR": {
+      "addresses": 1737747,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "AZ": {
+      "addresses": 3651067,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 1
+      },
+      "flags": []
+    },
+    "CA": {
+      "addresses": 2416345,
+      "with_city": 0.999,
+      "with_zip": 0.999,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 25,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 1204
+      },
+      "flags": []
+    },
+    "CO": {
+      "addresses": 2497088,
+      "with_city": 0.122,
+      "with_zip": 0.74,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_city",
+        "sparse_zip"
+      ]
+    },
+    "CT": {
+      "addresses": 1188645,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "DC": {
+      "addresses": 429637,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "DE": {
+      "addresses": 562290,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "FL": {
+      "addresses": 42461,
+      "with_city": 1.0,
+      "with_zip": 0.999,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 5
+      },
+      "flags": []
+    },
+    "GA": {
+      "addresses": 205071,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "IA": {
+      "addresses": 1586226,
+      "with_city": 0.973,
+      "with_zip": 0.912,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "ID": {
+      "addresses": 88631,
+      "with_city": 0.819,
+      "with_zip": 0.999,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "IL": {
+      "addresses": 4862330,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "IN": {
+      "addresses": 3195556,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "KS": {
+      "addresses": 1009989,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "KY": {
+      "addresses": 2446693,
+      "with_city": 0.891,
+      "with_zip": 0.843,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "LA": {
+      "addresses": 278824,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "MA": {
+      "addresses": 3642378,
+      "with_city": 1.0,
+      "with_zip": 0.999,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 79,
+        "no_street_name": 56,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "MD": {
+      "addresses": 2604088,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 703,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "ME": {
+      "addresses": 772912,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "MN": {
+      "addresses": 2062319,
+      "with_city": 0.971,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 425
+      },
+      "flags": []
+    },
+    "MO": {
+      "addresses": 1696514,
+      "with_city": 0.976,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "MS": {
+      "addresses": 3,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "MT": {
+      "addresses": 644458,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "NC": {
+      "addresses": 6098279,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "ND": {
+      "addresses": 432847,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "NE": {
+      "addresses": 862288,
+      "with_city": 1.0,
+      "with_zip": 0.434,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "NJ": {
+      "addresses": 3704126,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 18,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 8
+      },
+      "flags": []
+    },
+    "NM": {
+      "addresses": 1042258,
+      "with_city": 0.885,
+      "with_zip": 0.774,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "NY": {
+      "addresses": 6545862,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "OH": {
+      "addresses": 5468857,
+      "with_city": 0.999,
+      "with_zip": 0.999,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "OK": {
+      "addresses": 1483126,
+      "with_city": 0.991,
+      "with_zip": 0.99,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "OR": {
+      "addresses": 1942239,
+      "with_city": 1.0,
+      "with_zip": 0.981,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "PA": {
+      "addresses": 1053971,
+      "with_city": 1.0,
+      "with_zip": 0.734,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 3,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "RI": {
+      "addresses": 391461,
+      "with_city": 0.117,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_city"
+      ]
+    },
+    "SC": {
+      "addresses": 212291,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "SD": {
+      "addresses": 85942,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "TN": {
+      "addresses": 3892997,
+      "with_city": 1.0,
+      "with_zip": 0.983,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "TX": {
+      "addresses": 11548181,
+      "with_city": 0.853,
+      "with_zip": 0.841,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "UT": {
+      "addresses": 1477148,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "VA": {
+      "addresses": 3838563,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "VI": {
+      "addresses": 2863,
+      "with_city": 0.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_city"
+      ]
+    },
+    "VT": {
+      "addresses": 333610,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "WA": {
+      "addresses": 2977398,
+      "with_city": 0.964,
+      "with_zip": 0.936,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": []
+    },
+    "WI": {
+      "addresses": 2394297,
+      "with_city": 1.0,
+      "with_zip": 0.863,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 0
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    },
+    "WV": {
+      "addresses": 1017549,
+      "with_city": 1.0,
+      "with_zip": 1.0,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 2399
+      },
+      "flags": []
+    },
+    "WY": {
+      "addresses": 233405,
+      "with_city": 0.954,
+      "with_zip": 0.78,
+      "usable_rate": 1.0,
+      "dropped": {
+        "no_house_number": 0,
+        "no_street_name": 0,
+        "bad_coordinates": 0,
+        "retired": 6
+      },
+      "flags": [
+        "sparse_zip"
+      ]
+    }
+  },
+  "skipped": {
+    "no_house_number": 122,
+    "no_street_name": 762,
+    "retired": 4048
+  }
+}
