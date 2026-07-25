@@ -286,7 +286,9 @@
           <h3>Offline address geocoding</h3>
           <p>Authoritative address data (Utah's UGRC points, or another locality's) is
             built into a local SQLite index that the geocoder matches against. Optional
-            supplemental files extend coverage.</p>
+            supplemental files extend coverage. For work outside Utah, MESA can build a
+            local database for any US state from the National Address Database (USDOT,
+            public domain), downloaded directly from the source and never redistributed.</p>
         </div>
       </div>
       <div class="row">
@@ -408,6 +410,17 @@
       </tbody>
     </table>
     <div class="subhead">geocoder accuracy (held-out validation)</div>
+    <p class="fine" style="margin-top:0">MESA geocodes anywhere in the US, building a local database
+      for any state from the National Address Database. It is validated across the country;
+      Utah, the original study area, is the deepest single-jurisdiction test.</p>
+    <div class="subhead" style="font-size:0.85em;opacity:0.8">nationwide (National Address Database, eight representative states)</div>
+    <table class="data">
+      <tbody>
+        <tr><td class="v">98.8%</td><td class="note">sensitivity across eight states built from the US National Address Database &mdash; higher than the Utah figure, as national named-street data is cleaner than Utah's numeric grid</td></tr>
+        <tr><td class="v">95.0%</td><td class="note">specificity: fabricated addresses correctly refused rather than snapped to a wrong, distant point, on the same adversarial controls</td></tr>
+      </tbody>
+    </table>
+    <div class="subhead" style="font-size:0.85em;opacity:0.8">Utah (original study area, full statewide reference)</div>
     <table class="data">
       <tbody>
         <tr><td class="v">92.7%</td><td class="note">sensitivity: correct reference points recovered under adversarial input noise, on a held-out test partition (99% CI 92.3 to 93.1)</td></tr>
@@ -415,12 +428,19 @@
         <tr><td class="v">98.2%</td><td class="note">specificity: fabricated or out-of-reference addresses correctly rejected instead of snapped to a point</td></tr>
       </tbody>
     </table>
-    <p class="fine">Measured on a held-out, adversarial partition of the Utah UGRC reference
-      (the study area used for testing), with fabricated negative controls and
-      county-stratified bootstrap intervals; not a synthetic self-benchmark. The geocoder
-      works against whatever authoritative data you load, so these figures must be
-      revalidated per jurisdiction. Spatial-statistics cross-validation re-runs in CI against
-      regenerated PySAL, R, and SciPy oracles.</p>
+    <p class="fine">Both use the same adversarial harness with fabricated negative controls and
+      stratified bootstrap intervals, against each record's authoritative coordinate; not a
+      synthetic self-benchmark. The nationwide figures cover eight states (Alaska,
+      Connecticut, DC, Delaware, Nebraska, Rhode Island, Wisconsin, Wyoming) built from the
+      National Address Database; the scoring was fit on Utah and applied unchanged, so these
+      are held-out, out-of-distribution results. The specificity shown is the genuine
+      wrong-street rate; the full per-state numbers, both raw and genuine, and the method are
+      in the <a href="https://www.spatialepi.org/nad/validation.json" style="color:var(--accent);border-bottom:1px solid var(--line-2)">published validation data</a>,
+      which MESA refreshes as each National Address Database release is validated. Because the
+      geocoder works against whatever authoritative data you load, results depend on that
+      data's coverage and quality, which MESA reports per state before you download.
+      Spatial-statistics cross-validation re-runs in CI against regenerated PySAL, R, and
+      SciPy oracles.</p>
     <p class="fine">Full methodology, parameters, and citations:
       <a href="methods-geocoding.html" style="color:var(--accent);border-bottom:1px solid var(--line-2)">geocoding</a>,
       <a href="methods-hotspots.html" style="color:var(--accent);border-bottom:1px solid var(--line-2)">Gi* &amp; Moran's I</a>,
