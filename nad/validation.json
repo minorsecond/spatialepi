@@ -1,127 +1,183 @@
 {
   "release": "r23",
   "states": [
+    "AK",
+    "CT",
     "DC",
-    "RI",
+    "DE",
+    "MA",
+    "MT",
     "NE",
+    "NM",
+    "RI",
+    "WI",
     "WY"
   ],
-  "reference_records": 23886,
-  "sampled_addresses": 2400,
+  "reference_records": 218740,
+  "sampled_addresses": 22000,
   "tolerance_m": 50.0,
   "method": "adversarial_geocode_validation; 10k stratified bootstrap; same harness as the Utah validation; NAD-built reference",
   "headline": {
-    "sensitivity": 98.36,
-    "specificity_genuine": 95.26,
-    "specificity_raw": 81.35,
-    "precision": 92.42,
-    "accuracy": 93.26,
+    "sensitivity": 98.66,
+    "specificity_genuine": 95.17,
+    "specificity_raw": 84.63,
+    "precision": 93.69,
+    "accuracy": 94.45,
     "positional_error_median_m": 0.0,
     "positional_error_p95_m": 0.0
   },
   "per_state": [
     {
+      "state": "AK",
+      "sensitivity": 99.72,
+      "specificity_raw": 90.26,
+      "precision": 95.93,
+      "accuracy": 96.88
+    },
+    {
+      "state": "CT",
+      "sensitivity": 99.3,
+      "specificity_raw": 86.79,
+      "precision": 94.59,
+      "accuracy": 95.57
+    },
+    {
       "state": "DC",
-      "sensitivity": 96.31,
-      "specificity_raw": 69.55,
-      "precision": 88.16,
-      "accuracy": 88.33
+      "sensitivity": 96.23,
+      "specificity_raw": 68.88,
+      "precision": 87.94,
+      "accuracy": 88.08
+    },
+    {
+      "state": "DE",
+      "sensitivity": 99.36,
+      "specificity_raw": 91.17,
+      "precision": 96.29,
+      "accuracy": 96.93
+    },
+    {
+      "state": "MA",
+      "sensitivity": 99.11,
+      "specificity_raw": 78.27,
+      "precision": 91.37,
+      "accuracy": 92.89
+    },
+    {
+      "state": "MT",
+      "sensitivity": 99.04,
+      "specificity_raw": 88.51,
+      "precision": 95.25,
+      "accuracy": 95.88
     },
     {
       "state": "NE",
-      "sensitivity": 98.99,
-      "specificity_raw": 76.36,
-      "precision": 90.51,
-      "accuracy": 92.17
+      "sensitivity": 99.1,
+      "specificity_raw": 79.53,
+      "precision": 91.61,
+      "accuracy": 93.19
+    },
+    {
+      "state": "NM",
+      "sensitivity": 98.66,
+      "specificity_raw": 81.02,
+      "precision": 92.3,
+      "accuracy": 93.36
     },
     {
       "state": "RI",
-      "sensitivity": 99.55,
-      "specificity_raw": 88.62,
-      "precision": 95.3,
-      "accuracy": 96.28
+      "sensitivity": 99.51,
+      "specificity_raw": 88.26,
+      "precision": 95.24,
+      "accuracy": 96.17
+    },
+    {
+      "state": "WI",
+      "sensitivity": 99.01,
+      "specificity_raw": 88.16,
+      "precision": 95.03,
+      "accuracy": 95.72
     },
     {
       "state": "WY",
-      "sensitivity": 98.6,
-      "specificity_raw": 90.81,
-      "precision": 96.1,
-      "accuracy": 96.25
+      "sensitivity": 96.17,
+      "specificity_raw": 90.09,
+      "precision": 95.69,
+      "accuracy": 94.34
     }
   ],
   "positive_scenarios": [
     {
       "scenario": "clean",
-      "n": 2400,
-      "sensitivity": 99.88
+      "n": 22000,
+      "sensitivity": 99.74
     },
     {
       "scenario": "keyboard_typo",
-      "n": 2392,
-      "sensitivity": 99.87
+      "n": 21953,
+      "sensitivity": 99.65
     },
     {
       "scenario": "phonetic_typo",
-      "n": 2390,
-      "sensitivity": 93.6
+      "n": 21920,
+      "sensitivity": 96.86
     },
     {
       "scenario": "drop_name_token",
-      "n": 2335,
-      "sensitivity": 95.59
+      "n": 21321,
+      "sensitivity": 95.08
     },
     {
       "scenario": "case_punct_noise",
-      "n": 2400,
-      "sensitivity": 99.88
+      "n": 22000,
+      "sensitivity": 99.74
     },
     {
       "scenario": "missing_city",
-      "n": 2400,
-      "sensitivity": 99.75
+      "n": 22000,
+      "sensitivity": 99.68
     },
     {
       "scenario": "unit_appended",
-      "n": 2400,
-      "sensitivity": 99.88
+      "n": 22000,
+      "sensitivity": 99.74
     }
   ],
   "negative_scenarios": [
     {
       "scenario": "cross_county_zip",
-      "n": 2400,
-      "raw_fp": 0,
-      "genuine_fp": 0,
-      "specificity_raw": 100.0,
-      "specificity_genuine": 100.0
+      "n": 21998,
+      "raw_fp": 523,
+      "genuine_fp": 518,
+      "specificity_raw": 97.62,
+      "specificity_genuine": 97.65
     },
     {
       "scenario": "directional_swap",
-      "n": 22,
-      "raw_fp": 5,
-      "genuine_fp": 5,
-      "specificity_raw": 77.27,
-      "specificity_genuine": 77.27
+      "n": 146,
+      "raw_fp": 9,
+      "genuine_fp": 8,
+      "specificity_raw": 93.84,
+      "specificity_genuine": 94.52
     },
     {
       "scenario": "house_from_distant_address",
-      "n": 2350,
-      "raw_fp": 205,
-      "genuine_fp": 205,
-      "specificity_raw": 91.28,
-      "specificity_genuine": 91.28
+      "n": 21419,
+      "raw_fp": 1074,
+      "genuine_fp": 1073,
+      "specificity_raw": 94.99,
+      "specificity_genuine": 94.99
     },
     {
       "scenario": "phonetic_fake_street",
-      "n": 2395,
-      "raw_fp": 1127,
-      "genuine_fp": 130,
-      "specificity_raw": 52.94,
-      "specificity_genuine": 94.57
+      "n": 21965,
+      "raw_fp": 8469,
+      "genuine_fp": 1566,
+      "specificity_raw": 61.44,
+      "specificity_genuine": 92.87
     },
     {
       "scenario": "transposed_grid",
-      "n": 2,
+      "n": 18,
       "raw_fp": 0,
       "genuine_fp": 0,
       "specificity_raw": 100.0,
