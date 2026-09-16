@@ -74,12 +74,21 @@
 
   <h2><span class="n">02</span> MESA</h2>
   <p>MESA (Mapping Epidemiology for Sparse Areas) takes messy exported health data
-    from cleaning through geocoding, spatial cluster detection, and a reproducible,
-    provenance-tracked pipeline, entirely on one machine with nothing leaving it.
-    The spatial statistics are cross-checked against the field's reference
-    implementations, the geocoder is validated on held-out authoritative data, and
-    every run reproduces bit-for-bit across platforms. It is a single-author,
-    pre-release project.</p>
+    through cleaning, geocoding, spatial cluster detection, and the decision about
+    which counts are safe to publish, entirely on one machine with nothing leaving it.
+    Each step is a node on a saved pipeline, so the analysis can be re-run and the run
+    itself is recorded. The spatial statistics are cross-checked against the field's
+    reference implementations, the geocoder is validated on held-out authoritative
+    data, and every run reproduces bit-for-bit across platforms. It is a
+    single-author, pre-release project.</p>
+
+  <p>Sparse areas are the hard case, and they are the reason for two of the features.
+    A rural county's case counts are small enough that a published table can identify
+    someone, so MESA masks the small cells and a second cell as cover, then reports
+    whether anything is still recoverable. Small counts also make unstable rates: one
+    case in a settlement of forty people is a rate of 2,500 per 100,000 and almost no
+    evidence, so MESA can pull each rate toward the district mean by an amount set by
+    how little that population can support.</p>
   <p>The <a class="x" href="methods.html">methods pages</a> document how each part
     works and what it is checked against. The <a class="x" href="notes.html">notes</a>
     cover the why and the how-it-went. Packaged downloads are on the
