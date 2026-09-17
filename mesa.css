@@ -11,14 +11,18 @@
   --amber:#B07D2A;
   --cold:#3E7CB1;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  /* Prose in a text face, mono for machine output. See index.html. */
+  --serif:"IBM Plex Serif",Charter,"Bitstream Charter","Sitka Text",Cambria,Georgia,serif;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:74px;scroll-behavior:smooth}
 body{
   margin:0;background:var(--bg);color:var(--ink);
-  font-family:var(--mono);font-size:15px;line-height:1.75;
+  font-family:var(--serif);font-size:17px;line-height:1.62;
   -webkit-font-smoothing:antialiased;
 }
+.nav,.mark b,.crumb,.doc .meta,.notes-list a.n .d,code,
+.doc article pre,.doc article table,.doc article figcaption{font-family:var(--mono)}
 a{color:inherit}
 ::selection{background:var(--ink);color:var(--bg)}
 .wrap{max-width:840px;margin:0 auto;padding:0 24px}
@@ -45,16 +49,15 @@ p{margin:0}
 .crumb a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line-2)}
 .crumb a:hover{color:var(--accent);border-color:var(--accent)}
 .crumb span{color:var(--faint)}
-.doc h1{font-weight:600;font-size:clamp(1.5rem,3.2vw,2rem);line-height:1.25;letter-spacing:-.01em;margin:0 0 12px}
-.doc .sub{color:var(--muted);font-size:.95rem;max-width:66ch;margin-bottom:8px}
+.doc h1{font-weight:600;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.15;letter-spacing:-.022em;margin:0 0 14px}
+.doc .sub{color:var(--muted);font-size:1.06rem;max-width:62ch;margin-bottom:8px}
 .doc .meta{color:var(--faint);font-size:.74rem;letter-spacing:.03em;margin-top:14px}
 
 /* section headers with trailing rule */
-.doc h2{display:flex;align-items:center;gap:14px;margin:48px 0 20px;font-weight:500;
-  font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.doc h2 .n{color:var(--accent)}
-.doc h2::after{content:"";flex:1;height:0;border-top:1px solid var(--line)}
-.doc h3{font-weight:600;font-size:1.02rem;margin:30px 0 10px;color:var(--ink)}
+.doc h2{display:block;margin:52px 0 6px;font-weight:600;
+  font-size:1.5rem;letter-spacing:-.018em;color:var(--ink)}
+.doc h2 .n{display:none}
+.doc h3{font-weight:600;font-size:1.05rem;margin:30px 0 8px;color:var(--ink)}
 .doc p{color:var(--muted);max-width:74ch;margin:0 0 16px}
 .doc p b,.doc li b{color:var(--ink);font-weight:600}
 .doc a.x{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
@@ -136,9 +139,8 @@ table.data td b{color:var(--ink)}
 
 /* method index cards (hub) */
 .mindex{border-top:1px solid var(--line);margin-top:4px}
-.mindex a.m{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:20px 0;border-bottom:1px solid var(--line);text-decoration:none}
-.mindex a.m .k{color:var(--accent);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
-.mindex a.m h3{margin:0 0 6px;color:var(--ink);font-size:1rem}
+.mindex a.m{display:block;padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.mindex a.m h3{margin:0 0 6px;color:var(--ink);font-size:1.05rem}
 .mindex a.m p{color:var(--muted);font-size:.88rem;margin:0}
 .mindex a.m:hover h3{color:var(--accent)}
 

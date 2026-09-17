@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
-<title>MESA · Mapping Epidemiology for Sparse Areas</title>
+<title>MESA: Mapping Epidemiology for Sparse Areas</title>
 <meta name="description" content="MESA is a desktop application for spatial epidemiology. It geocodes case addresses, detects disease clusters, turns counts into rates, and suppresses counts too small to publish. The geocoder and the statistics run on your own machine, so case data does not leave it.">
 <meta name="theme-color" content="#0e141a">
-<meta property="og:title" content="MESA · Mapping Epidemiology for Sparse Areas">
+<meta property="og:title" content="MESA: Mapping Epidemiology for Sparse Areas">
 <meta property="og:description" content="Spatial cluster detection and offline geocoding for public health. Runs entirely on your machine.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.spatialepi.org/">
 <meta property="og:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MESA · Mapping Epidemiology for Sparse Areas">
+<meta name="twitter:title" content="MESA: Mapping Epidemiology for Sparse Areas">
 <meta name="twitter:description" content="Spatial cluster detection and offline geocoding for public health. Runs entirely on your machine.">
 <meta name="twitter:image" content="https://www.spatialepi.org/og-image.png">
 
@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#E9E8E4;
@@ -36,19 +36,27 @@
     --amber:#B07D2A;
     --cold:#3E7CB1;
     --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+    /* Prose is set in a text face and mono is reserved for machine output: file
+       extensions, parameters, checksums, table data, figure captions. The distinction
+       carries meaning, which is why it is worth having two faces at all. */
+    --serif:"IBM Plex Serif",Charter,"Bitstream Charter","Sitka Text",Cambria,Georgia,serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;scroll-padding-top:58px;scroll-behavior:smooth}
   body{
     margin:0;background:var(--bg);color:var(--ink);
-    font-family:var(--mono);font-size:15px;line-height:1.7;
+    font-family:var(--serif);font-size:17px;line-height:1.62;
     -webkit-font-smoothing:antialiased;
   }
+  /* Everything that is a value rather than a sentence. */
+  .nav,.mark b,.btn,.get,.plat,.cap,.tk,.subhead,.status,.sha,.arch,.os,
+  table.data th,table.data td.v,table.dl th,.tiers,.notify input,.notify button,
+  code,.crumb,footer .wrap{font-family:var(--mono)}
   a{color:inherit}
   ::selection{background:var(--ink);color:var(--bg)}
   .wrap{max-width:840px;margin:0 auto;padding:0 24px}
   p{margin:0}
-  h1,h2,h3{font-weight:500;margin:0;line-height:1.3}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;line-height:1.25}
   b,strong{font-weight:600}
 
   /* ---- header ---- */
@@ -67,19 +75,18 @@
   .nav a:hover{color:var(--accent)}
 
   /* ---- section frame ---- */
-  section{padding:46px 0}
-  .sec{display:flex;align-items:center;gap:14px;margin:0 0 26px;
-    font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .sec .n{color:var(--accent)}
-  .sec::after{content:"";flex:1;height:0;border-top:1px solid var(--line)}
+  section{padding:72px 0 64px}
+  .sec{display:block;margin:0 0 4px;font-size:1.62rem;letter-spacing:-.018em;color:var(--ink)}
   .lead{color:var(--muted);max-width:64ch}
+  /* A section's own intro belongs to its heading, not to the gap above it. */
+  .sec + p,.sec + .lead{margin-top:14px}
+  .rows,.flow,.tiers,table.data,table.dl,.panel{margin-top:32px}
 
   /* ---- hero ---- */
-  .hero{border-bottom:1px solid var(--line);padding-top:52px}
-  .kicker{color:var(--faint);font-size:.75rem;letter-spacing:.06em;margin-bottom:22px}
-  .kicker::before{content:"// "}
-  .hero h1{font-size:clamp(1.5rem,3.6vw,2.15rem);letter-spacing:-.01em;max-width:22ch}
-  .hero .lead{margin-top:20px;font-size:.98rem}
+  .hero{border-bottom:1px solid var(--line);padding:76px 0 68px}
+
+  .hero h1{font-size:clamp(2rem,4.6vw,3.05rem);line-height:1.13;letter-spacing:-.022em;max-width:19ch}
+  .hero .lead{margin-top:24px;font-size:1.06rem;max-width:60ch}
   .hero .lead b{color:var(--ink)}
   .actions{margin-top:30px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
   .btn{font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.04em;
@@ -105,22 +112,20 @@
   .cap b{color:var(--muted);font-weight:500}
 
   /* ---- label/value rows (capabilities) ---- */
-  .rows{border-top:1px solid var(--line)}
-  .row{display:grid;grid-template-columns:130px 1fr;gap:18px;
-    padding:20px 0;border-bottom:1px solid var(--line)}
-  .row .k{color:var(--accent);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
-  .row h3{font-size:1rem;margin-bottom:7px}
-  .row p{color:var(--muted);font-size:.9rem}
+  .rows{margin-top:30px}
+  .row{padding:0 0 26px;margin-bottom:26px;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .row h3{font-size:1.06rem;margin-bottom:8px}
+  .row p{color:var(--muted);max-width:68ch}
 
   /* ---- workflow ---- */
-  .flow{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-  .flow li{display:grid;grid-template-columns:130px 1fr;gap:18px;
-    padding:20px 0;border-bottom:1px solid var(--line)}
-  .flow .n{color:var(--accent);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding-top:3px}
-  .flow h3{font-size:1rem;margin-bottom:7px}
-  .flow p{color:var(--muted);font-size:.9rem}
-  .flow .tk{display:block;margin-top:10px;color:var(--faint);font-size:.72rem}
-  .flow .tk::before{content:"› "}
+  .flow{margin:30px 0 0;padding:0 0 0 1.6em}
+  .flow li{padding:0 0 24px;margin-bottom:24px;border-bottom:1px solid var(--line)}
+  .flow li:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .flow li::marker{color:var(--faint);font-family:var(--mono);font-size:.82rem}
+  .flow h3{font-size:1.06rem;margin-bottom:8px}
+  .flow p{color:var(--muted);max-width:68ch}
+  .flow .tk{display:block;margin-top:9px;color:var(--faint);font-size:.76rem}
   .tiers{margin-top:26px;border:1px solid var(--line)}
   .tiers .t{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:13px 16px;
     border-bottom:1px solid var(--line);font-size:.82rem}
@@ -134,7 +139,7 @@
   .tiers .cap-line em{color:var(--accent);font-style:normal}
 
   /* ---- offline ---- */
-  .offline p{color:var(--muted);max-width:64ch;font-size:.95rem}
+  .offline p{color:var(--muted);max-width:62ch;font-size:1.06rem}
 
   /* ---- data tables (validation, download) ---- */
   table{width:100%;border-collapse:collapse;font-size:.85rem}
@@ -191,8 +196,7 @@
 
   @media(max-width:720px){
     .nav{display:none}
-    .row,.flow li{grid-template-columns:1fr;gap:6px}
-    .row .k,.flow .n{padding-top:0}
+    .flow{padding-left:1.35em}
     .tiers .t,.tiers .t1 b,.tiers .t2 b,.tiers .t3 b{grid-template-columns:1fr}
     .tiers .t{grid-template-columns:1fr;gap:5px}
     table.dl th:nth-child(2),table.dl td:nth-child(2){display:none}
@@ -245,34 +249,27 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="kicker">spatial cluster detection · offline geocoding</p>
     <h1>Spatial disease-cluster detection and address geocoding, computed entirely on the local machine.</h1>
-    <p class="lead">MESA is a desktop application for spatial epidemiology. It geocodes case
-      addresses and detects spatial clusters in the resulting point data, running the
-      geocoder and the statistics in-process. No network access is required, and case data
-      remains on the local machine.</p>
+    <p class="lead">A desktop application for spatial epidemiology. It geocodes case
+      addresses, detects clusters in the resulting point data, and labels how precisely
+      each address was matched, with the geocoder and the statistics running in-process.</p>
     <div class="actions">
       <a class="btn" href="#download">Download</a>
       <a class="tl" href="#capabilities">Capabilities →</a>
     </div>
-    <p class="plat">windows x64 · macos apple silicon · linux x64</p>
+    <p class="plat">Windows x64, macOS Apple silicon, Linux x64</p>
     <figure class="panel" id="hero-fig">
       <img class="plotimg" src="hero-map.png" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster">
-      <div class="ph" aria-hidden="true">
-        <span class="a">Gi* hot-spot analysis</span>
-        <span class="b">figure coming soon</span>
-      </div>
     </figure>
-    <p class="cap"><b>Figure 1.</b> Getis-Ord Gi* on MESA's demo dataset, computed offline.</p>
+    <p class="cap"><b>Figure 1.</b> Getis-Ord Gi* on MESA's demo dataset.</p>
   </div>
 </section>
 
 <section id="capabilities">
   <div class="wrap">
-    <h2 class="sec"><span class="n">01</span> capabilities</h2>
+    <h2 class="sec">Capabilities</h2>
     <div class="rows">
       <div class="row">
-        <div class="k">analyze</div>
         <div>
           <h3>Cluster detection</h3>
           <p>Local hot- and cold-spot detection with Getis-Ord Gi* and a Bernoulli spatial
@@ -281,7 +278,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="k">geocode</div>
         <div>
           <h3>Offline address geocoding</h3>
           <p>MESA builds a local SQLite address index that the geocoder matches against,
@@ -293,7 +289,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="k">publish</div>
         <div>
           <h3>Small-count suppression</h3>
           <p>A count small enough to identify someone must not be published, and masking
@@ -304,7 +299,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="k">rates</div>
         <div>
           <h3>Rates, and rates built on almost nobody</h3>
           <p>Counts become rates per 1,000 or per 100,000. Where a rate cannot honestly be
@@ -315,7 +309,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="k">repeat</div>
         <div>
           <h3>Protocols you can re-run</h3>
           <p>Steps are wired together on a canvas and saved with the project, so next
@@ -324,7 +317,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="k">prepare</div>
         <div>
           <h3>Table cleaning and joins</h3>
           <p>Reads Cognos MHT, CSV, and Excel exports. Columns can be corrected, tables
@@ -332,18 +324,16 @@
         </div>
       </div>
       <div class="row">
-        <div class="k">data flow</div>
         <div>
           <h3>No outbound connections during analysis</h3>
-          <p>MESA emits no telemetry and opens no outbound connections while analyzing.
-            Protected health information stays on the operator's machine.</p>
+          <p>MESA emits no telemetry and opens no outbound connections while
+            analyzing.</p>
         </div>
       </div>
       <div class="row">
-        <div class="k">serve</div>
         <div>
           <h3>ArcGIS Pro geocode endpoint</h3>
-          <p>The same offline geocoder can be exposed as a local ArcGIS GeocodeServer
+          <p>The same geocoder can be exposed as a local ArcGIS GeocodeServer
             endpoint. ArcGIS Pro can batch-geocode tables against it directly, with no
             ArcGIS Enterprise and no tokens. It binds to localhost by default, so requests
             do not leave the machine.</p>
@@ -355,42 +345,38 @@
 
 <section id="workflow">
   <div class="wrap">
-    <h2 class="sec"><span class="n">02</span> workflow</h2>
+    <h2 class="sec">Workflow</h2>
     <ol class="flow">
       <li>
-        <div class="n">step 01</div>
         <div>
           <h3>Load the table</h3>
           <p>A Cognos MHT, CSV, or Excel export is parsed and column-profiled, and missing
             fields are reported.</p>
-          <span class="tk">.mht · .csv · .xlsx</span>
+          <span class="tk">.mht, .csv, .xlsx</span>
         </div>
       </li>
       <li>
-        <div class="n">step 02</div>
         <div>
-          <h3>Geocode offline</h3>
+          <h3>Geocode the addresses</h3>
           <p>The address column is matched against the loaded authoritative address data.
             Each result carries a precision label.</p>
           <span class="tk">operator-supplied authoritative data</span>
         </div>
       </li>
       <li>
-        <div class="n">step 03</div>
         <div>
           <h3>Detect clusters</h3>
           <p>Getis-Ord Gi* or a Bernoulli scan, with Monte-Carlo inference, identifies where
             cases aggregate into hot and cold spots.</p>
-          <span class="tk">Gi* · Bernoulli scan</span>
+          <span class="tk">Gi*, Bernoulli scan</span>
         </div>
       </li>
       <li>
-        <div class="n">step 04</div>
         <div>
           <h3>Export with provenance</h3>
           <p>Results are written back to CSV, Excel, or a spatial format, precision labels
             included, for use in a downstream tool or a report.</p>
-          <span class="tk">.csv · .xlsx · spatial</span>
+          <span class="tk">.csv, .xlsx, spatial</span>
         </div>
       </li>
     </ol>
@@ -405,12 +391,11 @@
 
 <section id="offline" class="offline">
   <div class="wrap">
-    <h2 class="sec"><span class="n">03</span> offline</h2>
+    <h2 class="sec">Offline</h2>
     <p>Spatial epidemiology usually means shipping addresses to a geocoding API. MESA
       doesn't. The address database lives on your disk and the analysis runs in-process,
       so you can work on an air-gapped machine and still get reproducible results. Every
-      figure on this page, including the scan below, is real MESA output computed entirely
-      offline.</p>
+      figure on this page, including the scan below, is real MESA output.</p>
     <figure class="panel" style="max-width:600px">
       <img src="scan.png" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled">
     </figure>
@@ -420,15 +405,15 @@
 
 <section id="validation">
   <div class="wrap">
-    <h2 class="sec"><span class="n">04</span> validation</h2>
+    <h2 class="sec">Validation</h2>
     <p class="lead">The geocoder matches against authoritative data, the statistics are
       checked against the standard reference implementations, and every run reproduces byte
       for byte.</p>
     <div class="subhead">reference &amp; reproducibility</div>
     <table class="data">
       <tbody>
-        <tr><td class="v">&asymp; 98 million</td><td class="note">US National Address Database points MESA builds from, per state, matched entirely offline</td></tr>
-        <tr><td class="v">PySAL · R/spdep</td><td class="note">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</td></tr>
+        <tr><td class="v">&asymp; 98 million</td><td class="note">US National Address Database points MESA builds from, per state</td></tr>
+        <tr><td class="v">PySAL, R/spdep</td><td class="note">Getis-Ord Gi*, Moran's I, and multiple-testing correction cross-checked against the standard libraries</td></tr>
         <tr><td class="v">SaTScan 10.3.2</td><td class="note">Bernoulli spatial scan matched against the field standard, no discrepancies in the suite</td></tr>
         <tr><td class="v">bit-identical</td><td class="note">the same p-values on Windows, macOS, and Linux, from one core or a hundred</td></tr>
       </tbody>
@@ -478,7 +463,7 @@
 
 <section id="download">
   <div class="wrap">
-    <h2 class="sec"><span class="n">05</span> download</h2>
+    <h2 class="sec">Download</h2>
     <p class="lead">Native builds for each platform. Every release is published with a
       SHA-256 checksum so you can verify it before running.</p>
     <table class="dl" style="margin-top:22px">
@@ -488,19 +473,19 @@
       <tbody id="dlbody">
         <tr data-os="windows">
           <td><span class="os">Windows</span></td>
-          <td><span class="arch">x64 · Windows 10/11 · .exe</span></td>
+          <td><span class="arch">x64, Windows 10/11, .exe</span></td>
           <td><span class="status"><span class="led"></span>coming soon</span></td>
           <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
         <tr data-os="macos">
           <td><span class="os">macOS</span></td>
-          <td><span class="arch">Apple Silicon · arm64 · .dmg</span></td>
+          <td><span class="arch">Apple silicon, arm64, .dmg</span></td>
           <td><span class="status"><span class="led"></span>coming soon</span></td>
           <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
         <tr data-os="linux">
           <td><span class="os">Linux</span></td>
-          <td><span class="arch">x64 · AppImage</span></td>
+          <td><span class="arch">x64, AppImage</span></td>
           <td><span class="status"><span class="led"></span>coming soon</span></td>
           <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
         </tr>
@@ -519,9 +504,9 @@
       an MPH Epidemiology candidate at the University of Memphis, with a background in
       geospatial software and public-health surveillance and an epidemiology practicum at
       the Southeast Utah Health Department. Publications:
-      <a href="https://orcid.org/0009-0005-8235-6047" style="color:var(--accent);border-bottom:1px solid var(--line-2)">ORCID</a> ·
-      <a href="https://scholar.google.com/citations?user=NAcxI4IAAAAJ" style="color:var(--accent);border-bottom:1px solid var(--line-2)">Google Scholar</a> ·
-      <a href="https://github.com/minorsecond" style="color:var(--accent);border-bottom:1px solid var(--line-2)">GitHub</a> ·
+      <a href="https://orcid.org/0009-0005-8235-6047" style="color:var(--accent);border-bottom:1px solid var(--line-2)">ORCID</a>,
+      <a href="https://scholar.google.com/citations?user=NAcxI4IAAAAJ" style="color:var(--accent);border-bottom:1px solid var(--line-2)">Google Scholar</a>,
+      <a href="https://github.com/minorsecond" style="color:var(--accent);border-bottom:1px solid var(--line-2)">GitHub</a>,
       <a href="https://www.linkedin.com/in/robert-wardrup/" style="color:var(--accent);border-bottom:1px solid var(--line-2)">LinkedIn</a></p>
   </div>
 </section>
@@ -532,7 +517,7 @@
       <img src="mesa-icon.png" width="20" height="20" alt="" aria-hidden="true" style="image-rendering:pixelated">
       <span class="t"><b>MESA</b><em>mapping epidemiology for sparse areas</em></span>
     </span>
-    <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate · Spatial Epi LLC.</span>
+    <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate, Spatial Epi LLC.</span>
     <span><a href="mailto:ross@spatialepi.org">contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
@@ -634,8 +619,6 @@
     });
   })();
 
-  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
-  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
 </script>
 </body>
 </html>

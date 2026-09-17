@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
-<title>Methods · MESA</title>
+<title>Methods | MESA</title>
 <meta name="description" content="How MESA works: the methodology behind its offline geocoder and spatial cluster statistics (Getis-Ord Gi*, Moran's I, Bernoulli spatial scan), with reproducibility, validation, and citations.">
-<meta property="og:title" content="Methods · MESA">
+<meta property="og:title" content="Methods | MESA">
 <meta property="og:description" content="How MESA works: the methodology behind its offline geocoder and spatial cluster statistics (Getis-Ord Gi*, Moran's I, Bernoulli spatial scan), with reproducibility, validation, and citations.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.spatialepi.org/methods.html">
 <meta property="og:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Methods · MESA">
+<meta name="twitter:title" content="Methods | MESA">
 <meta name="twitter:description" content="How MESA works: the methodology behind its offline geocoder and spatial cluster statistics (Getis-Ord Gi*, Moran's I, Bernoulli spatial scan), with reproducibility, validation, and citations.">
 <meta name="twitter:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="theme-color" content="#0e141a">
@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mesa.css">
 <script data-goatcounter="https://spatialepi.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -72,10 +72,9 @@
     rather than claimed. All reported geocoder accuracy is internal validation on the
     Utah UGRC reference only and must be revalidated for any other jurisdiction's data.</div>
 
-  <h2><span class="n">§</span> the methods</h2>
+  <h2>The methods</h2>
   <div class="mindex">
     <a class="m" href="methods-geocoding.html">
-      <div class="k">geocoding</div>
       <div>
         <h3>Offline address geocoding</h3>
         <p>Normalization, blocking, the address-geometry gate, and a Fellegi-Sunter
@@ -84,7 +83,6 @@
       </div>
     </a>
     <a class="m" href="methods-hotspots.html">
-      <div class="k">hot spots</div>
       <div>
         <h3>Getis-Ord Gi* &amp; Moran's I</h3>
         <p>Local and global spatial autocorrelation: the statistics, spatial weights,
@@ -93,7 +91,6 @@
       </div>
     </a>
     <a class="m" href="methods-scan.html">
-      <div class="k">scan</div>
       <div>
         <h3>Bernoulli spatial scan</h3>
         <p>Kulldorff's case/control scan statistic: the likelihood-ratio test, circular
@@ -102,7 +99,7 @@
     </a>
   </div>
 
-  <h2 id="reproducibility"><span class="n">01</span> reproducibility</h2>
+  <h2 id="reproducibility">Reproducibility</h2>
   <p>MESA treats reproducibility as a correctness property, not a nicety. The design rule
     is stated plainly in the codebase: deterministic logic must be bit-identical
     across operating systems, compilers, and core counts for the same input and seed.
@@ -122,7 +119,7 @@
     hashes an entire permutation null distribution. Pure floating-point that is genuinely
     order-dependent is compared with explicit tolerances, never exact equality.</p>
 
-  <h2><span class="n">02</span> how it is validated</h2>
+  <h2>How it is validated</h2>
   <p>The statistical engine is checked against the field's reference implementations rather
     than trusted on its own:</p>
   <table class="data">
@@ -139,7 +136,7 @@
     5,000 simulations per run (100,000 nightly). Method-specific power and equivalence
     results are on each method's page.</p>
 
-  <h2><span class="n">03</span> author</h2>
+  <h2>Author</h2>
   <p>MESA is designed and built by <b>Ross Wardrup</b>, an MPH Epidemiology candidate at the
     University of Memphis and a geospatial-software developer with over a decade building
     spatial analysis tools across federal hazard modeling, healthcare operations, and public
@@ -151,13 +148,13 @@
     codebase; packaged per-platform downloads are being wired up. Questions, corrections, and
     requests to use it are welcome at
     <a class="x" href="mailto:ross@spatialepi.org">ross@spatialepi.org</a>.</p>
-  <p class="meta"><a class="x" href="https://rwardrup.com">rwardrup.com</a> &nbsp;·&nbsp;
-    <a class="x" href="https://orcid.org/0009-0005-8235-6047">ORCID&nbsp;0009-0005-8235-6047</a> &nbsp;·&nbsp;
-    <a class="x" href="https://scholar.google.com/citations?user=NAcxI4IAAAAJ">Google&nbsp;Scholar</a> &nbsp;·&nbsp;
-    <a class="x" href="https://github.com/minorsecond">GitHub</a> &nbsp;·&nbsp;
+  <p class="meta"><a class="x" href="https://rwardrup.com">rwardrup.com</a> ,&nbsp;
+    <a class="x" href="https://orcid.org/0009-0005-8235-6047">ORCID&nbsp;0009-0005-8235-6047</a> ,&nbsp;
+    <a class="x" href="https://scholar.google.com/citations?user=NAcxI4IAAAAJ">Google&nbsp;Scholar</a> ,&nbsp;
+    <a class="x" href="https://github.com/minorsecond">GitHub</a> ,&nbsp;
     <a class="x" href="https://www.linkedin.com/in/robert-wardrup/">LinkedIn</a></p>
 
-  <h2><span class="n">04</span> citing MESA</h2>
+  <h2>Citing MESA</h2>
   <p>MESA is pre-release and does not yet have a versioned, archived release with a DOI.
     Until it does, cite it as software:</p>
   <div class="eq"><span class="lbl">provisional citation</span>Wardrup, R. (2026). MESA: offline address geocoding and spatial
@@ -165,7 +162,7 @@ cluster detection for public health [computer software]. spatialepi.org</div>
   <p>Please also cite the primary methods you rely on. The canonical references for each
     are listed on the method pages and collected below.</p>
 
-  <h2><span class="n">§</span> references</h2>
+  <h2>References</h2>
   <ol class="refs">
     <li id="r-kahan">Kahan, W. (1965). Further remarks on reducing truncation errors. <i>Communications of the ACM</i>, 8(1), 40.</li>
     <li id="r-durstenfeld">Durstenfeld, R. (1964). Algorithm 235: Random permutation. <i>Communications of the ACM</i>, 7(7), 420.</li>
@@ -190,7 +187,7 @@ cluster detection for public health [computer software]. spatialepi.org</div>
       <img src="mesa-icon.png" width="20" height="20" alt="" aria-hidden="true" style="image-rendering:pixelated">
       <span class="t"><b>MESA</b><em>mapping epidemiology for sparse areas</em></span>
     </span>
-    <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate · Spatial Epi LLC.</span>
+    <span>Developed by <a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate, Spatial Epi LLC.</span>
     <span><a href="mailto:ross@spatialepi.org">contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
@@ -209,8 +206,6 @@ cluster detection for public health [computer software]. spatialepi.org</div>
     });
   })();
 
-  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
-  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
 </script>
 </body>
 </html>

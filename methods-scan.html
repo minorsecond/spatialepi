@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
-<title>Bernoulli spatial scan · MESA</title>
+<title>Bernoulli spatial scan | MESA</title>
 <meta name="description" content="MESA's Bernoulli spatial scan: Kulldorff's case/control scan statistic, the likelihood-ratio test, circular candidate windows, Monte-Carlo inference, and parity with SaTScan 10.3.2.">
-<meta property="og:title" content="Bernoulli spatial scan · MESA">
+<meta property="og:title" content="Bernoulli spatial scan | MESA">
 <meta property="og:description" content="MESA's Bernoulli spatial scan: Kulldorff's case/control scan statistic, the likelihood-ratio test, circular candidate windows, Monte-Carlo inference, and parity with SaTScan 10.3.2.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.spatialepi.org/methods-scan.html">
 <meta property="og:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Bernoulli spatial scan · MESA">
+<meta name="twitter:title" content="Bernoulli spatial scan | MESA">
 <meta name="twitter:description" content="MESA's Bernoulli spatial scan: Kulldorff's case/control scan statistic, the likelihood-ratio test, circular candidate windows, Monte-Carlo inference, and parity with SaTScan 10.3.2.">
 <meta name="twitter:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="theme-color" content="#0e141a">
@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mesa.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -81,7 +81,7 @@
     </ol>
   </div>
 
-  <h2 id="model"><span class="n">01</span> the case/control model</h2>
+  <h2 id="model">The case/control model</h2>
   <p>In the Bernoulli model<sup><a href="#s-k97">1</a></sup><sup><a href="#s-kn95">2</a></sup>
     every location holds some number of cases and some number of controls (non-cases). There
     is no external population denominator; cases are compared against controls. The scan asks:
@@ -91,7 +91,7 @@
     only. A window whose internal case rate is at or below the overall rate scores zero and is
     never reported as a cluster.</div>
 
-  <h2 id="llr"><span class="n">02</span> the likelihood-ratio statistic</h2>
+  <h2 id="llr">The likelihood-ratio statistic</h2>
   <p>Each candidate window is scored by the log of the likelihood ratio between a model where
     the window has its own elevated rate and the null where the rate is uniform. For a window
     containing <code>c</code> cases out of <code>n</code> people, in a study area of
@@ -103,7 +103,7 @@
     <code>C · n/N</code>. Sums that could underflow use an <code>x·log(x)</code> helper that
     is defined to be 0 at 0.</p>
 
-  <h2 id="windows"><span class="n">03</span> candidate windows</h2>
+  <h2 id="windows">Candidate windows</h2>
   <p>Windows are circular and centered on each location. For a given center, the other
     locations are sorted by distance and added one at a time, so every concentric circle from
     the smallest to the largest allowed becomes a candidate window. A window stops growing
@@ -113,7 +113,7 @@
     <div class="v"><code>tie-breaking</code><span>ties in distance are broken by coordinate (y then x), and all intermediate windows are evaluated, matching SaTScan exactly</span></div>
   </div>
 
-  <h2 id="mc"><span class="n">04</span> Monte-Carlo inference</h2>
+  <h2 id="mc">Monte-Carlo inference</h2>
   <p>Because the maximum LLR is taken over a very large number of overlapping windows, its
     null distribution has no closed form. MESA obtains a p-value by simulation<sup><a href="#s-dwass">3</a></sup>:
     it repeatedly reassigns the fixed total number of cases at random among all people
@@ -127,7 +127,7 @@
     default reported clusters may not share any location (the strictest, no-geographical-overlap
     criterion).</p>
 
-  <h2 id="output"><span class="n">05</span> cluster output</h2>
+  <h2 id="output">Cluster output</h2>
   <p>Each detected cluster reports:</p>
   <div class="vars">
     <div class="v"><code>center, radius</code><span>the projected center and display (WGS84) coordinate, and the distance to the farthest member</span></div>
@@ -139,7 +139,7 @@
   <p>A post-hoc diagnostic flag may annotate a cluster, but it is computed after the scan and
     never affects inference or which clusters are selected.</p>
 
-  <h2 id="satscan"><span class="n">06</span> parity with SaTScan</h2>
+  <h2 id="satscan">Parity with SaTScan</h2>
   <p>MESA deliberately mirrors SaTScan's behavior<sup><a href="#s-satscan">4</a></sup> so results
     are comparable and reproducible: candidate generation, tied-distance handling, relative-risk
     calculation, and the Monte-Carlo inference all follow SaTScan's conventions. In MESA's
@@ -148,7 +148,7 @@
     observed on the tested datasets against the pinned SaTScan version (10.3.2); it does not
     mean the two are provably identical for every possible input.</div>
 
-  <h2><span class="n">§</span> references</h2>
+  <h2>References</h2>
   <ol class="refs">
     <li id="s-k97">Kulldorff, M. (1997). A spatial scan statistic. <i>Communications in Statistics, Theory and Methods</i>, 26(6), 1481-1496.</li>
     <li id="s-kn95">Kulldorff, M., &amp; Nagarwalla, N. (1995). Spatial disease clusters: detection and inference. <i>Statistics in Medicine</i>, 14(8), 799-810.</li>
@@ -168,7 +168,7 @@
       <img src="mesa-icon.png" width="20" height="20" alt="" aria-hidden="true" style="image-rendering:pixelated">
       <span class="t"><b>MESA</b><em>mapping epidemiology for sparse areas</em></span>
     </span>
-    <span><a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate · Spatial Epi LLC</span>
+    <span><a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate, Spatial Epi LLC</span>
     <span><a href="methods.html">methods</a> &nbsp; <a href="mailto:ross@spatialepi.org">contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
@@ -187,8 +187,6 @@
     });
   })();
 
-  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
-  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
 </script>
 </body>
 </html>

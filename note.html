@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if('scrollRestoration' in history)history.scrollRestoration='manual';</script>
-<title id="pagetitle">Notes · MESA</title>
+<title id="pagetitle">Notes | MESA</title>
 <meta id="desc" name="description" content="MESA dev notes.">
-<meta id="og-title" property="og:title" content="Notes · MESA">
+<meta id="og-title" property="og:title" content="Notes | MESA">
 <meta id="og-desc" property="og:description" content="MESA dev notes.">
 <meta property="og:type" content="article">
 <meta id="og-url" property="og:url" content="https://www.spatialepi.org/note.html">
 <meta property="og:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta id="tw-title" name="twitter:title" content="Notes · MESA">
+<meta id="tw-title" name="twitter:title" content="Notes | MESA">
 <meta id="tw-desc" name="twitter:description" content="MESA dev notes.">
 <meta name="twitter:image" content="https://www.spatialepi.org/og-image.png">
 <meta name="theme-color" content="#0e141a">
@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mesa.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -77,7 +77,7 @@
       <img src="mesa-icon.png" width="20" height="20" alt="" aria-hidden="true" style="image-rendering:pixelated">
       <b>MESA</b>
     </span>
-    <span><a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate · Spatial Epi LLC</span>
+    <span><a href="https://rwardrup.com">Ross Wardrup</a>, MPH candidate, Spatial Epi LLC</span>
     <span><a href="methods.html">methods</a> &nbsp; <a href="mailto:ross@spatialepi.org">contact</a> &nbsp; spatialepi.org</span>
   </div>
 </footer>
@@ -99,8 +99,8 @@
       return;
     }
 
-    document.title = meta.title + ' · MESA notes';
-    document.getElementById('pagetitle').textContent = meta.title + ' · MESA notes';
+    document.title = meta.title + ' | MESA notes';
+    document.getElementById('pagetitle').textContent = meta.title + ' | MESA notes';
     document.getElementById('desc').setAttribute('content', meta.summary);
 
     // count.js loads async, so wait (briefly) for it before firing the
@@ -108,15 +108,15 @@
     // no_onload since every note otherwise shares the /note.html path.
     (function sendPageview(triesLeft){
       if(window.goatcounter && window.goatcounter.count){
-        window.goatcounter.count({path: 'note/' + slug, title: meta.title + ' · MESA notes'});
+        window.goatcounter.count({path: 'note/' + slug, title: meta.title + ' | MESA notes'});
       } else if(triesLeft > 0){
         setTimeout(function(){ sendPageview(triesLeft - 1); }, 100);
       }
     })(20);
-    document.getElementById('og-title').setAttribute('content', meta.title + ' · MESA notes');
+    document.getElementById('og-title').setAttribute('content', meta.title + ' | MESA notes');
     document.getElementById('og-desc').setAttribute('content', meta.summary);
     document.getElementById('og-url').setAttribute('content', 'https://www.spatialepi.org/note.html?slug=' + encodeURIComponent(meta.slug));
-    document.getElementById('tw-title').setAttribute('content', meta.title + ' · MESA notes');
+    document.getElementById('tw-title').setAttribute('content', meta.title + ' | MESA notes');
     document.getElementById('tw-desc').setAttribute('content', meta.summary);
     document.getElementById('crumb-title').textContent = '/ ' + meta.title;
     document.getElementById('post-title').textContent = meta.title;
@@ -177,8 +177,6 @@
     });
   })();
 
-  console.log('%c▲ MESA', 'color:#C8402F;font-weight:bold;font-family:monospace;font-size:14px');
-  console.log('%cz = ∞ · p < 2.2e-16 (very significant find)', 'color:#9BA7AD;font-family:monospace');
 </script>
 </body>
 </html>
