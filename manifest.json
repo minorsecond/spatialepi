@@ -1,0 +1,10 @@
+{
+    "builds":  {
+                   "windows":  {
+                                   "url":  "https://github.com/minorsecond/spatialepi/releases/download/v1.0.0/mesa-setup-1.0.0.exe",
+                                   "sha256":  "7d1e6eab08385fbd30bd27d7120d4b0d301c717e09dcaf99667b16efe533e20f"
+                               }
+               },
+    "version":  "1.0.0",
+    "date":  "2026-09-18"
+}
