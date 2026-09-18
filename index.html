@@ -275,7 +275,7 @@
     </div>
     <p class="plat">Windows x64, macOS Apple silicon, Linux x64</p>
     <figure class="panel" id="hero-fig">
-      <img class="plotimg" src="hero-map.png" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster">
+      <img class="plotimg" src="hero-map.png" width="1000" height="1200" alt="Getis-Ord Gi* hot-spot analysis of MESA's demo dataset, showing a significant hot-spot cluster and a cold-spot cluster">
     </figure>
     <p class="cap"><b>Figure 1.</b> Getis-Ord Gi* on MESA's demo dataset.</p>
   </div>
@@ -413,7 +413,7 @@
       so you can work on an air-gapped machine and still get reproducible results. Every
       figure on this page, including the scan below, is real MESA output.</p>
     <figure class="panel" style="max-width:600px">
-      <img src="scan.png" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled">
+      <img src="scan.png" width="1040" height="1080" alt="Bernoulli spatial scan of MESA's demo dataset: a significant most-likely cluster with relative risk 2.8 and p=0.001, circled">
     </figure>
     <p class="cap"><b>Figure 2.</b> Bernoulli spatial scan on MESA's demo dataset, validated against SaTScan.</p>
   </div>
@@ -641,6 +641,41 @@
         link.setAttribute('href', document.hidden ? sad : originals[i]);
       });
     });
+  })();
+
+  // Deep links: land on the section, not near it.
+  //
+  // A cold load scrolls to the hash before the page has finished settling. The figures now
+  // carry intrinsic dimensions so they no longer reflow, but the webfonts still arrive late,
+  // and when they swap in, every line above the target re-measures and the target moves. The
+  // reader ends up somewhere above or below what they clicked for.
+  //
+  // So re-apply the hash once things have settled, and stop as soon as the reader takes over,
+  // because yanking the page under someone who has started scrolling is worse than landing a
+  // little off.
+  (function(){
+    if(!location.hash) return;
+    var target;
+    try { target = document.querySelector(location.hash); } catch(e){ return; }
+    if(!target) return;
+
+    var surrendered = false;
+    function standDown(){ surrendered = true; }
+    ['wheel','touchstart','keydown','pointerdown'].forEach(function(evt){
+      addEventListener(evt, standDown, {passive:true, once:true});
+    });
+
+    function realign(){
+      if(surrendered) return;
+      // Only correct a real miss; scroll-padding-top already handles the normal case.
+      var off = target.getBoundingClientRect().top
+              - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop || 0);
+      if(Math.abs(off) < 4) return;
+      target.scrollIntoView({block:'start', behavior:'instant'});
+    }
+
+    addEventListener('load', realign);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(realign);
   })();
 
 </script>
