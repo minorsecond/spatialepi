@@ -174,7 +174,16 @@
     border:1px solid var(--line-2);color:var(--faint);text-decoration:none;white-space:nowrap;cursor:not-allowed}
   .get.ready{background:var(--ink);border-color:var(--ink);color:var(--bg);cursor:pointer}
   .get.ready:hover{background:#000}
-  .sha{display:block;color:var(--faint);font-size:.66rem;margin-top:7px;word-break:break-all}
+  /* The checksum sits on its own full-width line under its platform rather than squeezed
+     into the button cell, where 64 hex characters had to wrap and came out ragged on the
+     left because that cell is right aligned. People compare this against what their
+     terminal prints, so it wants to be one left-aligned run. It still wraps on a narrow
+     screen, which is unavoidable and fine. */
+  tr.shar td{padding:0 14px 15px 0;border-bottom:1px solid var(--line)}
+  .sha{display:block;color:var(--faint);font-size:.66rem;word-break:break-all}
+  /* A platform row that owns a checksum hands its rule down to it, so the two read as one
+     block instead of looking like separate entries. */
+  tr.has-sha td{border-bottom:none;padding-bottom:8px}
   .dlnote{margin-top:26px;color:var(--muted);font-size:.84rem;max-width:70ch}
   .dlnote code{background:var(--panel);color:#B9C2C7;padding:1px 6px;font-size:.9em}
   .notify{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:26px}
@@ -482,19 +491,19 @@
           <td><span class="os">Windows</span></td>
           <td><span class="arch">x64, Windows 10/11, .exe</span></td>
           <td><span class="status"><span class="led"></span>coming soon</span></td>
-          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
+          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a></td>
         </tr>
         <tr data-os="macos">
           <td><span class="os">macOS</span></td>
           <td><span class="arch">Apple silicon, arm64, .dmg</span></td>
           <td><span class="status"><span class="led"></span>coming soon</span></td>
-          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
+          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a></td>
         </tr>
         <tr data-os="linux">
           <td><span class="os">Linux</span></td>
           <td><span class="arch">x64, AppImage</span></td>
           <td><span class="status"><span class="led"></span>coming soon</span></td>
-          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a><span class="sha"></span></td>
+          <td class="act"><a class="get" role="link" aria-disabled="true">Download</a></td>
         </tr>
       </tbody>
     </table>
@@ -553,11 +562,19 @@
     rows.forEach(function(row){
       var b=m.builds[row.dataset.os]; if(!b||!b.url) return;
       ready++;
-      var get=row.querySelector('.get'), st=row.querySelector('.status'), sha=row.querySelector('.sha');
+      var get=row.querySelector('.get'), st=row.querySelector('.status');
       get.textContent='Download'+(m.version?' v'+m.version:''); get.href=b.url;
       get.classList.add('ready'); get.removeAttribute('aria-disabled');
       st.classList.add('ready'); st.lastChild.textContent='available';
-      if(b.sha256) sha.textContent='SHA-256 '+b.sha256;
+      if(b.sha256){
+        var shaRow=document.createElement('tr'); shaRow.className='shar';
+        var cell=document.createElement('td'); cell.colSpan=4;
+        var text=document.createElement('span'); text.className='sha';
+        text.textContent='SHA-256 '+b.sha256;
+        cell.appendChild(text); shaRow.appendChild(cell);
+        row.parentNode.insertBefore(shaRow,row.nextSibling);
+        row.classList.add('has-sha');
+      }
     });
     if(!ready) return;
 
