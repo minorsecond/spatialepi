@@ -35,6 +35,9 @@
     --accent:#C8402F;
     --amber:#B07D2A;
     --cold:#3E7CB1;
+    /* Reserved for the download table's shipped state. The brand accent is a red, and a red
+       dot beside the word "available" reads as a fault before the label is read at all. */
+    --ok:#3F7A4A;
     --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
     /* Prose is set in a text face and mono is reserved for machine output: file
        extensions, parameters, checksums, table data, figure captions. The distinction
@@ -160,8 +163,12 @@
   .os{color:var(--ink);font-weight:600}
   .arch{color:var(--muted);font-size:.8rem}
   .status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.74rem;letter-spacing:.04em}
-  .led{width:7px;height:7px;background:var(--faint);display:inline-block}
-  .status.ready .led{background:var(--accent)}
+  /* Hollow square means pending, solid means shipped. The fill carries the state on its own,
+     so color is reinforcement rather than the only signal. */
+  .led{width:7px;height:7px;display:inline-block;background:none;
+    box-shadow:inset 0 0 0 1px var(--faint)}
+  .status.ready .led{background:var(--ok);box-shadow:none}
+  .status.ready{color:var(--ink)}
   td.act{text-align:right}
   .get{font-family:var(--mono);font-weight:600;font-size:.78rem;padding:8px 14px;
     border:1px solid var(--line-2);color:var(--faint);text-decoration:none;white-space:nowrap;cursor:not-allowed}
@@ -205,7 +212,7 @@
   @media(prefers-color-scheme:dark){
     :root{
       --bg:#0E141A;--panel:#12191F;--ink:#E7ECEE;--muted:#9BA7AD;--faint:#69747A;
-      --line:#232D34;--line-2:#33404A;
+      --line:#232D34;--line-2:#33404A;--ok:#6FA46A;
     }
     .btn:hover{background:#fff}
     .get.ready:hover{background:#fff}
